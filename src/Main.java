@@ -1,5 +1,3 @@
-package library;
-import library.controllers.MainController;
 
 import java.util.Scanner;
 

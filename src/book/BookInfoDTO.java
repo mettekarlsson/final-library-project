@@ -81,4 +81,15 @@ public class BookInfoDTO {
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
     }
+
+    @Override
+    public String toString() {
+        return "Book-id:" + id +
+                ", Title: '" + title + '\'' +
+                ", Year Published: " + yearPublished +
+                ", Available Copies: " + availableCopies +
+                ", Summary: '" + summary + '\'' +
+                ", Author/s: " + authors +
+                ", Categories: " + categories;
+    }
 }

@@ -25,17 +25,17 @@ public class BookController {
                     break;
                 }
                 case 2: {
-                    showAllAvailableBooks();
+                    //showAllAvailableBooks();
                     break;
                 }
 
                 case 3: {
-                    showTopTenBooks();
+                   // showTopTenBooks();
                     break;
                 }
 
                 case 4: {
-                    searchBook();
+                   // searchBook();
                     break;
                 }
                 case 0: {
@@ -49,85 +49,85 @@ public class BookController {
 
     //case 1
     public void showAllBooks() {
-    ArrayList<Book> books = new ArrayList<>(bookService.getAllBooks());
-    for(Book b :books) {
+    ArrayList<BookInfoDTO> books = new ArrayList<>(bookService.getAllBooks());
+    for(BookInfoDTO b :books) {
         System.out.println(b);
     }
 }
 
-    //case 2
-    public void showAllAvailableBooks() {
-        ArrayList<Book> books = new ArrayList<>(bookService.getAllAvailableBooks());
-        for (Book b : books) {
-            System.out.println(b);
-        }
-    }
-
-    //case 3
-    public void showTopTenBooks() {
-        ArrayList<Book> books = new ArrayList<>(bookService.getPopularBooks());
-        for (Book b : books) {
-            System.out.println(b);
-        }
-    }
-
-    //case 4
-    public void searchBook() {
-        System.out.println("Sök på en bok-titel:");
-        ArrayList<Book> books = bookService.searchBook(scanner.nextLine());
-        for (Book b : books) {
-            System.out.println(b.toSearchString());
-        }
-    }
-
-
-    public void adminBookMenu() {
-        boolean active = true;
-        while (active) {
-            System.out.println("1. Add book");
-            System.out.println("2. Update book");
-            System.out.println("3. Delete book");
-            System.out.println("0. Return");
-            int choice = Integer.parseInt(scanner.nextLine());
-
-            switch (choice) {
-                case 1: {
-                    addBook();
-                    break;
-                }
-                case 2: {
-                    bookService.editBook();
-                    break;
-                }
-                case 3: {
-                    bookService.deleteBook();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
-            }
-        }
-    }
-
-    //case 1
-    public void addBook() {
-        System.out.println("Skriv in titeln på boken:");
-        String title = scanner.nextLine();
-        System.out.println("Skriv in isbn för boken:");
-        String isbn = scanner.nextLine();
-        System.out.println("Skriv in vilket år boken publicerades:");
-        int yearPublished = Integer.parseInt(scanner.nextLine());
-        System.out.println("Skriv in totalt antal kopior av boken:");
-        int totalCopies = Integer.parseInt(scanner.nextLine());
-        System.out.println("Skriv in antal tillgängliga kopior av boken:");
-        int availableCopies = Integer.parseInt(scanner.nextLine());
-
-        Book book = new Book(title, isbn, yearPublished, totalCopies, availableCopies);
-
-        bookService.addBook(book);
-    }
+//    //case 2
+//    public void showAllAvailableBooks() {
+//        ArrayList<Book> books = new ArrayList<>(bookService.getAllAvailableBooks());
+//        for (Book b : books) {
+//            System.out.println(b);
+//        }
+//    }
+//
+//    //case 3
+//    public void showTopTenBooks() {
+//        ArrayList<Book> books = new ArrayList<>(bookService.getPopularBooks());
+//        for (Book b : books) {
+//            System.out.println(b);
+//        }
+//    }
+//
+//    //case 4
+//    public void searchBook() {
+//        System.out.println("Sök på en bok-titel:");
+//        ArrayList<Book> books = bookService.searchBook(scanner.nextLine());
+//        for (Book b : books) {
+//            System.out.println(b.toSearchString());
+//        }
+//    }
+//
+//
+//    public void adminBookMenu() {
+//        boolean active = true;
+//        while (active) {
+//            System.out.println("1. Add book");
+//            System.out.println("2. Update book");
+//            System.out.println("3. Delete book");
+//            System.out.println("0. Return");
+//            int choice = Integer.parseInt(scanner.nextLine());
+//
+//            switch (choice) {
+//                case 1: {
+//                    addBook();
+//                    break;
+//                }
+//                case 2: {
+//                    bookService.editBook();
+//                    break;
+//                }
+//                case 3: {
+//                    bookService.deleteBook();
+//                    break;
+//                }
+//                case 0: {
+//                    active = false;
+//                    break;
+//                }
+//            }
+//        }
+//    }
+//
+//    //case 1
+//    public void addBook() {
+//        System.out.println("Skriv in titeln på boken:");
+//        String title = scanner.nextLine();
+//        System.out.println("Skriv in isbn för boken:");
+//        String isbn = scanner.nextLine();
+//        System.out.println("Skriv in vilket år boken publicerades:");
+//        int yearPublished = Integer.parseInt(scanner.nextLine());
+//        System.out.println("Skriv in totalt antal kopior av boken:");
+//        int totalCopies = Integer.parseInt(scanner.nextLine());
+//        System.out.println("Skriv in antal tillgängliga kopior av boken:");
+//        int availableCopies = Integer.parseInt(scanner.nextLine());
+//
+//        Book book = new Book(title, isbn, yearPublished, totalCopies, availableCopies);
+//
+//        bookService.addBook(book);
+//    }
 
 
 }

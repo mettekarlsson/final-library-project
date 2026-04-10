@@ -1,9 +1,10 @@
-import library.models.Member;
-import library.repositories.MemberRepository;
+import book.BookController;
+import member.Member;
 
 import java.util.Scanner;
 
 public class MainController {
+
     public static Member loggedInUser = null;
     Scanner scanner = new Scanner(System.in);
     BookController bookController = new BookController();

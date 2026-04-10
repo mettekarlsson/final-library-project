@@ -78,4 +78,9 @@ public class Author {
     public void setWebsite(String website) {
         this.website = website;
     }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
 }
