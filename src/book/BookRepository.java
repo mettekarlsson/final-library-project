@@ -53,10 +53,10 @@ public class BookRepository {
 
             ResultSet rs = stmt.executeQuery(
                             """
-            SELECT b.id, b.title, b.isbn, b.year_published, b.total_copies, b.available_copies, bd.summary, bd.language, bd.page_count, COUNT(loans.book_id) AS loan_count FROM bo
-                                 JOIN book_descriptions bd ON bd.book_id
-                                 JOIN loans ON loans.book_id
-                                 GROUP BY b.id ORDER BY loan_count DESC LIM
+            SELECT b.id, b.title, b.isbn, b.year_published, b.total_copies, b.available_copies, bd.summary, bd.language, bd.page_count, COUNT(loans.book_id) AS loan_count FROM books b
+            JOIN book_descriptions bd ON bd.book_id=b.id
+            JOIN loans ON loans.book_id=b.id
+            GROUP BY b.id ORDER BY loan_count DESC LIMIT 10
                                  """);
 
             while (rs.next()) {

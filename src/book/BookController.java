@@ -80,37 +80,37 @@ public class BookController {
         }
     }
 
-//    public void adminBookMenu() {
-//        boolean active = true;
-//        while (active) {
-//            System.out.println("1. Add book");
-//            System.out.println("2. Update book");
-//            System.out.println("3. Delete book");
-//            System.out.println("0. Return");
-//            int choice = Integer.parseInt(scanner.nextLine());
-//
-//            switch (choice) {
-//                case 1: {
-//                    addBook();
-//                    break;
-//                }
-//                case 2: {
-//                    bookService.editBook();
-//                    break;
-//                }
-//                case 3: {
-//                    bookService.deleteBook();
-//                    break;
-//                }
-//                case 0: {
-//                    active = false;
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//
-//    //case 1
+    public void adminBookMenu() {
+        boolean active = true;
+        while (active) {
+            System.out.println("1. Add book");
+            System.out.println("2. Update book");
+            System.out.println("3. Delete book");
+            System.out.println("0. Return");
+            int choice = Integer.parseInt(scanner.nextLine());
+
+            switch (choice) {
+                case 1: {
+                    //addBook();
+                    break;
+                }
+                case 2: {
+                    //editBook();
+                    break;
+                }
+                case 3: {
+                    //deleteBook();
+                    break;
+                }
+                case 0: {
+                    active = false;
+                    break;
+                }
+            }
+        }
+    }
+
+    //case 1
 //    public void addBook() {
 //        System.out.println("Skriv in titeln på boken:");
 //        String title = scanner.nextLine();
