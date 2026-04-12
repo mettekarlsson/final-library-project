@@ -25,17 +25,17 @@ public class BookController {
                     break;
                 }
                 case 2: {
-                    //showAllAvailableBooks();
+                    showAllAvailableBooks();
                     break;
                 }
 
                 case 3: {
-                   // showTopTenBooks();
+                    showPopularBooks();
                     break;
                 }
 
                 case 4: {
-                   // searchBook();
+                    searchBook();
                     break;
                 }
                 case 0: {
@@ -55,32 +55,31 @@ public class BookController {
     }
 }
 
-//    //case 2
-//    public void showAllAvailableBooks() {
-//        ArrayList<Book> books = new ArrayList<>(bookService.getAllAvailableBooks());
-//        for (Book b : books) {
-//            System.out.println(b);
-//        }
-//    }
-//
-//    //case 3
-//    public void showTopTenBooks() {
-//        ArrayList<Book> books = new ArrayList<>(bookService.getPopularBooks());
-//        for (Book b : books) {
-//            System.out.println(b);
-//        }
-//    }
-//
-//    //case 4
-//    public void searchBook() {
-//        System.out.println("Sök på en bok-titel:");
-//        ArrayList<Book> books = bookService.searchBook(scanner.nextLine());
-//        for (Book b : books) {
-//            System.out.println(b.toSearchString());
-//        }
-//    }
-//
-//
+    //case 2
+    public void showAllAvailableBooks() {
+        ArrayList<BookInfoDTO> books = new ArrayList<>(bookService.getAllAvailableBooks());
+        for (BookInfoDTO b : books) {
+            System.out.println(b);
+        }
+    }
+
+    //case 3
+    public void showPopularBooks() {
+        ArrayList<BookInfoDTO> books = new ArrayList<>(bookService.getPopularBooks());
+        for (BookInfoDTO b : books) {
+            System.out.println(b);
+        }
+    }
+
+    //case 4
+    public void searchBook() {
+        System.out.println("Search for a book:");
+        ArrayList<BookInfoDTO> books = bookService.searchBook(scanner.nextLine());
+        for (BookInfoDTO b : books) {
+            System.out.println(b);
+        }
+    }
+
 //    public void adminBookMenu() {
 //        boolean active = true;
 //        while (active) {

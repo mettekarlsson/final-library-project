@@ -19,7 +19,8 @@ public class BookRepository {
              Statement stmt = conn.createStatement()) {
 
             ResultSet rs = stmt.executeQuery("""
-            SELECT * FROM books b JOIN book_descriptions bd ON b.id = bd.book_id
+            
+                    SELECT * FROM books b JOIN book_descriptions bd ON b.id = bd.book_id
             """);
 
             while (rs.next()) {
@@ -43,4 +44,76 @@ public class BookRepository {
         }
         return books;
     }
-}
+
+    public ArrayList<Book> getPopularBooks() {
+        ArrayList<Book> books = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             Statement stmt = conn.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery(
+                            """
+            SELECT b.id, b.title, b.isbn, b.year_published, b.total_copies, b.available_copies, bd.summary, bd.language, bd.page_count, COUNT(loans.book_id) AS loan_count FROM bo
+                                 JOIN book_descriptions bd ON bd.book_id
+                                 JOIN loans ON loans.book_id
+                                 GROUP BY b.id ORDER BY loan_count DESC LIM
+                                 """);
+
+            while (rs.next()) {
+                books.add(new Book(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("isbn"),
+                        rs.getInt("year_published"),
+                        rs.getInt("total_copies"),
+                        rs.getInt("available_copies"),
+                        rs.getString("summary"),
+                        rs.getString("language"),
+                        rs.getInt("page_count"),
+                        new ArrayList<>(),
+                        new ArrayList<>()
+                ));
+                }
+
+            } catch (SQLException e) {
+            System.out.println("SQL-fel: " + e.getMessage());
+        }
+        return books;
+    }
+
+    //sök efter en bok via boktitel/beskrivning
+    public ArrayList<Book> searchBook(String searchTerm) {
+        ArrayList<Book> books = new ArrayList<>();
+        String search = "%" + searchTerm + "%";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("""
+            SELECT * FROM books b JOIN book_descriptions bd ON bd.book_id=b.id WHERE title LIKE ? OR summary LIKE ?
+
+""")){
+            stmt.setString(1, search);
+            stmt.setString(2, search);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                books.add(new Book(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("isbn"),
+                        rs.getInt("year_published"),
+                        rs.getInt("total_copies"),
+                        rs.getInt("available_copies"),
+                        rs.getString("summary"),
+                        rs.getString("language"),
+                        rs.getInt("page_count"),
+                        new ArrayList<>(),
+                        new ArrayList<>()
+                ));
+
+            }
+            } catch (SQLException e){
+                throw new RuntimeException(e);
+            }
+        return books;
+        }
+        }

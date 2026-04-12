@@ -1,11 +1,14 @@
 
+import book.BookController;
+
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        MainController mainController = new MainController();
+        //MainController mainController = new MainController();
+        BookController bookController = new BookController();
         boolean active = true;
 
         while (active) {
@@ -17,11 +20,13 @@ public class Main {
 
             switch (choice) {
                 case 1: {
-                    mainController.memberLogIn();
+                    bookController.memberBookMenu();
+
+                   // mainController.memberLogIn();
                     break;
                 }
                 case 2: {
-                    mainController.adminMainMenu();
+                    //mainController.adminMainMenu();
                     break;
                 }
                 case 0: {

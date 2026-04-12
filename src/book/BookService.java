@@ -40,4 +40,30 @@ public class BookService {
         return dtos;
     }
 
+    //lägger till author och category samt gör om till dtos.
+    public ArrayList<BookInfoDTO> getPopularBooks() {
+        ArrayList<BookInfoDTO> dtos = new ArrayList<>();
+        ArrayList<Book> books = bookRepository.getPopularBooks();
+        for (Book b : books) {
+            ArrayList<Author> authors = authorRepository.findAuthorsByBookId(b.getId());
+            ArrayList<Category> categories = categoryRepository.findCategoriesByBookId(b.getId());
+            BookInfoDTO bookInfoDTO = new BookInfoDTO(b.getId(), b.getTitle(), b.getYearPublished(), b.getAvailableCopies(), b.getSummary(), authors, categories);
+            dtos.add(bookInfoDTO);
+        }
+        return dtos;
+    }
+
+    //lägger till author och category samt gör om till dtos.
+    public ArrayList<BookInfoDTO> searchBook(String search) {
+        ArrayList<BookInfoDTO> dtos = new ArrayList<>();
+        ArrayList<Book> books = bookRepository.searchBook(search);
+        for (Book b : books) {
+            ArrayList<Author> authors = authorRepository.findAuthorsByBookId(b.getId());
+            ArrayList<Category> categories = categoryRepository.findCategoriesByBookId(b.getId());
+            BookInfoDTO bookInfoDTO = new BookInfoDTO(b.getId(), b.getTitle(), b.getYearPublished(), b.getAvailableCopies(), b.getSummary(), authors, categories);
+            dtos.add(bookInfoDTO);
+        }
+        return dtos;
+    }
+
 }
