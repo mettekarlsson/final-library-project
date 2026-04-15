@@ -53,6 +53,10 @@ public class BookService {
         return mapToDTO(bookRepository.searchBook(search));
     }
 
+    public ArrayList<BookInfoDTO> filterBooksByCategory(int categoryId) {
+        return mapToDTO(bookRepository.filterBooksByCategory(categoryId));
+    }
+
     //kallar på sökfunktionen i authorrepository genom mapperklassen - används i addbook
     public ArrayList<AuthorInfoDTO> searchAuthor(String search) {
         return authorMapper.mapToDTO(authorRepository.searchAuthor(search));

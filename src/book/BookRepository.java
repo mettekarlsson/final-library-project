@@ -117,6 +117,43 @@ public class BookRepository {
         return books;
         }
 
+        //filtrera böcker via kategori
+    public ArrayList<Book> filterBooksByCategory(int categoryId) {
+        ArrayList<Book> booksByCategory = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+            PreparedStatement stmt = conn.prepareStatement("""
+            SELECT * FROM books b
+            JOIN book_descriptions bd ON bd.book_id=b.id
+            JOIN book_categories bc ON bc.book_id=b.id
+            JOIN categories c ON bc.category_id=c.id
+            WHERE c.id = ?
+            """)) {
+                stmt.setInt(1, categoryId);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    booksByCategory.add(new Book(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getString("isbn"),
+                            rs.getInt("year_published"),
+                            rs.getInt("total_copies"),
+                            rs.getInt("available_copies"),
+                            rs.getString("summary"),
+                            rs.getString("language"),
+                            rs.getInt("page_count"),
+                            new ArrayList<>(),
+                            new ArrayList<>()
+                    ));
+                }
+            } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } return booksByCategory;
+    }
+
+
+
+
     public String addBook(NewBookDTO newBookDTO) throws SQLException {
 
         //insert books-info, få tillbaka nya book-id

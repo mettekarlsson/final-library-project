@@ -22,6 +22,7 @@ public class BookController {
             System.out.println("2. Show all available books");
             System.out.println("3. Show top ten most popular books");
             System.out.println("4. Search book");
+            System.out.println("5. Filter books by category");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -42,6 +43,11 @@ public class BookController {
 
                 case 4: {
                     searchBook();
+                    break;
+                }
+
+                case 5: {
+                    filterBooksByCategory();
                     break;
                 }
                 case 0: {
@@ -81,6 +87,21 @@ public class BookController {
     public void searchBook() {
         System.out.println("Search for a book:");
         ArrayList<BookInfoDTO> books = bookService.searchBook(scanner.nextLine());
+        for (BookInfoDTO b : books) {
+            System.out.println(b);
+        }
+    }
+
+    //case 5
+    public void filterBooksByCategory() {
+        System.out.println("--- All categories ---");
+        ArrayList<Category> categories = bookService.getAllCategories();
+        for (Category c : categories) {
+            System.out.println(c);
+        }
+        System.out.println("Choose which category(id) to look at:");
+        int categoryId = Integer.parseInt(scanner.nextLine());
+        ArrayList<BookInfoDTO> books = bookService.filterBooksByCategory(categoryId);
         for (BookInfoDTO b : books) {
             System.out.println(b);
         }
