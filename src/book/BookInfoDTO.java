@@ -85,10 +85,10 @@ public class BookInfoDTO {
     @Override
     public String toString() {
         return "Book-id:" + id +
-                ", Title: '" + title +
+                ", Title: '" + title + "'" +
                 ", Year Published: " + yearPublished +
                 ", Available Copies: " + availableCopies +
-                ", Summary: '" + summary +
+                ", Summary: '" + summary + "'" +
                 ", Author/s: " + authors +
                 ", Categories: " + categories;
     }

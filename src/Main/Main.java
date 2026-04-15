@@ -1,3 +1,4 @@
+package Main;
 
 import book.BookController;
 
@@ -8,7 +9,7 @@ public class Main {
     public static void main(String[] args) throws SQLException {
 
         Scanner scanner = new Scanner(System.in);
-        //MainController mainController = new MainController();
+        MainController mainController = new MainController();
         BookController bookController = new BookController();
         boolean active = true;
 
@@ -21,14 +22,11 @@ public class Main {
 
             switch (choice) {
                 case 1: {
-                    bookController.memberBookMenu();
-
-                   // mainController.memberLogIn();
+                    mainController.memberLogIn();
                     break;
                 }
                 case 2: {
-                    bookController.adminBookMenu();
-                    //mainController.adminMainMenu();
+                    mainController.adminMainMenu();
                     break;
                 }
                 case 0: {

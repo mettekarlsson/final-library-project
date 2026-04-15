@@ -1,28 +1,22 @@
 package member;
 
-import java.time.LocalDate;
-
-public class Member {
+public class MemberInfoDTO {
 
     private int id;
     private String firstName;
     private String lastName;
     private String email;
-    private LocalDate membershipDate;
     private String membershipType;
     private String status;
-    private String password;
 
-    public Member(int id, String firstName, String lastName, String email,
-                  LocalDate membershipDate, String membershipType, String status, String password) {
+    public MemberInfoDTO(int id, String firstName, String lastName, String email,
+                         String membershipType, String status) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.membershipDate = membershipDate;
         this.membershipType = membershipType;
         this.status = status;
-        this.password = password;
     }
 
     public int getId() {
@@ -57,14 +51,6 @@ public class Member {
         this.email = email;
     }
 
-    public LocalDate getMembershipDate() {
-        return membershipDate;
-    }
-
-    public void setMembershipDate(LocalDate membershipDate) {
-        this.membershipDate = membershipDate;
-    }
-
     public String getMembershipType() {
         return membershipType;
     }
@@ -81,11 +67,13 @@ public class Member {
         this.status = status;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String toString() {
+        return "Member-ID: " + id +
+                ", First Name: '" + firstName + '\'' +
+                ", Last Name: '" + lastName + '\'' +
+                ", Email: '" + email + '\'' +
+                ", Membership Type: '" + membershipType + '\'' +
+                ", Status: '" + status + "'";
     }
 }
