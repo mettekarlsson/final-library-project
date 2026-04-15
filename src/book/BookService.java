@@ -91,4 +91,13 @@ public class BookService {
         bookRepository.deleteBook(bookId);
     }
 
+
+    public String addCategoryToBook(int bookId, int categoryId) {
+        return bookRepository.addCategoryToBook(bookId, categoryId);
+    }
+
+    public ArrayList<BookInfoDTO> getBookById(int bookId) {
+        return mapToDTO(bookRepository.getBookById(bookId));
+    }
+
 }

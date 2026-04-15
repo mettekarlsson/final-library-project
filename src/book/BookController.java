@@ -114,6 +114,7 @@ public class BookController {
             System.out.println("1. Add book");
             System.out.println("2. Update book");
             System.out.println("3. Delete book");
+            System.out.println("4. Add category to book");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -128,6 +129,10 @@ public class BookController {
                 }
                 case 3: {
                     deleteBook();
+                    break;
+                }
+                case 4: {
+                    addCategoryToBook();
                     break;
                 }
                 case 0: {
@@ -302,6 +307,24 @@ public class BookController {
         bookService.deleteBook(bookId);
 
         System.out.println("Book #" + bookId + " has been deleted.");
+    }
+
+    //case 4 admin
+    public void addCategoryToBook() {
+        System.out.println("Enter the book-id:");
+        int bookId = Integer.parseInt(scanner.nextLine());
+        ArrayList<BookInfoDTO> books = bookService.getBookById(bookId);
+        for (BookInfoDTO b : books) {
+            System.out.println(b);
+        }
+        ArrayList<Category> categories = bookService.getAllCategories();
+        for (Category c : categories) {
+            System.out.println(c);
+        }
+        System.out.println("Enter the category-id:");
+        int categoryId = Integer.parseInt(scanner.nextLine());
+        String result = bookService.addCategoryToBook(bookId, categoryId);
+        System.out.println(result);
     }
 }
 

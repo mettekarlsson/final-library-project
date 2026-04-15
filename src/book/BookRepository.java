@@ -151,6 +151,37 @@ public class BookRepository {
         } return booksByCategory;
     }
 
+    public ArrayList<Book> getBookById(int bookId) {
+        ArrayList<Book> book = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
+            PreparedStatement stmt = conn.prepareStatement("""
+            SELECT * FROM books b
+            JOIN book_descriptions bd ON bd.book_id=b.id
+            WHERE b.id=?
+""");
+            stmt.setInt(1, bookId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                book.add(new Book(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("isbn"),
+                        rs.getInt("year_published"),
+                        rs.getInt("total_copies"),
+                        rs.getInt("available_copies"),
+                        rs.getString("summary"),
+                        rs.getString("language"),
+                        rs.getInt("page_count"),
+                        new ArrayList<>(),
+                        new ArrayList<>()
+                ));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return book;
+    }
 
 
 
@@ -285,5 +316,20 @@ public class BookRepository {
         } catch (SQLException e) {
             System.out.println("Fel: " + e.getMessage());
         }
+    }
+
+    //add a category to a book
+    public String addCategoryToBook(int bookId, int categoryId) {
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("""
+                     INSERT INTO book_categories (book_id, category_id) VALUES (?, ?)
+                     """)) {
+            stmt.setInt(1, bookId);
+            stmt.setInt(2, categoryId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }  return "Category with id # " + categoryId + " has been added to Book with id #" + bookId;
     }
 }
