@@ -1,16 +1,20 @@
 package book;
 
 import author.Author;
+import author.AuthorInfoDTO;
+import author.AuthorMapper;
 import author.AuthorRepository;
 import category.Category;
 import category.CategoryRepository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class BookService {
     BookRepository bookRepository = new BookRepository();
     AuthorRepository authorRepository = new AuthorRepository();
     CategoryRepository categoryRepository = new CategoryRepository();
+    AuthorMapper authorMapper = new AuthorMapper();
 
     //metod som lägger till author, category och gör om till dto
     public ArrayList<BookInfoDTO> mapToDTO(ArrayList<Book> books) {
@@ -47,6 +51,27 @@ public class BookService {
 
     public ArrayList<BookInfoDTO> searchBook(String search) {
         return mapToDTO(bookRepository.searchBook(search));
+    }
+
+    //kallar på sökfunktionen i authorrepository genom mapperklassen - används i addbook
+    public ArrayList<AuthorInfoDTO> searchAuthor(String search) {
+        return authorMapper.mapToDTO(authorRepository.searchAuthor(search));
+    }
+
+    public Author getAuthorById(int authorId) {
+        return authorRepository.findAuthorById(authorId);
+    }
+
+    public ArrayList<Category> getAllCategories() {
+        return categoryRepository.getAllCategories();
+    }
+
+    public Category getCategoryById(int categoryId) {
+        return categoryRepository.getCategoryById(categoryId);
+    }
+
+    public String addBook(NewBookDTO newBookDTO) throws SQLException {
+        return bookRepository.addBook(newBookDTO);
     }
 
     public void editBook(int bookId, String column, String value) {

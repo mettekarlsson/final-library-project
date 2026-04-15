@@ -117,6 +117,95 @@ public class BookRepository {
         return books;
         }
 
+    public String addBook(NewBookDTO newBookDTO) throws SQLException {
+
+        //insert books-info, få tillbaka nya book-id
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
+
+
+            PreparedStatement stmt = conn.prepareStatement("""
+        INSERT INTO books (title, isbn, year_published, total_copies, available_copies) VALUES (?, ?, ?, ?, ?)
+        """, Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, newBookDTO.getTitle());
+            stmt.setString(2, newBookDTO.getIsbn());
+            stmt.setInt(3, newBookDTO.getYearPublished());
+            stmt.setInt(4, newBookDTO.getTotalCopies());
+            stmt.setInt(5, newBookDTO.getAvailableCopies());
+            stmt.executeUpdate();
+
+            ResultSet generatedBookKey = stmt.getGeneratedKeys();
+            int bookId = 0;
+            if (generatedBookKey.next()) {
+                bookId = generatedBookKey.getInt(1);
+            }
+
+            //insert book_descriptions info
+            PreparedStatement bdStmt = conn.prepareStatement("""
+                INSERT INTO book_descriptions (book_id, summary, language, page_count) VALUES (?, ?, ?, ?)
+            """);
+            bdStmt.setInt(1, bookId);
+            bdStmt.setString(2, newBookDTO.getSummary());
+            bdStmt.setString(3, newBookDTO.getLanguage());
+            bdStmt.setInt(4, newBookDTO.getPageCount());
+
+            bdStmt.executeUpdate();
+
+            //insert book_authors info, eventuellt authors - isåfall ta emot nya id:et och lägger sen till
+            int authorId = 0;
+            for (Author a : newBookDTO.getAuthors()) {
+                authorId = a.getId();
+
+                if (authorId == 0) {
+                    PreparedStatement authorStmt = conn.prepareStatement("""
+                    INSERT INTO authors (first_name, last_name, nationality, birth_date) VALUES (?, ?, ?, ?)
+                """, Statement.RETURN_GENERATED_KEYS);
+                        authorStmt.setString(1, a.getFirstName());
+                        authorStmt.setString(2, a.getLastName());
+                        authorStmt.setString(3, a.getNationality());
+                        authorStmt.setDate(4, Date.valueOf(a.getBirthDate()));
+                        authorStmt.executeUpdate();
+                        ResultSet rs = authorStmt.getGeneratedKeys();
+                        if (rs.next()) {
+                            authorId = rs.getInt(1);
+                    }
+                        PreparedStatement adStmt = conn.prepareStatement("""
+                                INSERT INTO author_descriptions (author_id, biography, website) VALUES (?, ?, ?) 
+                                """);
+                        adStmt.setInt(1, authorId);
+                        adStmt.setString(2, a.getBiography());
+                        adStmt.setString(3, a.getWebsite());
+                        adStmt.executeUpdate();
+                }
+                //insert i book-categories
+                PreparedStatement baStmt = conn.prepareStatement("""
+                   INSERT INTO book_authors (book_id, author_id) VALUES (?, ?)
+                    """);
+                baStmt.setInt(1, bookId);
+                baStmt.setInt(2, authorId);
+                baStmt.executeUpdate();
+
+
+            }
+            int categoryId = 0;
+            for (Category c : newBookDTO.getCategories()) {
+                categoryId = c.getId();
+
+                PreparedStatement bcStmt = conn.prepareStatement("""
+                INSERT INTO book_categories (book_id, category_id) VALUES (?, ?)
+                """);
+                bcStmt.setInt(1, bookId);
+                bcStmt.setInt(2, categoryId);
+                bcStmt.executeUpdate();
+
+            }
+            return "Bok med id #" + bookId + " har lagts till";
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+
+        }
+    }
+
         //redigera en bok där kolumnen du redigerar är ett string värde
     public void editBook(int bookId, String column, String value) {
 
@@ -160,4 +249,4 @@ public class BookRepository {
             System.out.println("Fel: " + e.getMessage());
         }
     }
-        }
+}

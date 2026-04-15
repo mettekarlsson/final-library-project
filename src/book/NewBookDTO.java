@@ -5,33 +5,32 @@ import category.Category;
 
 import java.util.ArrayList;
 
-public class BookInfoDTO {
+public class NewBookDTO {
 
-    private int id;
     private String title;
+    private String isbn;
     private int yearPublished;
+    private int totalCopies;
     private int availableCopies;
     private String summary;
+    private String language;
+    private int pageCount;
     private ArrayList<Author> authors;
     private ArrayList<Category> categories;
 
-    public BookInfoDTO(int id, String title, int yearPublished, int availableCopies, String summary,
-                       ArrayList<Author> authors, ArrayList<Category> categories) {
-        this.id = id;
+    public NewBookDTO(String title, String isbn, int yearPublished, int totalCopies,
+                      int availableCopies, String summary, String language, int pageCount,
+                      ArrayList<Author> authors, ArrayList<Category> categories) {
         this.title = title;
+        this.isbn = isbn;
         this.yearPublished = yearPublished;
+        this.totalCopies = totalCopies;
         this.availableCopies = availableCopies;
         this.summary = summary;
+        this.language = language;
+        this.pageCount = pageCount;
         this.authors = authors;
         this.categories = categories;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -42,12 +41,28 @@ public class BookInfoDTO {
         this.title = title;
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
     public int getYearPublished() {
         return yearPublished;
     }
 
     public void setYearPublished(int yearPublished) {
         this.yearPublished = yearPublished;
+    }
+
+    public int getTotalCopies() {
+        return totalCopies;
+    }
+
+    public void setTotalCopies(int totalCopies) {
+        this.totalCopies = totalCopies;
     }
 
     public int getAvailableCopies() {
@@ -66,6 +81,22 @@ public class BookInfoDTO {
         this.summary = summary;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public int getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
     public ArrayList<Author> getAuthors() {
         return authors;
     }
@@ -80,16 +111,5 @@ public class BookInfoDTO {
 
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
-    }
-
-    @Override
-    public String toString() {
-        return "Book-id:" + id +
-                ", Title: '" + title +
-                ", Year Published: " + yearPublished +
-                ", Available Copies: " + availableCopies +
-                ", Summary: '" + summary +
-                ", Author/s: " + authors +
-                ", Categories: " + categories;
     }
 }

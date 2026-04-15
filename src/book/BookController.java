@@ -1,9 +1,11 @@
 package book;
+import author.Author;
+import author.AuthorInfoDTO;
+import author.newAuthorDTO;
+import category.Category;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -84,9 +86,10 @@ public class BookController {
         }
     }
 
-    public void adminBookMenu() {
+    public void adminBookMenu() throws SQLException {
         boolean active = true;
         while (active) {
+            System.out.println("---- Book Menu ----");
             System.out.println("1. Add book");
             System.out.println("2. Update book");
             System.out.println("3. Delete book");
@@ -95,7 +98,7 @@ public class BookController {
 
             switch (choice) {
                 case 1: {
-                    //addBook();
+                    addBook();
                     break;
                 }
                 case 2: {
@@ -114,27 +117,109 @@ public class BookController {
         }
     }
 
-    //case 1
-//    public void addBook() {
-//        System.out.println("Skriv in titeln på boken:");
-//        String title = scanner.nextLine();
-//        System.out.println("Skriv in isbn för boken:");
-//        String isbn = scanner.nextLine();
-//        System.out.println("Skriv in vilket år boken publicerades:");
-//        int yearPublished = Integer.parseInt(scanner.nextLine());
-//        System.out.println("Skriv in totalt antal kopior av boken:");
-//        int totalCopies = Integer.parseInt(scanner.nextLine());
-//        System.out.println("Skriv in antal tillgängliga kopior av boken:");
-//        int availableCopies = Integer.parseInt(scanner.nextLine());
-//
-//        Book book = new Book(title, isbn, yearPublished, totalCopies, availableCopies);
-//
-//        bookService.addBook(book);
-//    }
+    //case 1 admin
+    public void addBook() throws SQLException {
+        ArrayList<Author> bookAuthors = new ArrayList<>();
+        ArrayList<Category> bookCategories = new ArrayList<>();
+
+        System.out.println("Enter the book-title:");
+        String title = scanner.nextLine();
+        System.out.println("Enter the ISBN:");
+        String isbn = scanner.nextLine();
+        System.out.println("Enter the publishing year:");
+        int yearPublished = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter the total number of copies:");
+        int totalCopies = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter the available number of copies:");
+        int availableCopies = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter the summary:");
+        String summary = scanner.nextLine();
+        System.out.println("Enter the language:");
+        String language = scanner.nextLine();
+        System.out.println("Enter the page count:");
+        int pageCount = Integer.parseInt(scanner.nextLine());
+
+
+        boolean addAuthor = true;
+        while (addAuthor) {
+            System.out.println("1. Choose existing author");
+            System.out.println("2. Add new author");
+
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1: {
+                    System.out.println("Search for an author:");
+                    String authorSearch = scanner.nextLine();
+                    ArrayList<AuthorInfoDTO> authors = bookService.searchAuthor(authorSearch);
+                    for (AuthorInfoDTO a : authors) {
+                        System.out.println(a);
+                    }
+                    System.out.println("Enter the author-id:");
+                    int authorId = Integer.parseInt(scanner.nextLine());
+
+                    Author author = bookService.getAuthorById(authorId);
+                    bookAuthors.add(author);
+                    break;
+                }
+                case 2: {
+                    System.out.println("Enter their first name:");
+                    String firstName = scanner.nextLine();
+                    System.out.println("Enter their last name:");
+                    String lastName = scanner.nextLine();
+                    System.out.println("Enter their nationality:");
+                    String nationality = scanner.nextLine();
+                    System.out.println("Enter their birth date:");
+                    LocalDate birthDate = LocalDate.parse(scanner.nextLine());
+                    System.out.println("Enter their biography:");
+                    String biography = scanner.nextLine();
+                    System.out.println("Enter their website:");
+                    String website = scanner.nextLine();
+                    Author author = new Author(0, firstName, lastName, nationality, birthDate, biography, website);
+                    bookAuthors.add(author);
+                    break;
+                }
+            }
+            System.out.println("Do you want to add another author? Y/N");
+            String again = scanner.nextLine();
+            if (!again.equalsIgnoreCase("Y")) {
+                addAuthor = false;
+            }
+
+        }
+        System.out.println("See all categories:");
+        ArrayList<Category> categories = bookService.getAllCategories();
+        for (Category c : categories) {
+            System.out.println(c);
+        }
+        boolean addCategory = true;
+        while (addCategory) {
+            System.out.println("Enter the category-id:");
+            int categoryId = Integer.parseInt(scanner.nextLine());
+
+            Category category = bookService.getCategoryById(categoryId);
+            if (category != null) {
+                bookCategories.add(category);
+            } else {
+                System.out.println("Category not found: " + categoryId);
+            }
+
+            System.out.println("Add another category? (Y/N)");
+            String again = scanner.nextLine();
+            if (!again.equalsIgnoreCase("Y")) {
+                addCategory = false;
+            }
+        }
+
+        NewBookDTO newBookDTO = new NewBookDTO(title, isbn, yearPublished, totalCopies, availableCopies,
+                summary, language, pageCount, bookAuthors, bookCategories);
+        String result = bookService.addBook(newBookDTO);
+        System.out.println(result);
+    }
 
 
     //case 2 admin
     public void editBook() {
+        ArrayList<Author> bookAuthors = new ArrayList<>();
         System.out.println("Enter the book ID:");
         int bookId = Integer.parseInt(scanner.nextLine());
         boolean active = true;
