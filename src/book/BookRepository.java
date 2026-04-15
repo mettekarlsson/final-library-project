@@ -117,8 +117,38 @@ public class BookRepository {
         return books;
         }
 
+        //redigera en bok där kolumnen du redigerar är ett string värde
+    public void editBook(int bookId, String column, String value) {
 
-    //ta bort en bok
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE books SET " + column + " = ? WHERE id = ?")) {
+
+            stmt.setString(1, value);
+            stmt.setInt(2, bookId);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    //redigera en bok där kolumnen du redigerar är ett int värde
+    public void editBook(int bookId, String column, int value) {
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE books SET " + column + " = ? WHERE id = ?")) {
+
+            stmt.setInt(1, value);
+            stmt.setInt(2, bookId);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+        //ta bort en bok
     public void deleteBook(int bookId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);

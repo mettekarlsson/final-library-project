@@ -1,5 +1,9 @@
 package book;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -95,7 +99,7 @@ public class BookController {
                     break;
                 }
                 case 2: {
-                    //editBook();
+                    editBook();
                     break;
                 }
                 case 3: {
@@ -129,12 +133,70 @@ public class BookController {
 //    }
 
 
-    //case 3 admin
-    public void deleteBook() {
+    //case 2 admin
+    public void editBook() {
+        System.out.println("Enter the book ID:");
+        int bookId = Integer.parseInt(scanner.nextLine());
+        boolean active = true;
+
+        while (active) {
+            System.out.println("Choose what to update");
+            System.out.println("1. Title");
+            System.out.println("2. ISBN");
+            System.out.println("3. Year Published");
+            System.out.println("4. Total copies");
+            System.out.println("5. Available copies");
+            System.out.println("0. Return");
+
+            int choice = Integer.parseInt(scanner.nextLine());
+
+            switch (choice) {
+                case 1: {
+                    System.out.println("Enter the new title:");
+                    String bookTitle = scanner.nextLine();
+                    bookService.editBook(bookId, "title", bookTitle);
+                    break;
+                }
+                case 2: {
+                    System.out.println("Enter the new ISBN:");
+                    String isbn = scanner.nextLine();
+                    bookService.editBook(bookId, "isbn", isbn);
+                    break;
+                }
+                case 3: {
+                    System.out.println("Enter the new publishing year:");
+                    int yearPublished = Integer.parseInt(scanner.nextLine());
+                    bookService.editBook(bookId, "year_published", yearPublished);
+                    break;
+                }
+                case 4: {
+                    System.out.println("Enter the new number of total copies:");
+                    int totalCopies = Integer.parseInt(scanner.nextLine());
+                    bookService.editBook(bookId, "total_copies", totalCopies);
+                    break;
+                }
+                case 5: {
+                    System.out.println("Enter the new number of available copies:");
+                    int availableCopies = Integer.parseInt(scanner.nextLine());
+                    bookService.editBook(bookId, "available_copies", availableCopies);
+                    break;
+                }
+                case 0: {
+                    active = false;
+                    break;
+                }
+            }
+        }
+    }
+
+            //case 3 admin
+        public void deleteBook() {
         System.out.println("Enter the book ID:");
         int bookId = Integer.parseInt(scanner.nextLine());
         bookService.deleteBook(bookId);
+
         System.out.println("Book #" + bookId + " has been deleted.");
     }
-
 }
+
+

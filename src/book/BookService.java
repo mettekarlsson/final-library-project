@@ -49,6 +49,14 @@ public class BookService {
         return mapToDTO(bookRepository.searchBook(search));
     }
 
+    public void editBook(int bookId, String column, String value) {
+        bookRepository.editBook(bookId, column, value);
+    }
+
+    public void editBook(int bookId, String column, int value) {
+        bookRepository.editBook(bookId, column, value);
+    }
+
     //bara ett mellansteg
     public void deleteBook(int bookId) {
         bookRepository.deleteBook(bookId);
