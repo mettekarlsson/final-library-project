@@ -99,7 +99,7 @@ public class BookController {
                     break;
                 }
                 case 3: {
-                    //deleteBook();
+                    deleteBook();
                     break;
                 }
                 case 0: {
@@ -128,5 +128,13 @@ public class BookController {
 //        bookService.addBook(book);
 //    }
 
+
+    //case 3 admin
+    public void deleteBook() {
+        System.out.println("Enter the book ID:");
+        int bookId = Integer.parseInt(scanner.nextLine());
+        bookService.deleteBook(bookId);
+        System.out.println("Book #" + bookId + " has been deleted.");
+    }
 
 }

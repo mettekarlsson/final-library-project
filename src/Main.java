@@ -26,6 +26,7 @@ public class Main {
                     break;
                 }
                 case 2: {
+                    bookController.adminBookMenu();
                     //mainController.adminMainMenu();
                     break;
                 }

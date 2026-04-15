@@ -49,4 +49,9 @@ public class BookService {
         return mapToDTO(bookRepository.searchBook(search));
     }
 
+    //bara ett mellansteg
+    public void deleteBook(int bookId) {
+        bookRepository.deleteBook(bookId);
+    }
+
 }

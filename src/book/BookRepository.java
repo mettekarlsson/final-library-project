@@ -116,4 +116,18 @@ public class BookRepository {
             }
         return books;
         }
+
+
+    //ta bort en bok
+    public void deleteBook(int bookId) {
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM books WHERE id = ?")) {
+            stmt.setInt(1, bookId);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Fel: " + e.getMessage());
+        }
+    }
         }
