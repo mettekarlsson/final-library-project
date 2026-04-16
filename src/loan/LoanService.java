@@ -1,9 +1,7 @@
 package loan;
 
-import author.Author;
 import book.Book;
 import book.BookRepository;
-import category.Category;
 import member.Member;
 import member.MemberRepository;
 
@@ -27,5 +25,20 @@ public class LoanService {
 
     public ArrayList<LoanInfoDTO> getAllLoansByMemberId(int memberId) {
         return mapToLoanDTO(loanRepository.getAllLoansByMemberId(memberId));
+    }
+
+    public ArrayList<LoanInfoDTO> getAllCurrentLoans(int memberId) {
+        ArrayList<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
+        ArrayList<Loan> currentLoans = new ArrayList<>();
+        for (Loan l : loans) {
+            if (l.getReturnDate() == null) {
+                currentLoans.add(l);
+            }
+        }
+        return mapToLoanDTO(currentLoans);
+    }
+
+    public String extendLoan(int loanId) {
+        return loanRepository.extendLoan(loanId);
     }
 }

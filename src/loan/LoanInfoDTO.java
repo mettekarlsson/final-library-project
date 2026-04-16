@@ -61,7 +61,7 @@ public class LoanInfoDTO {
 
     @Override
     public String toString() {
-        return "Loan-ID" + id +
+        return "Loan-ID: " + id +
                 ", Book Title: '" + bookTitle + "'" +
                 ", Loan Date: " + loanDate +
                 ", Due Date: " + dueDate +

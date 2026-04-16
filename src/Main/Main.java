@@ -1,7 +1,5 @@
 package Main;
 
-import book.BookController;
-
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -10,7 +8,7 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         MainController mainController = new MainController();
-        BookController bookController = new BookController();
+
         boolean active = true;
 
         while (active) {

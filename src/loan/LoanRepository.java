@@ -44,4 +44,21 @@ public class LoanRepository {
         }
         return loans;
     }
+
+    public String extendLoan(int loanId) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+            PreparedStatement stmt = conn.prepareStatement("""
+                   UPDATE loans
+                   SET due_date = DATE_ADD(due_date, INTERVAL 14 DAY) 
+                   WHERE id=?
+                   """)) {
+            stmt.setInt(1, loanId);
+            stmt.executeUpdate();
+
+            return "Your loan #" + loanId + " has been extended.";
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
