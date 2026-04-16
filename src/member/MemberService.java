@@ -37,4 +37,8 @@ public class MemberService {
     public ArrayList<MemberInfoDTO> getAllMembers() {
         return mapToMemberDTO(memberRepository.getAllMembers());
     }
+
+    public String addNewMember(NewMemberDTO member) {
+        return memberRepository.addNewMember(member);
+    }
 }

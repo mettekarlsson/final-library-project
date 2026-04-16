@@ -97,4 +97,31 @@ public class MemberRepository {
         }
         return null;
     }
+
+    public String addNewMember(NewMemberDTO member) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("INSERT INTO members (first_name, last_name, email, membership_date, membership_type, status, password)  VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, member.getFirstName());
+            stmt.setString(2, member.getLastName());
+            stmt.setString(3, member.getEmail());
+            stmt.setDate(4, java.sql.Date.valueOf(member.getMembershipDate()));
+            stmt.setString(5, member.getMembershipType());
+            stmt.setString(6, member.getStatus());
+            stmt.setString(7, member.getPassword());
+
+            stmt.executeUpdate();
+            ResultSet generatedMemberKey = stmt.getGeneratedKeys();
+
+            int memberId = 0;
+            if (generatedMemberKey.next()) {
+                memberId = generatedMemberKey.getInt(1);
+            }
+
+            return "Member with ID #" + memberId + " has been added.";
+
+        } catch (SQLException e) {
+            System.out.println("Fel: " + e.getMessage());
+        }
+        return null;
+    }
 }
