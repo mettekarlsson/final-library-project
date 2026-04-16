@@ -1,5 +1,7 @@
 package loan;
 
+import com.mysql.cj.x.protobuf.MysqlxPrepare;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -57,6 +59,22 @@ public class LoanRepository {
 
             return "Your loan #" + loanId + " has been extended.";
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String returnLoan(int loanId) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("""
+            UPDATE loans
+            SET return_date = CURDATE()
+            WHERE id=?
+            """)) {
+            stmt.setInt(1, loanId);
+            stmt.executeUpdate();
+
+            return "Your loan #" + loanId + " has been returned.";
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

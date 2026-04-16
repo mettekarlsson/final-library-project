@@ -41,4 +41,8 @@ public class LoanService {
     public String extendLoan(int loanId) {
         return loanRepository.extendLoan(loanId);
     }
+
+    public String returnLoan(int loanId) {
+        return loanRepository.returnLoan(loanId);
+    }
 }

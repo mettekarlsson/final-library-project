@@ -37,7 +37,7 @@ public class LoanController {
                     break;
                 }
                 case 4: {
-                    //loanService.returnLoan();
+                    returnLoan();
                     break;
                 }
                 case 5: {
@@ -74,6 +74,14 @@ public class LoanController {
         System.out.println("Which loan(id) would you like to extend?");
         int loanId = Integer.parseInt(scanner.nextLine());
         String result = loanService.extendLoan(loanId);
+        System.out.println(result);
+    }
+
+    //case 4
+    public void returnLoan() {
+        System.out.println("Which loan(id) would you like to return?");
+        int loanId = Integer.parseInt(scanner.nextLine());
+        String result = loanService.returnLoan(loanId);
         System.out.println(result);
     }
 
