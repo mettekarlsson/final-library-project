@@ -8,19 +8,22 @@ import java.time.LocalDate;
 public class Loan {
 
     private int id;
+    private int bookId;
+    private int memberId;
     private Book book;
     private Member member;
     private LocalDate loanDate;
     private LocalDate dueDate;
     private LocalDate returnDate;
 
-    //behövs för att hämta info om book och member när man först får loanobjektet
-    private int bookId;
-    private int memberId;
+    //bookid o memberid behövs för att hämta info om book och member när man först får loanobjektet
 
-    public Loan(int id, Book book, Member member, LocalDate loanDate,
+
+    public Loan(int id, int bookId, int memberId, Book book, Member member, LocalDate loanDate,
                 LocalDate dueDate, LocalDate returnDate) {
         this.id = id;
+        this.bookId = bookId;
+        this.memberId = memberId;
         this.book = book;
         this.member = member;
         this.loanDate = loanDate;

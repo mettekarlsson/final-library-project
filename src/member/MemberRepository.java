@@ -1,5 +1,7 @@
 package member;
 
+import book.Book;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -152,5 +154,36 @@ public class MemberRepository {
             System.out.println("Fel: " + e.getMessage());
         }
         return null;
+    }
+
+    //for loanservice, to add member-info into loan-object
+    public Member findMemberByLoanId(int loanId) {
+        Member member = null;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("""
+            SELECT * FROM members m
+                JOIN loans l ON l.member_id=m.id
+                     WHERE l.id=?
+            """)) {
+            stmt.setInt(1, loanId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                member = new Member
+                        (rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("email"),
+                        rs.getDate("membership_date").toLocalDate(),
+                        rs.getString("membership_type"),
+                        rs.getString("status"),
+                        rs.getString("password"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL-FEL: " + e.getMessage());
+        }
+        return member;
     }
 }

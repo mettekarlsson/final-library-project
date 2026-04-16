@@ -332,4 +332,41 @@ public class BookRepository {
             throw new RuntimeException(e);
         }  return "Category with id # " + categoryId + " has been added to Book with id #" + bookId;
     }
+
+    //for loanservice, to add book-info into loan-object
+    public Book findBookByLoanId(int loanId) {
+        Book book = null;
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("""
+            SELECT * FROM books b
+                JOIN loans l ON l.book_id=b.id
+                JOIN book_descriptions bd ON bd.book_id=b.id
+                     WHERE l.id=?
+            """)) {
+            stmt.setInt(1, loanId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                book = new Book(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("isbn"),
+                        rs.getInt("year_published"),
+                        rs.getInt("total_copies"),
+                        rs.getInt("available_copies"),
+                        rs.getString("summary"),
+                        rs.getString("language"),
+                        rs.getInt("page_count"),
+                        new ArrayList<>(),
+                        new ArrayList<>()
+
+                );
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL-FEL: " + e.getMessage());
+        }
+        return book;
+    }
 }

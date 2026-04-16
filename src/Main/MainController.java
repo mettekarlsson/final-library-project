@@ -1,6 +1,7 @@
 package Main;
 
 import book.BookController;
+import loan.LoanController;
 import member.Member;
 import member.MemberController;
 import member.MemberService;
@@ -15,6 +16,7 @@ public class MainController {
     BookController bookController = new BookController();
     MemberController memberController = new MemberController();
     MemberService memberService = new MemberService();
+    LoanController loanController = new LoanController();
 
 
     public void memberLogIn() {
@@ -53,7 +55,7 @@ public class MainController {
                     break;
                 }
                 case 2: {
-                    //loanController.memberLoanMenu();
+                    loanController.memberLoanMenu();
                     break;
                 }
                 case 3: {
