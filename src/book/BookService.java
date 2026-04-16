@@ -28,7 +28,7 @@ public class BookService {
         return dtos;
     }
 
-
+    //gör om till dtos
     public ArrayList<BookInfoDTO> getAllBooks() {
         return mapToDTO(bookRepository.getAllBooks());
     }

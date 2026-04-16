@@ -124,4 +124,33 @@ public class MemberRepository {
         }
         return null;
     }
+
+    public String suspendMember(int memberId){
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE members SET status = ? WHERE id = ?")) {
+            stmt.setString(1, "suspended");
+            stmt.setInt(2, memberId);
+
+            stmt.executeUpdate();
+            return "Member with ID #" + memberId + " has been suspended.";
+
+        } catch (SQLException e) {
+            System.out.println("Fel: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public String removeMember(int memberId) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM members WHERE id = ?")) {
+            stmt.setInt(1, memberId);
+
+            stmt.executeUpdate();
+            return "Member with ID #" + memberId + " has been removed.";
+
+        } catch (SQLException e) {
+            System.out.println("Fel: " + e.getMessage());
+        }
+        return null;
+    }
 }

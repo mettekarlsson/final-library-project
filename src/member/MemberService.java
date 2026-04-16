@@ -41,4 +41,12 @@ public class MemberService {
     public String addNewMember(NewMemberDTO member) {
         return memberRepository.addNewMember(member);
     }
+
+    public String suspendMember(int memberId) {
+        return memberRepository.suspendMember(memberId);
+    }
+
+    public String removeMember(int memberId) {
+        return memberRepository.removeMember(memberId);
+    }
 }

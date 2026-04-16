@@ -100,6 +100,7 @@ public class MemberController {
             System.out.println("1. See all members");
             System.out.println("2. Add new member");
             System.out.println("3. Suspend member");
+            System.out.println("4. Remove member");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -112,12 +113,14 @@ public class MemberController {
                     addNewMember();
                     break;
                 }
-//                case 3: {
-//                    System.out.println("What member-id do you want to suspend?");
-//                    int memberId = Integer.parseInt(scanner.nextLine());
-//                    memberService.suspendMember(memberId);
-//                    break;
-//                }
+                case 3: {
+                    suspendMember();
+                    break;
+                }
+                case 4: {
+                    removeMember();
+                    break;
+                }
                 case 0: {
                     active = false;
                     break;
@@ -152,6 +155,22 @@ public class MemberController {
         String password = scanner.nextLine();
         NewMemberDTO member = new NewMemberDTO(firstName, lastName, email, membershipDate, membershipType, status, password);
         String result = memberService.addNewMember(member);
+        System.out.println(result);
+    }
+
+    //case 3 admin
+    public void suspendMember() {
+        System.out.println("Enter the ID of the member you want to suspend:");
+        int memberId = Integer.parseInt(scanner.nextLine());
+        String result = memberService.suspendMember(memberId);
+        System.out.println(result);
+    }
+
+    //case 4 admin
+    public void removeMember() {
+        System.out.println("Enter the ID of the member you want to remove:");
+        int memberId = Integer.parseInt(scanner.nextLine());
+        String result = memberService.removeMember(memberId);
         System.out.println(result);
     }
 }
