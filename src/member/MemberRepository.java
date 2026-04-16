@@ -1,6 +1,9 @@
 package member;
 
 import java.sql.*;
+import java.util.ArrayList;
+
+import static Main.MainController.loggedInUser;
 
 public class MemberRepository {
     private final String URL = "jdbc:mysql://localhost:3306/bibliotek";
@@ -49,6 +52,45 @@ public class MemberRepository {
                         rs.getString("status"),
                         rs.getString("password"));
             }
+
+        } catch (SQLException e) {
+            System.out.println("Fel: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public void updateMemberInfo(String column, String newValue) {
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE members SET " + column + " = ? WHERE id = ?")) {
+            stmt.setString(1, newValue);
+            stmt.setInt(2, loggedInUser.getId());
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Fel: " + e.getMessage());
+        }
+    }
+
+    public ArrayList<Member> getAllMembers() {
+        ArrayList<Member> members = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             Statement stmt = conn.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery("SELECT * FROM members");
+
+            while (rs.next()) {
+                members.add(new Member(rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("email"),
+                        rs.getDate("membership_date").toLocalDate(),
+                        rs.getString("membership_type"),
+                        rs.getString("status"),
+                        rs.getString("password")));
+            }
+            return members;
 
         } catch (SQLException e) {
             System.out.println("Fel: " + e.getMessage());

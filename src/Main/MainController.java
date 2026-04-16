@@ -3,7 +3,7 @@ package Main;
 import book.BookController;
 import member.Member;
 import member.MemberController;
-import member.MemberRepository;
+import member.MemberService;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -14,12 +14,12 @@ public class MainController {
     Scanner scanner = new Scanner(System.in);
     BookController bookController = new BookController();
     MemberController memberController = new MemberController();
-    MemberRepository memberRepository = new MemberRepository();
-//    LoanController loanController = new LoanController();
+    MemberService memberService = new MemberService();
+
 
     public void memberLogIn() {
         System.out.println("Enter your email");
-        Member member = memberRepository.getMemberByEmail(scanner.nextLine());
+        Member member = memberService.getMemberByEmail(scanner.nextLine());
         if (member == null) {
             System.out.println("Email not found");
             return;

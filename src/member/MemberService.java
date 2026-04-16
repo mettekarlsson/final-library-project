@@ -12,11 +12,29 @@ public class MemberService {
         return memberInfoDTO;
     }
 
+    public ArrayList<MemberInfoDTO> mapToMemberDTO(ArrayList<Member> members) {
+        ArrayList<MemberInfoDTO> dtos = new ArrayList<>();
+        for (Member m : members) {
+            MemberInfoDTO memberInfoDTO = new MemberInfoDTO(m.getId(), m.getFirstName(), m.getLastName(),
+                    m.getEmail(), m.getMembershipType(), m.getStatus());
+            dtos.add(memberInfoDTO);
+        }
+        return dtos;
+    }
+
     public MemberInfoDTO getMemberById(int id) {
         return mapToMemberDTO(memberRepository.getMemberById(id)) ;
     }
 
-    public MemberInfoDTO getMemberByEmail(String email) {
-        return mapToMemberDTO(memberRepository.getMemberByEmail(email));
+    public Member getMemberByEmail(String email) {
+        return memberRepository.getMemberByEmail(email);
+    }
+
+    public void updateMemberInfo(String column, String newValue) {
+        memberRepository.updateMemberInfo(column, newValue);
+    }
+
+    public ArrayList<MemberInfoDTO> getAllMembers() {
+        return mapToMemberDTO(memberRepository.getAllMembers());
     }
 }
