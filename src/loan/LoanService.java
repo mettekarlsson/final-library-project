@@ -11,20 +11,10 @@ public class LoanService {
     BookRepository bookRepository = new BookRepository();
     MemberRepository memberRepository = new MemberRepository();
     LoanRepository loanRepository = new LoanRepository();
-
-    public ArrayList<LoanInfoDTO> mapToLoanDTO(ArrayList<Loan> loans) {
-        ArrayList<LoanInfoDTO> dtos = new ArrayList<>();
-        for (Loan l : loans) {
-            Book book = bookRepository.findBookByLoanId(l.getId());
-            Member member = memberRepository.findMemberByLoanId(l.getId());
-            LoanInfoDTO loanInfoDTO = new LoanInfoDTO(l.getId(), book.getTitle(), l.getLoanDate(), l.getDueDate(), l.getReturnDate());
-            dtos.add(loanInfoDTO);
-        }
-        return dtos;
-    }
+    LoanMapper loanMapper = new LoanMapper();
 
     public ArrayList<LoanInfoDTO> getAllLoansByMemberId(int memberId) {
-        return mapToLoanDTO(loanRepository.getAllLoansByMemberId(memberId));
+        return loanMapper.mapToLoanInfoDTO(loanRepository.getAllLoansByMemberId(memberId));
     }
 
     public ArrayList<LoanInfoDTO> getAllCurrentLoans(int memberId) {
@@ -35,7 +25,7 @@ public class LoanService {
                 currentLoans.add(l);
             }
         }
-        return mapToLoanDTO(currentLoans);
+        return loanMapper.mapToLoanInfoDTO(currentLoans);
     }
 
     public String extendLoan(int loanId) {
@@ -48,5 +38,9 @@ public class LoanService {
 
     public String addNewLoan(int bookId, int memberId) {
         return loanRepository.addNewLoan(bookId, memberId);
+    }
+
+    public ArrayList<ActiveLoanDTO> getAllCurrentLoans() {
+        return loanMapper.mapToActiveLoanDTO(loanRepository.getAllCurrentLoans());
     }
 }

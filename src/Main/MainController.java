@@ -91,7 +91,7 @@ public class MainController {
                     break;
                 }
                 case 2: {
-                    //adminLoanMenu();
+                    loanController.adminLoanMenu();
                     break;
                 }
                 case 3: {

@@ -100,7 +100,7 @@ public class LoanController {
 
             switch (choice) {
                 case 1: {
-                    //loanService.getAllCurrentLoans();
+                    getAllCurrentLoans();
                     break;
                 }
                 case 2: {
@@ -112,6 +112,14 @@ public class LoanController {
                     break;
                 }
             }
+        }
+    }
+
+    //case 1 admin
+    public void getAllCurrentLoans() {
+        ArrayList<ActiveLoanDTO> loans = loanService.getAllCurrentLoans();
+        for (ActiveLoanDTO l : loans) {
+            System.out.println(l.toString());
         }
     }
 }

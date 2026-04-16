@@ -104,4 +104,38 @@ public class LoanRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public ArrayList<Loan> getAllCurrentLoans() {
+        ArrayList<Loan> loans = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery("""
+            SELECT * FROM loans
+            WHERE return_date IS NULL
+            """);
+
+            while (rs.next()) {
+                Date returnDateSql = rs.getDate("return_date");
+                LocalDate returnDate = null;
+
+                if (returnDateSql != null) {
+                    returnDate = returnDateSql.toLocalDate();
+                }
+                loans.add(new Loan(
+                        rs.getInt("id"),
+                        rs.getInt("book_id"),
+                        rs.getInt("member_id"),
+                        null,
+                        null,
+                        rs.getDate("loan_date").toLocalDate(),
+                        rs.getDate("due_date").toLocalDate(),
+                        returnDate
+                ));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return loans;
+    }
 }
