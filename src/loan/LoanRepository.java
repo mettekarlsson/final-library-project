@@ -79,4 +79,29 @@ public class LoanRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public String addNewLoan(int bookId, int memberId) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement("""
+        INSERT INTO loans (book_id, member_id, loan_date, due_date, return_date)
+        VALUES (?, ?, CURDATE(), CURDATE() + INTERVAL 14 DAY, null)
+        """)) {
+            stmt.setInt(1, bookId);
+            stmt.setInt(2, memberId);
+            stmt.executeUpdate();
+
+            PreparedStatement copiesStmt = conn.prepareStatement("""
+            UPDATE books
+            SET available_copies = available_copies -1
+            WHERE id=?
+""");
+            copiesStmt.setInt(1, bookId);
+            copiesStmt.executeUpdate();
+
+            return "You've loaned book #" + bookId +".";
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
