@@ -1,6 +1,6 @@
 package author;
 
-import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -23,7 +23,7 @@ public class AuthorController {
                     break;
                 }
                 case 2: {
-                    //addAuthor();
+                    addAuthor();
                     break;
                 }
                 case 0: {
@@ -105,5 +105,24 @@ public class AuthorController {
                 }
             }
         }
+    }
+
+    public void addAuthor() {
+        System.out.println("Enter their first name:");
+        String firstName = scanner.nextLine();
+        System.out.println("Enter their last name:");
+        String lastName = scanner.nextLine();
+        System.out.println("Enter their nationality:");
+        String nationality = scanner.nextLine();
+        System.out.println("Enter their birth date:");
+        LocalDate birthDate = LocalDate.parse(scanner.nextLine());
+        System.out.println("Enter their biography:");
+        String biography = scanner.nextLine();
+        System.out.println("Enter their website:");
+        String website = scanner.nextLine();
+
+        NewAuthorDTO newAuthorDTO = new NewAuthorDTO(firstName, lastName, nationality, birthDate, biography, website);
+        String result = authorService.addAuthor(newAuthorDTO);
+        System.out.println(result);
     }
 }

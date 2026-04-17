@@ -16,4 +16,8 @@ public class AuthorService {
     public String editAuthorDesc(int authorId, String column, String value) {
         return authorRepository.editAuthorDesc(authorId, column, value);
     }
+
+    public String addAuthor(NewAuthorDTO newAuthorDTO) {
+        return authorRepository.addAuthor(newAuthorDTO);
+    }
 }

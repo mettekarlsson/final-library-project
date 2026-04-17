@@ -2,7 +2,7 @@ package author;
 
 import java.time.LocalDate;
 
-public class newAuthorDTO {
+public class NewAuthorDTO {
 
     private String firstName;
     private String lastName;
@@ -11,7 +11,7 @@ public class newAuthorDTO {
     private String biography;
     private String website;
 
-    public newAuthorDTO(String firstName, String lastName, String nationality, LocalDate birthDate,
+    public NewAuthorDTO(String firstName, String lastName, String nationality, LocalDate birthDate,
                         String biography, String website) {
         this.firstName = firstName;
         this.lastName = lastName;

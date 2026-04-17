@@ -141,8 +141,8 @@ public class AuthorRepository {
     } return "Author # " + authorId + " has been edited.";
 }
 
-//edit author_descriptions
-public String editAuthorDesc(int authorId, String column, String value) {
+    //edit author_descriptions
+    public String editAuthorDesc(int authorId, String column, String value) {
     try (Connection conn = DriverManager.getConnection(URL,USER,PASS);
          PreparedStatement stmt = conn.prepareStatement("UPDATE author_descriptions SET " + column + " = ? WHERE author_id = ?")) {
         stmt.setString(1, value);
@@ -153,5 +153,38 @@ public String editAuthorDesc(int authorId, String column, String value) {
         System.out.println("SQL-FEL: " + e.getMessage());
     } return "Author # " + authorId + " has been edited.";
 }
+
+    public String addAuthor(NewAuthorDTO newAuthorDTO) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement("""
+        INSERT INTO authors (first_name, last_name, nationality, birth_date) VALUES (?, ?, ?, ?)
+        """, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, newAuthorDTO.getFirstName());
+            stmt.setString(2, newAuthorDTO.getLastName());
+            stmt.setString(3, newAuthorDTO.getNationality());
+            stmt.setDate(4, Date.valueOf(newAuthorDTO.getBirthDate()));
+            stmt.executeUpdate();
+
+            ResultSet generatedBookKey = stmt.getGeneratedKeys();
+            int authorId = 0;
+            if (generatedBookKey.next()) {
+                authorId = generatedBookKey.getInt(1);
+            }
+
+            //insert author_description info
+            PreparedStatement adStmt = conn.prepareStatement("""
+            INSERT INTO author_descriptions (author_id, biography, website) VALUES (?, ?, ?)
+            """);
+            adStmt.setInt(1, authorId);
+            adStmt.setString(2, newAuthorDTO.getBiography());
+            adStmt.setString(3, newAuthorDTO.getWebsite());
+            adStmt.executeUpdate();
+
+            return "Author with ID #" + authorId + " has been added.";
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

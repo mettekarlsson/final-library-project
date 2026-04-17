@@ -1,7 +1,6 @@
 package book;
 import author.Author;
 import author.AuthorInfoDTO;
-import author.newAuthorDTO;
 import category.Category;
 
 import java.sql.SQLException;
