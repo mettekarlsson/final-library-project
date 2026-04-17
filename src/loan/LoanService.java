@@ -1,15 +1,11 @@
 package loan;
 
-import book.Book;
 import book.BookRepository;
-import member.Member;
 import member.MemberRepository;
 
 import java.util.ArrayList;
 
 public class LoanService {
-    BookRepository bookRepository = new BookRepository();
-    MemberRepository memberRepository = new MemberRepository();
     LoanRepository loanRepository = new LoanRepository();
     LoanMapper loanMapper = new LoanMapper();
 
@@ -40,7 +36,11 @@ public class LoanService {
         return loanRepository.addNewLoan(bookId, memberId);
     }
 
-    public ArrayList<ActiveLoanDTO> getAllCurrentLoans() {
-        return loanMapper.mapToActiveLoanDTO(loanRepository.getAllCurrentLoans());
+    public ArrayList<AdminLoanDTO> getAllCurrentLoans() {
+        return loanMapper.mapToAdminLoanDTO(loanRepository.getAllCurrentLoans());
+    }
+
+    public ArrayList<AdminLoanDTO> getAllLateLoans() {
+        return loanMapper.mapToAdminLoanDTO(loanRepository.getAllLateLoans());
     }
 }

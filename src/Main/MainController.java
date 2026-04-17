@@ -1,5 +1,6 @@
 package Main;
 
+import author.AuthorController;
 import book.BookController;
 import loan.LoanController;
 import member.Member;
@@ -17,6 +18,7 @@ public class MainController {
     MemberController memberController = new MemberController();
     MemberService memberService = new MemberService();
     LoanController loanController = new LoanController();
+    AuthorController authorController = new AuthorController();
 
 
     public void memberLogIn() {
@@ -81,7 +83,7 @@ public class MainController {
             System.out.println("1. Books");
             System.out.println("2. Loans");
             System.out.println("3. Members");
-            System.out.println("4. Authors? ");
+            System.out.println("4. Authors");
             System.out.println("0. Log out");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -99,7 +101,7 @@ public class MainController {
                     break;
                 }
                 case 4: {
-                    //adminAuthorMenu();
+                    authorController.adminAuthorMenu();
                     break;
                 }
                 case 0: {

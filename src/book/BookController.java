@@ -257,6 +257,9 @@ public class BookController {
             System.out.println("3. Year Published");
             System.out.println("4. Total copies");
             System.out.println("5. Available copies");
+            System.out.println("6. Summary");
+            System.out.println("7. Language");
+            System.out.println("8. Page count");
             System.out.println("0. Return");
 
             int choice = Integer.parseInt(scanner.nextLine());
@@ -291,6 +294,21 @@ public class BookController {
                     int availableCopies = Integer.parseInt(scanner.nextLine());
                     bookService.editBook(bookId, "available_copies", availableCopies);
                     break;
+                }
+                case 6: {
+                    System.out.println("Enter the new summary:");
+                    String summary = scanner.nextLine();
+                    bookService.editBookDesc(bookId, "summary", summary);
+                }
+                case 7: {
+                    System.out.println("Enter the new language:");
+                    String language = scanner.nextLine();
+                    bookService.editBookDesc(bookId, "language", language);
+                }
+                case 8: {
+                    System.out.println("Enter the new language:");
+                    int pageCount = Integer.parseInt(scanner.nextLine());
+                    bookService.editBookDesc(bookId, "page_count", pageCount);
                 }
                 case 0: {
                     active = false;

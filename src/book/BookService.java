@@ -86,6 +86,14 @@ public class BookService {
         bookRepository.editBook(bookId, column, value);
     }
 
+    public void editBookDesc(int bookId, String column, String value) {
+        bookRepository.editBookDesc(bookId, column, value);
+    }
+
+    public void editBookDesc(int bookId, String column, int value) {
+        bookRepository.editBookDesc(bookId, column, value);
+    }
+
     //bara ett mellansteg
     public void deleteBook(int bookId) {
         bookRepository.deleteBook(bookId);

@@ -1,6 +1,5 @@
 package loan;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -94,7 +93,7 @@ public class LoanController {
         while (active) {
             System.out.println("---- Loan Menu ----");
             System.out.println("1. See all current loans");
-            System.out.println("2. See all returned loans");
+            System.out.println("2. See all overdue loans");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -104,7 +103,7 @@ public class LoanController {
                     break;
                 }
                 case 2: {
-                    //loanService.getAllReturnedLoans();
+                    getAllLateLoans();
                     break;
                 }
                 case 0: {
@@ -117,8 +116,16 @@ public class LoanController {
 
     //case 1 admin
     public void getAllCurrentLoans() {
-        ArrayList<ActiveLoanDTO> loans = loanService.getAllCurrentLoans();
-        for (ActiveLoanDTO l : loans) {
+        ArrayList<AdminLoanDTO> loans = loanService.getAllCurrentLoans();
+        for (AdminLoanDTO l : loans) {
+            System.out.println(l.toString());
+        }
+    }
+
+    //case 2 admin
+    public void getAllLateLoans() {
+        ArrayList<AdminLoanDTO> loans = loanService.getAllLateLoans();
+        for (AdminLoanDTO l : loans) {
             System.out.println(l.toString());
         }
     }

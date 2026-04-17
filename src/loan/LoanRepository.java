@@ -138,4 +138,38 @@ public class LoanRepository {
         }
         return loans;
     }
+
+    public ArrayList<Loan> getAllLateLoans() {
+        ArrayList<Loan> loans = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery("""
+        SELECT * FROM loans
+        WHERE due_date < CURDATE() AND return_date IS NULL
+        """);
+
+        while (rs.next()) {
+            Date returnDateSql = rs.getDate("return_date");
+            LocalDate returnDate = null;
+
+            if (returnDateSql != null) {
+                returnDate = returnDateSql.toLocalDate();
+            }
+            loans.add(new Loan(
+                    rs.getInt("id"),
+                    rs.getInt("book_id"),
+                    rs.getInt("member_id"),
+                    null,
+                    null,
+                    rs.getDate("loan_date").toLocalDate(),
+                    rs.getDate("due_date").toLocalDate(),
+                    returnDate
+            ));
+        }
+        } catch (SQLException e) {
+            System.out.println("SQL-FEL: " + e.getMessage());
+        }
+        return loans;
+    }
 }

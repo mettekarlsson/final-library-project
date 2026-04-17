@@ -101,4 +101,11 @@ public class AuthorRepository {
         }
         return authors;
     }
+
+//    public String editAuthor(int authorId) {
+//        try (Connection conn = DriverManager.getConnection(URL,USER,PASS);
+//        PreparedStatement stmt = prepareStatement("""
+//                UPDATE authors
+//                """))
+//    }
 }

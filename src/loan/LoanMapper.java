@@ -23,12 +23,12 @@ public class LoanMapper {
         return dtos;
     }
 
-    public ArrayList<ActiveLoanDTO> mapToActiveLoanDTO(ArrayList<Loan> loans) {
-        ArrayList<ActiveLoanDTO> dtos = new ArrayList<>();
+    public ArrayList<AdminLoanDTO> mapToAdminLoanDTO(ArrayList<Loan> loans) {
+        ArrayList<AdminLoanDTO> dtos = new ArrayList<>();
         for (Loan l : loans) {
             Book book = bookRepository.findBookByLoanId(l.getId());
             Member member = memberRepository.findMemberByLoanId(l.getId());
-            ActiveLoanDTO activeLoanDTO = new ActiveLoanDTO(l.getId(), book.getTitle(), (member.getFirstName() + " " + member.getLastName()), l.getLoanDate(), l.getDueDate(), l.getReturnDate());
+            AdminLoanDTO activeLoanDTO = new AdminLoanDTO(l.getId(), book.getTitle(), member.getId(), (member.getFirstName() + " " + member.getLastName()), l.getLoanDate(), l.getDueDate(), l.getReturnDate());
             dtos.add(activeLoanDTO);
         }
         return dtos;

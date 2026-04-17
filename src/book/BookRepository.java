@@ -19,8 +19,7 @@ public class BookRepository {
              Statement stmt = conn.createStatement()) {
 
             ResultSet rs = stmt.executeQuery("""
-            
-                    SELECT * FROM books b JOIN book_descriptions bd ON b.id = bd.book_id
+            SELECT * FROM books b JOIN book_descriptions bd ON b.id = bd.book_id
             """);
 
             while (rs.next()) {
@@ -303,8 +302,34 @@ public class BookRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
+
+    //redigera en kolumn i bookdescriptions med stringvärde
+    public void editBookDesc(int bookId, String column, String value) {
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement("UPDATE book_descriptions SET " + column + " =? WHERE book_id=?")) {
+            stmt.setString(1, value);
+            stmt.setInt(2, bookId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("SQL-FEL: " + e.getMessage());
+        }
+    }
+
+    //redigera en kolumn i bookdescriptions med intvärde
+    public void editBookDesc(int bookId, String column, int value) {
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE book_descriptions SET " + column + " =? WHERE book_id=?")) {
+            stmt.setInt(1, value);
+            stmt.setInt(2, bookId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("SQL-FEL: " + e.getMessage());
+        }
+    }
+
         //ta bort en bok
     public void deleteBook(int bookId) {
 

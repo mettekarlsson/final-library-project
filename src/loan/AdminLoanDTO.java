@@ -2,19 +2,21 @@ package loan;
 
 import java.time.LocalDate;
 
-public class ActiveLoanDTO {
+public class AdminLoanDTO {
 
     private int id;
     String bookTitle;
+    int memberId;
     String memberName;
     private LocalDate loanDate;
     private LocalDate dueDate;
     private LocalDate returnDate;
 
-    public ActiveLoanDTO(int id, String bookTitle, String memberName, LocalDate loanDate,
-                         LocalDate dueDate, LocalDate returnDate) {
+    public AdminLoanDTO(int id, String bookTitle, int memberId, String memberName, LocalDate loanDate,
+                        LocalDate dueDate, LocalDate returnDate) {
         this.id = id;
         this.bookTitle = bookTitle;
+        this.memberId = memberId;
         this.memberName = memberName;
         this.loanDate = loanDate;
         this.dueDate = dueDate;
@@ -73,6 +75,7 @@ public class ActiveLoanDTO {
     public String toString() {
         return "Loan-id: " + id +
                 ", Book Title: '" + bookTitle + "'" +
+                ", Member-id: #" + memberId +
                 ", Member Name: '" + memberName + "'" +
                 ", Loan Date: " + loanDate +
                 ", Due Date: " + dueDate;
