@@ -81,6 +81,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return firstName + " " + lastName;
+        return "Author-id: #" + id + " " + firstName + " " + lastName;
     }
 }

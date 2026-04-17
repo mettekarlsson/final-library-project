@@ -102,10 +102,56 @@ public class AuthorRepository {
         return authors;
     }
 
-//    public String editAuthor(int authorId) {
-//        try (Connection conn = DriverManager.getConnection(URL,USER,PASS);
-//        PreparedStatement stmt = prepareStatement("""
-//                UPDATE authors
-//                """))
-//    }
+    public ArrayList<Author> getAllAuthors() {
+        ArrayList<Author> authors = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery("""
+            SELECT * FROM authors a JOIN author_descriptions ad ON a.id = ad.author_id
+            """);
+
+            while (rs.next()) {
+                authors.add(new Author(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("nationality"),
+                        rs.getDate("birth_date").toLocalDate(),
+                        rs.getString("biography"),
+                        rs.getString("website")
+                ));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return authors;
+    }
+
+    public String editAuthor(int authorId, String column, String value) {
+        try (Connection conn = DriverManager.getConnection(URL,USER,PASS);
+        PreparedStatement stmt = conn.prepareStatement("UPDATE authors SET " + column + " = ? WHERE id = ?")) {
+                stmt.setString(1, value);
+                stmt.setInt(2, authorId);
+                stmt.executeUpdate();
+
+    } catch (SQLException e) {
+        System.out.println("SQL-FEL: " + e.getMessage());
+    } return "Author # " + authorId + " has been edited.";
+}
+
+//edit author_descriptions
+public String editAuthorDesc(int authorId, String column, String value) {
+    try (Connection conn = DriverManager.getConnection(URL,USER,PASS);
+         PreparedStatement stmt = conn.prepareStatement("UPDATE author_descriptions SET " + column + " = ? WHERE author_id = ?")) {
+        stmt.setString(1, value);
+        stmt.setInt(2, authorId);
+        stmt.executeUpdate();
+
+    } catch (SQLException e) {
+        System.out.println("SQL-FEL: " + e.getMessage());
+    } return "Author # " + authorId + " has been edited.";
+}
+
 }

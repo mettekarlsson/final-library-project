@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class AuthorController {
         Scanner scanner = new Scanner(System.in);
+        AuthorService authorService = new AuthorService();
 
     public void adminAuthorMenu() {
         boolean active = true;
@@ -35,7 +36,10 @@ public class AuthorController {
 
     //case 1
     public void editAuthor() {
-        ArrayList<Author> authors = new ArrayList<>();
+        ArrayList<Author> authors = new ArrayList<>(authorService.getAllAuthors());
+        for(Author a : authors) {
+            System.out.println(a);
+        }
         System.out.println("Enter the author ID:");
         int authorId = Integer.parseInt(scanner.nextLine());
         boolean active = true;
@@ -53,42 +57,48 @@ public class AuthorController {
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
-//                case 1: {
-//                    System.out.println("Enter the new first name:");
-//                    String firstName = scanner.nextLine();
-//                    authorService.editAuthor(authorId, "first_name", firstName);
-//                    break;
-//                }
-//                case 2: {
-//                    System.out.println("Enter the new last name:");
-//                    String lastName = scanner.nextLine();
-//                    authorService.editAuthor(authorId, "last_name", lastName);
-//                    break;
-//                }
-//                case 3: {
-//                    System.out.println("Enter the new nationality:");
-//                    String nationality = scanner.nextLine();
-//                    authorService.editAuthor(authorId, "nationality", nationality);
-//                    break;
-//                }
-//                case 4: {
-//                    System.out.println("Enter the new birth date:");
-//                    String birthDate = scanner.nextLine();
-//                    authorService.editAuthor(authorId, "birth_date", birthDate);
-//                    break;
-//                }
-//                case 5: {
-//                    System.out.println("Enter the new biography:");
-//                    String biography = scanner.nextLine();
-//                    authorService.editAuthor(authorId, "biography", biography);
-//                    break;
-//                }
-//                case 6: {
-//                    System.out.println("Enter the new website:");
-//                    String website = scanner.nextLine();
-//                    authorService.editAuthor(authorId, "website", website);
-//                    break;
-//                }
+                case 1: {
+                    System.out.println("Enter the new first name:");
+                    String firstName = scanner.nextLine();
+                    String result = authorService.editAuthor(authorId, "first_name", firstName);
+                    System.out.println(result);
+                    break;
+                }
+                case 2: {
+                    System.out.println("Enter the new last name:");
+                    String lastName = scanner.nextLine();
+                    String result = authorService.editAuthor(authorId, "last_name", lastName);
+                    System.out.println(result);
+                    break;
+                }
+                case 3: {
+                    System.out.println("Enter the new nationality:");
+                    String nationality = scanner.nextLine();
+                    String result = authorService.editAuthor(authorId, "nationality", nationality);
+                    System.out.println(result);
+                    break;
+                }
+                case 4: {
+                    System.out.println("Enter the new birth date:");
+                    String birthDate = scanner.nextLine();
+                    String result = authorService.editAuthor(authorId, "birth_date", birthDate);
+                    System.out.println(result);
+                    break;
+                }
+                case 5: {
+                    System.out.println("Enter the new biography:");
+                    String biography = scanner.nextLine();
+                    String result = authorService.editAuthorDesc(authorId, "biography", biography);
+                    System.out.println(result);
+                    break;
+                }
+                case 6: {
+                    System.out.println("Enter the new website:");
+                    String website = scanner.nextLine();
+                    String result = authorService.editAuthorDesc(authorId, "website", website);
+                    System.out.println(result);
+                    break;
+                }
                 case 0: {
                     active = false;
                     break;
