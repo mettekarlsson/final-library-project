@@ -61,7 +61,7 @@ public class MemberRepository {
         return null;
     }
 
-    public void updateMemberInfo(String column, String newValue) {
+    public String updateMemberInfo(String column, String newValue) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("UPDATE members SET " + column + " = ? WHERE id = ?")) {
@@ -72,6 +72,7 @@ public class MemberRepository {
         } catch (SQLException e) {
             System.out.println("Fel: " + e.getMessage());
         }
+        return "Your profile has been updated.";
     }
 
     public ArrayList<Member> getAllMembers() {

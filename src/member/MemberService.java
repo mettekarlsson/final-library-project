@@ -30,8 +30,8 @@ public class MemberService {
         return memberRepository.getMemberByEmail(email);
     }
 
-    public void updateMemberInfo(String column, String newValue) {
-        memberRepository.updateMemberInfo(column, newValue);
+    public String updateMemberInfo(String column, String newValue) {
+        return memberRepository.updateMemberInfo(column, newValue);
     }
 
     public ArrayList<MemberInfoDTO> getAllMembers() {

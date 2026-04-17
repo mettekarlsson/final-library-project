@@ -18,6 +18,7 @@ public class MemberController {
             System.out.println("---- Your profile ----");
             System.out.println("1. Show my profile info");
             System.out.println("2. Update my profile info");
+            System.out.println("3. Change my membership-type");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -28,6 +29,10 @@ public class MemberController {
                 }
                 case 2: {
                     updateProfileInfo();
+                    break;
+                }
+                case 3: {
+                    updateMembershipType();
                     break;
                 }
                 case 0: {
@@ -91,6 +96,26 @@ public class MemberController {
     }
 
 
+    public void updateMembershipType() {
+        String result = null;
+        System.out.println("Current status:");
+        MemberInfoDTO member = memberService.getMemberById(loggedInUser.getId());
+        System.out.println(member.getMembershipType());
+        if (member.getMembershipType().equals("standard")) {
+            System.out.println("1. Change to premium");
+            int choice = Integer.parseInt(scanner.nextLine());
+            if (choice == 1) {
+                result = memberService.updateMemberInfo("membership_type", "premium");
+            }
+        } else {
+            System.out.println("1. Change to standard");
+            int choice = Integer.parseInt(scanner.nextLine());
+            if (choice == 1) {
+                result = memberService.updateMemberInfo("membership_type", "standard");
+            }
+        }
+        System.out.println(result);
+    }
 
     public void adminMemberMenu() {
         boolean active = true;
