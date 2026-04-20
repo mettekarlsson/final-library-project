@@ -2,8 +2,6 @@ package book;
 
 import author.Author;
 import category.Category;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookInfoDTO {

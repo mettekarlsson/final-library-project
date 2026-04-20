@@ -108,7 +108,7 @@ public class BookController {
         }
     }
 
-    public void adminBookMenu() throws SQLException {
+    public void adminBookMenu() {
         boolean active = true;
         while (active) {
             System.out.println("---- Book Menu ----");
