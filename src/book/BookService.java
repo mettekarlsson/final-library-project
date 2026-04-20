@@ -94,11 +94,27 @@ public class BookService {
         bookRepository.editBookDesc(bookId, column, value);
     }
 
+    public void addBookAuthors(int bookId, int authorId) {
+        bookRepository.addBookAuthors(bookId, authorId);
+    }
+
+    //för att bookcontroller inte ska behöva kalla på authorservice, denna o nästa
+    public ArrayList<AuthorInfoDTO> getAllAuthors() {
+        return authorMapper.mapToDTO(authorRepository.getAllAuthors());
+    }
+
+    public ArrayList<AuthorInfoDTO> getAuthorsByBookId(int bookId) {
+        return authorMapper.mapToDTO(authorRepository.findAuthorsByBookId(bookId));
+    }
+
+    public void removeBookAuthors(int bookId, int authorId){
+        bookRepository.removeBookAuthors(bookId, authorId);
+    }
+
     //bara ett mellansteg
     public void deleteBook(int bookId) {
         bookRepository.deleteBook(bookId);
     }
-
 
     public String addCategoryToBook(int bookId, int categoryId) {
         return bookRepository.addCategoryToBook(bookId, categoryId);

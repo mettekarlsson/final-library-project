@@ -248,6 +248,12 @@ public class BookController {
         ArrayList<Author> bookAuthors = new ArrayList<>();
         System.out.println("Enter the book ID:");
         int bookId = Integer.parseInt(scanner.nextLine());
+        ArrayList<BookInfoDTO> book = bookService.getBookById(bookId);
+        for (BookInfoDTO b : book) {
+            System.out.println(b);
+            bookAuthors = b.getAuthors();
+        }
+
         boolean active = true;
 
         while (active) {
@@ -260,6 +266,8 @@ public class BookController {
             System.out.println("6. Summary");
             System.out.println("7. Language");
             System.out.println("8. Page count");
+            System.out.println("9. Authors");
+            System.out.println("10. Categories");
             System.out.println("0. Return");
 
             int choice = Integer.parseInt(scanner.nextLine());
@@ -299,16 +307,46 @@ public class BookController {
                     System.out.println("Enter the new summary:");
                     String summary = scanner.nextLine();
                     bookService.editBookDesc(bookId, "summary", summary);
+                    break;
                 }
                 case 7: {
                     System.out.println("Enter the new language:");
                     String language = scanner.nextLine();
                     bookService.editBookDesc(bookId, "language", language);
+                    break;
                 }
                 case 8: {
-                    System.out.println("Enter the new language:");
+                    System.out.println("Enter the new page count:");
                     int pageCount = Integer.parseInt(scanner.nextLine());
                     bookService.editBookDesc(bookId, "page_count", pageCount);
+                    break;
+                }
+                case 9: {
+                    for (Author a : bookAuthors) {
+                        System.out.println(a);
+                    }
+                    System.out.println("1. Add author");
+                    System.out.println("2. Remove author");
+                    int authorChoice = Integer.parseInt(scanner.nextLine());
+                    if (authorChoice == 1) {
+                        ArrayList<AuthorInfoDTO> authors = bookService.getAllAuthors();
+                        for (AuthorInfoDTO a : authors) {
+                            System.out.println(a);
+                        }
+                        System.out.println("Which author(id) would you like to add?");
+                        int authorId = Integer.parseInt(scanner.nextLine());
+                        bookService.addBookAuthors(bookId, authorId);
+                    } else if (authorChoice == 2) {
+                        ArrayList<AuthorInfoDTO> currentAuthors = bookService.getAuthorsByBookId(bookId);
+                        for (AuthorInfoDTO a : currentAuthors) {
+                            System.out.println(a);
+                        }
+                        System.out.println("Which author(id) would you like to remove?");
+                        int authorId = Integer.parseInt(scanner.nextLine());
+                        bookService.removeBookAuthors(bookId, authorId);
+                    } else {
+                        System.out.println("Invalid choice.");
+                    }
                 }
                 case 0: {
                     active = false;

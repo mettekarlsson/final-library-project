@@ -330,6 +330,35 @@ public class BookRepository {
         }
     }
 
+    //add to book_authors
+    public void addBookAuthors(int bookId, int authorId) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement("""
+        INSERT INTO book_authors (book_id, author_id)
+        VALUES (?,?)
+""")) {
+            stmt.setInt(1, bookId);
+            stmt.setInt(2, authorId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //remove from book_authors
+    public void removeBookAuthors(int bookId, int authorId){
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("""
+        DELETE FROM book_authors WHERE book_id = ? AND author_id = ?
+""")) {
+            stmt.setInt(1, bookId);
+            stmt.setInt(2, authorId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
         //ta bort en bok
     public void deleteBook(int bookId) {
 
