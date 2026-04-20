@@ -1,7 +1,5 @@
 package category;
 
-import author.Author;
-
 import java.sql.*;
 import java.util.ArrayList;
 

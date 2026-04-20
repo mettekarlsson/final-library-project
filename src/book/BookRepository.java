@@ -56,7 +56,7 @@ public class BookRepository {
             JOIN book_descriptions bd ON bd.book_id=b.id
             JOIN loans ON loans.book_id=b.id
             GROUP BY b.id ORDER BY loan_count DESC LIMIT 10
-                                 """);
+            """);
 
             while (rs.next()) {
                 books.add(new Book(
@@ -184,7 +184,7 @@ public class BookRepository {
 
 
 
-    public String addBook(NewBookDTO newBookDTO) throws SQLException {
+    public String addBook(NewBookDTO newBookDTO) {
 
         //insert books-info, få tillbaka nya book-id
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
@@ -218,9 +218,8 @@ public class BookRepository {
             bdStmt.executeUpdate();
 
             //insert book_authors info, eventuellt authors - isåfall ta emot nya id:et och lägger sen till
-            int authorId = 0;
             for (Author a : newBookDTO.getAuthors()) {
-                authorId = a.getId();
+                int authorId = a.getId();
 
                 if (authorId == 0) {
                     PreparedStatement authorStmt = conn.prepareStatement("""
@@ -236,7 +235,7 @@ public class BookRepository {
                             authorId = rs.getInt(1);
                     }
                         PreparedStatement adStmt = conn.prepareStatement("""
-                                INSERT INTO author_descriptions (author_id, biography, website) VALUES (?, ?, ?) 
+                                INSERT INTO author_descriptions (author_id, biography, website) VALUES (?, ?, ?)
                                 """);
                         adStmt.setInt(1, authorId);
                         adStmt.setString(2, a.getBiography());
@@ -246,16 +245,16 @@ public class BookRepository {
                 //insert i book-categories
                 PreparedStatement baStmt = conn.prepareStatement("""
                    INSERT INTO book_authors (book_id, author_id) VALUES (?, ?)
-                    """);
+                   """);
                 baStmt.setInt(1, bookId);
                 baStmt.setInt(2, authorId);
                 baStmt.executeUpdate();
 
 
             }
-            int categoryId = 0;
+
             for (Category c : newBookDTO.getCategories()) {
-                categoryId = c.getId();
+                int categoryId = c.getId();
 
                 PreparedStatement bcStmt = conn.prepareStatement("""
                 INSERT INTO book_categories (book_id, category_id) VALUES (?, ?)

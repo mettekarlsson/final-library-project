@@ -1,8 +1,5 @@
 package loan;
 
-import book.BookRepository;
-import member.MemberRepository;
-
 import java.util.ArrayList;
 
 import static Main.MainController.loggedInUser;

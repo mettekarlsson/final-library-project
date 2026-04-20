@@ -1,7 +1,5 @@
 package loan;
 
-import com.mysql.cj.x.protobuf.MysqlxPrepare;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -6,10 +6,8 @@ public class MemberService {
     MemberRepository memberRepository = new MemberRepository();
 
     public MemberInfoDTO mapToMemberDTO(Member member) {
-            MemberInfoDTO memberInfoDTO = new MemberInfoDTO(member.getId(), member.getFirstName(),
-                    member.getLastName(), member.getEmail(), member.getMembershipType(), member.getStatus());
-
-        return memberInfoDTO;
+        return new MemberInfoDTO(member.getId(), member.getFirstName(),
+                member.getLastName(), member.getEmail(), member.getMembershipType(), member.getStatus());
     }
 
     public ArrayList<MemberInfoDTO> mapToMemberDTO(ArrayList<Member> members) {

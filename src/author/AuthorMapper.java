@@ -1,9 +1,4 @@
 package author;
-
-import book.Book;
-import book.BookInfoDTO;
-import category.Category;
-
 import java.util.ArrayList;
 
 public class AuthorMapper {

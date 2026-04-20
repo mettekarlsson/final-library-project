@@ -1,7 +1,5 @@
 package member;
 
-import book.Book;
-
 import java.sql.*;
 import java.util.ArrayList;
 
