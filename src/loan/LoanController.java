@@ -1,9 +1,10 @@
 package loan;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-import static Main.MainController.loggedInUser;
+import static main.MainController.loggedInUser;
 
 public class LoanController {
     Scanner scanner = new Scanner(System.in);
@@ -54,7 +55,7 @@ public class LoanController {
 
     //case 1
     public void getAllLoansByMemberId() {
-        ArrayList<LoanInfoDTO> loans = new ArrayList<>(loanService.getAllLoansByMemberId(loggedInUser.getId()));
+        List<LoanInfoDTO> loans = new ArrayList<>(loanService.getAllLoansByMemberId(loggedInUser.getId()));
         for (LoanInfoDTO l : loans) {
             System.out.println(l.toString());
         }
@@ -62,7 +63,7 @@ public class LoanController {
 
     //case 2
     public void extendLoan() {
-        ArrayList<LoanInfoDTO> loans = new ArrayList<>(loanService.getAllCurrentLoans(loggedInUser.getId()));
+        List<LoanInfoDTO> loans = new ArrayList<>(loanService.getAllCurrentLoans(loggedInUser.getId()));
         for (LoanInfoDTO l : loans) {
             System.out.println(l.toString());
         }
@@ -74,7 +75,7 @@ public class LoanController {
 
     //case 3
     public void returnLoan() {
-        ArrayList<LoanInfoDTO> loans = new ArrayList<>(loanService.getAllCurrentLoans(loggedInUser.getId()));
+        List<LoanInfoDTO> loans = new ArrayList<>(loanService.getAllCurrentLoans(loggedInUser.getId()));
         for (LoanInfoDTO l : loans) {
             System.out.println(l.toString());
         }
@@ -95,7 +96,7 @@ public class LoanController {
 
     //case 5
     public void leaveReview() {
-        ArrayList<LoanInfoDTO> loans = loanService.getReturnedLoans();
+        List<LoanInfoDTO> loans = loanService.getReturnedLoans(loggedInUser.getId());
         for (LoanInfoDTO l : loans) {
             System.out.println(l);
         }
@@ -105,7 +106,7 @@ public class LoanController {
         int rating = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter your review:");
         String comment = scanner.nextLine();
-        String result = loanService.leaveReview(bookId, rating, comment);
+        String result = loanService.leaveReview(bookId, loggedInUser.getId(), rating, comment);
         System.out.println(result);
     }
 
@@ -142,7 +143,7 @@ public class LoanController {
 
     //case 1 admin
     public void getAllCurrentLoans() {
-        ArrayList<AdminLoanDTO> loans = loanService.getAllCurrentLoans();
+        List<AdminLoanDTO> loans = loanService.getAllCurrentLoans();
         for (AdminLoanDTO l : loans) {
             System.out.println(l.toString());
         }
@@ -150,7 +151,7 @@ public class LoanController {
 
     //case 2 admin
     public void getAllLateLoans() {
-        ArrayList<AdminLoanDTO> loans = loanService.getAllLateLoans();
+        List<AdminLoanDTO> loans = loanService.getAllLateLoans();
         for (AdminLoanDTO l : loans) {
             System.out.println(l.toString());
         }
@@ -158,7 +159,7 @@ public class LoanController {
 
     //case 3 admin
     public void adminReturnLoan() {
-        ArrayList<AdminLoanDTO> loans = loanService.getAllCurrentLoans();
+        List<AdminLoanDTO> loans = loanService.getAllCurrentLoans();
         for (AdminLoanDTO l : loans) {
             System.out.println(l);
         }

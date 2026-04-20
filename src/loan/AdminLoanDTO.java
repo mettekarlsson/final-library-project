@@ -5,9 +5,9 @@ import java.time.LocalDate;
 public class AdminLoanDTO {
 
     private int id;
-    String bookTitle;
+    private String bookTitle;
     int memberId;
-    String memberName;
+    private String memberName;
     private LocalDate loanDate;
     private LocalDate dueDate;
     private LocalDate returnDate;

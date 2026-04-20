@@ -2,6 +2,7 @@ package author;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AuthorRepository {
     private final String URL = "jdbc:mysql://localhost:3306/bibliotek";
@@ -38,8 +39,8 @@ public class AuthorRepository {
         return author;
     }
 
-    public ArrayList<Author> findAuthorsByBookId(int bookId) {
-        ArrayList<Author> authors = new ArrayList<>();
+    public List<Author> findAuthorsByBookId(int bookId) {
+        List<Author> authors = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
@@ -69,8 +70,8 @@ public class AuthorRepository {
         return authors;
     }
 
-    public ArrayList<Author> searchAuthor(String searchTerm) {
-        ArrayList<Author> authors = new ArrayList<>();
+    public List<Author> searchAuthor(String searchTerm) {
+        List<Author> authors = new ArrayList<>();
         String search = "%" + searchTerm + "%";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -100,8 +101,8 @@ public class AuthorRepository {
         return authors;
     }
 
-    public ArrayList<Author> getAllAuthors() {
-        ArrayList<Author> authors = new ArrayList<>();
+    public List<Author> getAllAuthors() {
+        List<Author> authors = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         Statement stmt = conn.createStatement()) {

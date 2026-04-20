@@ -2,14 +2,15 @@ package category;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryRepository {
     private final String URL = "jdbc:mysql://localhost:3306/bibliotek";
     private final String USER = "root";
     private final String PASS = "Apelsinkr0kant!";
 
-    public ArrayList<Category> getAllCategories() {
-        ArrayList<Category> categories = new ArrayList<>();
+    public List<Category> getAllCategories() {
+        List<Category> categories = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              Statement stmt = conn.createStatement()) {
@@ -56,8 +57,8 @@ public class CategoryRepository {
         return category;
     }
 
-    public ArrayList<Category> findCategoriesByBookId(int bookId) {
-        ArrayList<Category> categories = new ArrayList<>();
+    public List<Category> findCategoriesByBookId(int bookId) {
+        List<Category> categories = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""

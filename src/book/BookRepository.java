@@ -5,6 +5,7 @@ import category.Category;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookRepository {
     private final String URL = "jdbc:mysql://localhost:3306/bibliotek";
@@ -12,8 +13,8 @@ public class BookRepository {
     private final String PASS = "Apelsinkr0kant!";
 
     //hämta alla böcker från biblioteket
-    public ArrayList<Book> getAllBooks() {
-        ArrayList<Book> books = new ArrayList<>();
+    public List<Book> getAllBooks() {
+        List<Book> books = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              Statement stmt = conn.createStatement()) {
@@ -44,8 +45,8 @@ public class BookRepository {
         return books;
     }
 
-    public ArrayList<Book> getPopularBooks() {
-        ArrayList<Book> books = new ArrayList<>();
+    public List<Book> getPopularBooks() {
+        List<Book> books = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              Statement stmt = conn.createStatement()) {
@@ -81,8 +82,8 @@ public class BookRepository {
     }
 
     //sök efter en bok via boktitel/beskrivning
-    public ArrayList<Book> searchBook(String searchTerm) {
-        ArrayList<Book> books = new ArrayList<>();
+    public List<Book> searchBook(String searchTerm) {
+        List<Book> books = new ArrayList<>();
         String search = "%" + searchTerm + "%";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -117,8 +118,8 @@ public class BookRepository {
         }
 
         //filtrera böcker via kategori
-    public ArrayList<Book> filterBooksByCategory(int categoryId) {
-        ArrayList<Book> booksByCategory = new ArrayList<>();
+    public List<Book> filterBooksByCategory(int categoryId) {
+        List<Book> booksByCategory = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
             PreparedStatement stmt = conn.prepareStatement("""
@@ -150,15 +151,15 @@ public class BookRepository {
         } return booksByCategory;
     }
 
-    public ArrayList<Book> getBookById(int bookId) {
-        ArrayList<Book> book = new ArrayList<>();
+    public List<Book> getBookById(int bookId) {
+        List<Book> book = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
             PreparedStatement stmt = conn.prepareStatement("""
             SELECT * FROM books b
             JOIN book_descriptions bd ON bd.book_id=b.id
             WHERE b.id=?
-""");
+""")) {
             stmt.setInt(1, bookId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -352,21 +353,6 @@ public class BookRepository {
 """)) {
             stmt.setInt(1, bookId);
             stmt.setInt(2, authorId);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    //add to book_categories
-    public void addBookCategories(int bookId, int categoryId) {
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement stmt = conn.prepareStatement("""
-        INSERT INTO book_categories (book_id, category_id)
-        VALUES (?,?)
-""")) {
-            stmt.setInt(1, bookId);
-            stmt.setInt(2, categoryId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

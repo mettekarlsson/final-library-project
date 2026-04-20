@@ -3,16 +3,15 @@ package loan;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
-import static Main.MainController.loggedInUser;
+import java.util.List;
 
 public class LoanRepository {
     private final String URL = "jdbc:mysql://localhost:3306/bibliotek";
     private final String USER = "root";
     private final String PASS = "Apelsinkr0kant!";
 
-    public ArrayList<Loan> getAllLoansByMemberId(int memberId) {
-        ArrayList<Loan> loans = new ArrayList<>();
+    public List<Loan> getAllLoansByMemberId(int memberId) {
+        List<Loan> loans = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
@@ -105,14 +104,14 @@ public class LoanRepository {
         }
     }
 
-    public String leaveReview(int bookId, int rating, String comment) {
+    public String leaveReview(int bookId, int memberId, int rating, String comment) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         PreparedStatement stmt = conn.prepareStatement("""
         INSERT INTO reviews (book_id, member_id, rating, comment, review_date)
         VALUES (?, ?, ?, ?, CURDATE())
 """)) {
             stmt.setInt(1, bookId);
-            stmt.setInt(2, loggedInUser.getId());
+            stmt.setInt(2, memberId);
             stmt.setInt(3, rating);
             stmt.setString(4, comment);
             stmt.executeUpdate();
@@ -125,8 +124,8 @@ public class LoanRepository {
     }
 
 
-    public ArrayList<Loan> getAllCurrentLoans() {
-        ArrayList<Loan> loans = new ArrayList<>();
+    public List<Loan> getAllCurrentLoans() {
+        List<Loan> loans = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         Statement stmt = conn.createStatement()) {
@@ -159,8 +158,8 @@ public class LoanRepository {
         return loans;
     }
 
-    public ArrayList<Loan> getAllLateLoans() {
-        ArrayList<Loan> loans = new ArrayList<>();
+    public List<Loan> getAllLateLoans() {
+        List<Loan> loans = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              Statement stmt = conn.createStatement()) {

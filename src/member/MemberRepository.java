@@ -2,8 +2,7 @@ package member;
 
 import java.sql.*;
 import java.util.ArrayList;
-
-import static Main.MainController.loggedInUser;
+import java.util.List;
 
 public class MemberRepository {
     private final String URL = "jdbc:mysql://localhost:3306/bibliotek";
@@ -59,12 +58,12 @@ public class MemberRepository {
         return null;
     }
 
-    public String updateMemberInfo(String column, String newValue) {
+    public String updateMemberInfo(String column, String newValue, int memberId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("UPDATE members SET " + column + " = ? WHERE id = ?")) {
             stmt.setString(1, newValue);
-            stmt.setInt(2, loggedInUser.getId());
+            stmt.setInt(2, memberId);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -73,8 +72,8 @@ public class MemberRepository {
         return "Your profile has been updated.";
     }
 
-    public ArrayList<Member> getAllMembers() {
-        ArrayList<Member> members = new ArrayList<>();
+    public List<Member> getAllMembers() {
+        List<Member> members = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              Statement stmt = conn.createStatement()) {
@@ -96,7 +95,7 @@ public class MemberRepository {
         } catch (SQLException e) {
             System.out.println("Fel: " + e.getMessage());
         }
-        return null;
+        return members;
     }
 
     public String addNewMember(NewMemberDTO member) {
@@ -162,8 +161,8 @@ public class MemberRepository {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
             SELECT * FROM members m
-                JOIN loans l ON l.member_id=m.id
-                     WHERE l.id=?
+            JOIN loans l ON l.member_id=m.id
+            WHERE l.id=?
             """)) {
             stmt.setInt(1, loanId);
             ResultSet rs = stmt.executeQuery();

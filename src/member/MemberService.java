@@ -1,6 +1,7 @@
 package member;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MemberService {
     MemberRepository memberRepository = new MemberRepository();
@@ -10,8 +11,8 @@ public class MemberService {
                 member.getLastName(), member.getEmail(), member.getMembershipType(), member.getStatus());
     }
 
-    public ArrayList<MemberInfoDTO> mapToMemberDTO(ArrayList<Member> members) {
-        ArrayList<MemberInfoDTO> dtos = new ArrayList<>();
+    public List<MemberInfoDTO> mapToMemberDTO(List<Member> members) {
+        List<MemberInfoDTO> dtos = new ArrayList<>();
         for (Member m : members) {
             MemberInfoDTO memberInfoDTO = new MemberInfoDTO(m.getId(), m.getFirstName(), m.getLastName(),
                     m.getEmail(), m.getMembershipType(), m.getStatus());
@@ -28,11 +29,11 @@ public class MemberService {
         return memberRepository.getMemberByEmail(email);
     }
 
-    public String updateMemberInfo(String column, String newValue) {
-        return memberRepository.updateMemberInfo(column, newValue);
+    public String updateMemberInfo(String column, String newValue, int memberId) {
+        return memberRepository.updateMemberInfo(column, newValue, memberId);
     }
 
-    public ArrayList<MemberInfoDTO> getAllMembers() {
+    public List<MemberInfoDTO> getAllMembers() {
         return mapToMemberDTO(memberRepository.getAllMembers());
     }
 

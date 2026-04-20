@@ -6,6 +6,7 @@ import category.Category;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class BookController {
@@ -61,7 +62,7 @@ public class BookController {
 
     //case 1
     public void showAllBooks() {
-    ArrayList<BookInfoDTO> books = new ArrayList<>(bookService.getAllBooks());
+    List<BookInfoDTO> books = new ArrayList<>(bookService.getAllBooks());
     for(BookInfoDTO b :books) {
         System.out.println(b);
     }
@@ -69,7 +70,7 @@ public class BookController {
 
     //case 2
     public void showAllAvailableBooks() {
-        ArrayList<BookInfoDTO> books = new ArrayList<>(bookService.getAllAvailableBooks());
+        List<BookInfoDTO> books = new ArrayList<>(bookService.getAllAvailableBooks());
         for (BookInfoDTO b : books) {
             System.out.println(b);
         }
@@ -77,7 +78,7 @@ public class BookController {
 
     //case 3
     public void showPopularBooks() {
-        ArrayList<BookInfoDTO> books = new ArrayList<>(bookService.getPopularBooks());
+        List<BookInfoDTO> books = new ArrayList<>(bookService.getPopularBooks());
         for (BookInfoDTO b : books) {
             System.out.println(b);
         }
@@ -86,7 +87,7 @@ public class BookController {
     //case 4
     public void searchBook() {
         System.out.println("Search for a book:");
-        ArrayList<BookInfoDTO> books = bookService.searchBook(scanner.nextLine());
+        List<BookInfoDTO> books = bookService.searchBook(scanner.nextLine());
         for (BookInfoDTO b : books) {
             System.out.println(b);
         }
@@ -95,13 +96,13 @@ public class BookController {
     //case 5
     public void filterBooksByCategory() {
         System.out.println("--- All categories ---");
-        ArrayList<Category> categories = bookService.getAllCategories();
+        List<Category> categories = bookService.getAllCategories();
         for (Category c : categories) {
             System.out.println(c);
         }
         System.out.println("Choose which category(id) to look at:");
         int categoryId = Integer.parseInt(scanner.nextLine());
-        ArrayList<BookInfoDTO> books = bookService.filterBooksByCategory(categoryId);
+        List<BookInfoDTO> books = bookService.filterBooksByCategory(categoryId);
         for (BookInfoDTO b : books) {
             System.out.println(b);
         }
@@ -144,9 +145,9 @@ public class BookController {
     }
 
     //case 1 admin
-    public void addBook() throws SQLException {
-        ArrayList<Author> bookAuthors = new ArrayList<>();
-        ArrayList<Category> bookCategories = new ArrayList<>();
+    public void addBook() {
+        List<Author> bookAuthors = new ArrayList<>();
+        List<Category> bookCategories = new ArrayList<>();
 
         System.out.println("Enter the book-title:");
         String title = scanner.nextLine();
@@ -176,7 +177,7 @@ public class BookController {
                 case 1: {
                     System.out.println("Search for an author:");
                     String authorSearch = scanner.nextLine();
-                    ArrayList<AuthorInfoDTO> authors = bookService.searchAuthor(authorSearch);
+                    List<AuthorInfoDTO> authors = bookService.searchAuthor(authorSearch);
                     for (AuthorInfoDTO a : authors) {
                         System.out.println(a);
                     }
@@ -213,7 +214,7 @@ public class BookController {
 
         }
         System.out.println("See all categories:");
-        ArrayList<Category> categories = bookService.getAllCategories();
+        List<Category> categories = bookService.getAllCategories();
         for (Category c : categories) {
             System.out.println(c);
         }
@@ -245,11 +246,11 @@ public class BookController {
 
     //case 2 admin
     public void editBook() {
-        ArrayList<Author> bookAuthors = new ArrayList<>();
-        ArrayList<Category> bookCategories = new ArrayList<>();
+        List<Author> bookAuthors = new ArrayList<>();
+        List<Category> bookCategories = new ArrayList<>();
         System.out.println("Enter the book ID:");
         int bookId = Integer.parseInt(scanner.nextLine());
-        ArrayList<BookInfoDTO> book = bookService.getBookById(bookId);
+        List<BookInfoDTO> book = bookService.getBookById(bookId);
         for (BookInfoDTO b : book) {
             System.out.println(b);
             bookAuthors = b.getAuthors();
@@ -331,7 +332,7 @@ public class BookController {
                     System.out.println("2. Remove author");
                     int authorChoice = Integer.parseInt(scanner.nextLine());
                     if (authorChoice == 1) {
-                        ArrayList<AuthorInfoDTO> authors = bookService.getAllAuthors();
+                        List<AuthorInfoDTO> authors = bookService.getAllAuthors();
                         for (AuthorInfoDTO a : authors) {
                             System.out.println(a);
                         }
@@ -339,7 +340,7 @@ public class BookController {
                         int authorId = Integer.parseInt(scanner.nextLine());
                         bookService.addBookAuthors(bookId, authorId);
                     } else if (authorChoice == 2) {
-                        ArrayList<AuthorInfoDTO> currentAuthors = bookService.getAuthorsByBookId(bookId);
+                        List<AuthorInfoDTO> currentAuthors = bookService.getAuthorsByBookId(bookId);
                         for (AuthorInfoDTO a : currentAuthors) {
                             System.out.println(a);
                         }
@@ -349,6 +350,7 @@ public class BookController {
                     } else {
                         System.out.println("Invalid choice.");
                     }
+                    break;
                 }
                 case 10: {
                     for (Category c : bookCategories) {
@@ -358,15 +360,15 @@ public class BookController {
                     System.out.println("2. Remove category");
                     int categoryChoice = Integer.parseInt(scanner.nextLine());
                     if (categoryChoice == 1) {
-                        ArrayList<Category> categories = bookService.getAllCategories();
+                        List<Category> categories = bookService.getAllCategories();
                         for (Category c : categories) {
                             System.out.println(c);
                         }
                         System.out.println("Which category(id) would you like to add?");
                         int categoryId = Integer.parseInt(scanner.nextLine());
-                        bookService.addBookCategories(bookId, categoryId);
+                        bookService.addCategoryToBook(bookId, categoryId);
                     } else if (categoryChoice == 2) {
-                        ArrayList<Category> currentCategories = bookService.getCategoriesByBookId(bookId);
+                        List<Category> currentCategories = bookService.getCategoriesByBookId(bookId);
                         for (Category c : currentCategories) {
                             System.out.println(c);
                         }
@@ -376,6 +378,7 @@ public class BookController {
                     } else {
                         System.out.println("Invalid choice.");
                     }
+                    break;
                 }
                 case 0: {
                     active = false;
@@ -398,11 +401,11 @@ public class BookController {
     public void addCategoryToBook() {
         System.out.println("Enter the book-id:");
         int bookId = Integer.parseInt(scanner.nextLine());
-        ArrayList<BookInfoDTO> books = bookService.getBookById(bookId);
+        List<BookInfoDTO> books = bookService.getBookById(bookId);
         for (BookInfoDTO b : books) {
             System.out.println(b);
         }
-        ArrayList<Category> categories = bookService.getAllCategories();
+        List<Category> categories = bookService.getAllCategories();
         for (Category c : categories) {
             System.out.println(c);
         }

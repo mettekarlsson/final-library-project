@@ -2,6 +2,7 @@ package author;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class AuthorController {
@@ -36,7 +37,7 @@ public class AuthorController {
 
     //case 1
     public void editAuthor() {
-        ArrayList<Author> authors = new ArrayList<>(authorService.getAllAuthors());
+        List<Author> authors = new ArrayList<>(authorService.getAllAuthors());
         for(Author a : authors) {
             System.out.println(a);
         }

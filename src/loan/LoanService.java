@@ -1,20 +1,19 @@
 package loan;
 
 import java.util.ArrayList;
-
-import static Main.MainController.loggedInUser;
+import java.util.List;
 
 public class LoanService {
     LoanRepository loanRepository = new LoanRepository();
     LoanMapper loanMapper = new LoanMapper();
 
-    public ArrayList<LoanInfoDTO> getAllLoansByMemberId(int memberId) {
+    public List<LoanInfoDTO> getAllLoansByMemberId(int memberId) {
         return loanMapper.mapToLoanInfoDTO(loanRepository.getAllLoansByMemberId(memberId));
     }
 
-    public ArrayList<LoanInfoDTO> getAllCurrentLoans(int memberId) {
-        ArrayList<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
-        ArrayList<Loan> currentLoans = new ArrayList<>();
+    public List<LoanInfoDTO> getAllCurrentLoans(int memberId) {
+        List<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
+        List<Loan> currentLoans = new ArrayList<>();
         for (Loan l : loans) {
             if (l.getReturnDate() == null) {
                 currentLoans.add(l);
@@ -36,9 +35,9 @@ public class LoanService {
     }
 
     //leave review
-    public ArrayList<LoanInfoDTO> getReturnedLoans() {
-        ArrayList<Loan> loans = loanRepository.getAllLoansByMemberId(loggedInUser.getId());
-        ArrayList<Loan> returnedLoans = new ArrayList<>();
+    public List<LoanInfoDTO> getReturnedLoans(int memberId) {
+        List<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
+        List<Loan> returnedLoans = new ArrayList<>();
         for (Loan l : loans) {
             if (l.getReturnDate() != null) {
                 returnedLoans.add(l);
@@ -47,15 +46,15 @@ public class LoanService {
         return loanMapper.mapToLoanInfoDTO(returnedLoans);
     }
 
-    public String leaveReview(int bookId, int rating, String review) {
-        return loanRepository.leaveReview(bookId, rating, review);
+    public String leaveReview(int bookId, int memberId, int rating, String review) {
+        return loanRepository.leaveReview(bookId, memberId, rating, review);
     }
 
-    public ArrayList<AdminLoanDTO> getAllCurrentLoans() {
+    public List<AdminLoanDTO> getAllCurrentLoans() {
         return loanMapper.mapToAdminLoanDTO(loanRepository.getAllCurrentLoans());
     }
 
-    public ArrayList<AdminLoanDTO> getAllLateLoans() {
+    public List<AdminLoanDTO> getAllLateLoans() {
         return loanMapper.mapToAdminLoanDTO(loanRepository.getAllLateLoans());
     }
 }

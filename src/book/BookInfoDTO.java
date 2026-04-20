@@ -4,6 +4,7 @@ import author.Author;
 import category.Category;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookInfoDTO {
 
@@ -12,11 +13,11 @@ public class BookInfoDTO {
     private int yearPublished;
     private int availableCopies;
     private String summary;
-    private ArrayList<Author> authors;
-    private ArrayList<Category> categories;
+    private List<Author> authors;
+    private List<Category> categories;
 
     public BookInfoDTO(int id, String title, int yearPublished, int availableCopies, String summary,
-                       ArrayList<Author> authors, ArrayList<Category> categories) {
+                       List<Author> authors, List<Category> categories) {
         this.id = id;
         this.title = title;
         this.yearPublished = yearPublished;
@@ -66,27 +67,27 @@ public class BookInfoDTO {
         this.summary = summary;
     }
 
-    public ArrayList<Author> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(ArrayList<Author> authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
-    public ArrayList<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(ArrayList<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
     @Override
     public String toString() {
-        return "Book-id:" + id +
+        return "Book #" + id +
                 ", Title: '" + title + "'" +
-                ", Year Published: " + yearPublished +
+                ", " + yearPublished +
                 ", Available Copies: " + availableCopies +
                 ", Summary: '" + summary + "'" +
                 ", Author/s: " + authors +

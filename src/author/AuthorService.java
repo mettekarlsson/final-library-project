@@ -1,11 +1,11 @@
 package author;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class AuthorService {
     AuthorRepository authorRepository = new AuthorRepository();
 
-    public ArrayList<Author> getAllAuthors() {
+    public List<Author> getAllAuthors() {
         return authorRepository.getAllAuthors();
     }
 

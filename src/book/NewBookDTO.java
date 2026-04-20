@@ -4,6 +4,7 @@ import author.Author;
 import category.Category;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NewBookDTO {
 
@@ -15,12 +16,12 @@ public class NewBookDTO {
     private String summary;
     private String language;
     private int pageCount;
-    private ArrayList<Author> authors;
-    private ArrayList<Category> categories;
+    private List<Author> authors;
+    private List<Category> categories;
 
     public NewBookDTO(String title, String isbn, int yearPublished, int totalCopies,
                       int availableCopies, String summary, String language, int pageCount,
-                      ArrayList<Author> authors, ArrayList<Category> categories) {
+                      List<Author> authors, List<Category> categories) {
         this.title = title;
         this.isbn = isbn;
         this.yearPublished = yearPublished;
@@ -97,19 +98,19 @@ public class NewBookDTO {
         this.pageCount = pageCount;
     }
 
-    public ArrayList<Author> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(ArrayList<Author> authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
-    public ArrayList<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(ArrayList<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 }

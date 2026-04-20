@@ -7,8 +7,8 @@ import author.AuthorRepository;
 import category.Category;
 import category.CategoryRepository;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookService {
     BookRepository bookRepository = new BookRepository();
@@ -17,11 +17,11 @@ public class BookService {
     AuthorMapper authorMapper = new AuthorMapper();
 
     //metod som lägger till author, category och gör om till dto
-    public ArrayList<BookInfoDTO> mapToDTO(ArrayList<Book> books) {
-        ArrayList<BookInfoDTO> dtos = new ArrayList<>();
+    public List<BookInfoDTO> mapToDTO(List<Book> books) {
+        List<BookInfoDTO> dtos = new ArrayList<>();
         for (Book b : books) {
-            ArrayList<Author> authors = authorRepository.findAuthorsByBookId(b.getId());
-            ArrayList<Category> categories = categoryRepository.findCategoriesByBookId(b.getId());
+            List<Author> authors = authorRepository.findAuthorsByBookId(b.getId());
+            List<Category> categories = categoryRepository.findCategoriesByBookId(b.getId());
             BookInfoDTO bookInfoDTO = new BookInfoDTO(b.getId(), b.getTitle(), b.getYearPublished(), b.getAvailableCopies(), b.getSummary(), authors, categories);
             dtos.add(bookInfoDTO);
         }
@@ -29,14 +29,14 @@ public class BookService {
     }
 
     //gör om till dtos
-    public ArrayList<BookInfoDTO> getAllBooks() {
+    public List<BookInfoDTO> getAllBooks() {
         return mapToDTO(bookRepository.getAllBooks());
     }
 
     //filtrerar ut de som är available
-    public ArrayList<BookInfoDTO> getAllAvailableBooks() {
-        ArrayList<Book> books = bookRepository.getAllBooks();
-        ArrayList<Book> availableBooks = new ArrayList<>();
+    public List<BookInfoDTO> getAllAvailableBooks() {
+        List<Book> books = bookRepository.getAllBooks();
+        List<Book> availableBooks = new ArrayList<>();
         for (Book b : books) {
             if (b.getAvailableCopies() > 0) {
                 availableBooks.add(b);
@@ -45,20 +45,20 @@ public class BookService {
         return mapToDTO(availableBooks);
     }
 
-    public ArrayList<BookInfoDTO> getPopularBooks() {
+    public List<BookInfoDTO> getPopularBooks() {
         return mapToDTO(bookRepository.getPopularBooks());
     }
 
-    public ArrayList<BookInfoDTO> searchBook(String search) {
+    public List<BookInfoDTO> searchBook(String search) {
         return mapToDTO(bookRepository.searchBook(search));
     }
 
-    public ArrayList<BookInfoDTO> filterBooksByCategory(int categoryId) {
+    public List<BookInfoDTO> filterBooksByCategory(int categoryId) {
         return mapToDTO(bookRepository.filterBooksByCategory(categoryId));
     }
 
     //kallar på sökfunktionen i authorrepository genom mapperklassen - används i addbook
-    public ArrayList<AuthorInfoDTO> searchAuthor(String search) {
+    public List<AuthorInfoDTO> searchAuthor(String search) {
         return authorMapper.mapToDTO(authorRepository.searchAuthor(search));
     }
 
@@ -66,7 +66,7 @@ public class BookService {
         return authorRepository.findAuthorById(authorId);
     }
 
-    public ArrayList<Category> getAllCategories() {
+    public List<Category> getAllCategories() {
         return categoryRepository.getAllCategories();
     }
 
@@ -74,7 +74,7 @@ public class BookService {
         return categoryRepository.getCategoryById(categoryId);
     }
 
-    public String addBook(NewBookDTO newBookDTO) throws SQLException {
+    public String addBook(NewBookDTO newBookDTO) {
         return bookRepository.addBook(newBookDTO);
     }
 
@@ -99,11 +99,11 @@ public class BookService {
     }
 
     //för att bookcontroller inte ska behöva kalla på authorservice, denna o nästa
-    public ArrayList<AuthorInfoDTO> getAllAuthors() {
+    public List<AuthorInfoDTO> getAllAuthors() {
         return authorMapper.mapToDTO(authorRepository.getAllAuthors());
     }
 
-    public ArrayList<AuthorInfoDTO> getAuthorsByBookId(int bookId) {
+    public List<AuthorInfoDTO> getAuthorsByBookId(int bookId) {
         return authorMapper.mapToDTO(authorRepository.findAuthorsByBookId(bookId));
     }
 
@@ -111,12 +111,8 @@ public class BookService {
         bookRepository.removeBookAuthors(bookId, authorId);
     }
 
-    public ArrayList<Category> getCategoriesByBookId(int bookId) {
+    public List<Category> getCategoriesByBookId(int bookId) {
         return categoryRepository.findCategoriesByBookId(bookId);
-    }
-
-    public void addBookCategories(int bookId, int categoryId) {
-        bookRepository.addBookCategories(bookId, categoryId);
     }
 
     public void removeBookCategories(int bookId, int categoryId) {
@@ -132,7 +128,7 @@ public class BookService {
         return bookRepository.addCategoryToBook(bookId, categoryId);
     }
 
-    public ArrayList<BookInfoDTO> getBookById(int bookId) {
+    public List<BookInfoDTO> getBookById(int bookId) {
         return mapToDTO(bookRepository.getBookById(bookId));
     }
 

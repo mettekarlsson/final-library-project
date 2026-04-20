@@ -2,8 +2,9 @@ package member;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-import static Main.MainController.loggedInUser;
+import static main.MainController.loggedInUser;
 
 
 public class MemberController {
@@ -66,25 +67,25 @@ public class MemberController {
                         case 1: {
                             System.out.println("New first name:");
                             String newValue = scanner.nextLine();
-                            memberService.updateMemberInfo("first_name", newValue);
+                            memberService.updateMemberInfo("first_name", newValue, loggedInUser.getId());
                             break;
                         }
                         case 2: {
                             System.out.println("New last name:");
                             String newValue = scanner.nextLine();
-                            memberService.updateMemberInfo("last_name", newValue);
+                            memberService.updateMemberInfo("last_name", newValue, loggedInUser.getId());
                             break;
                         }
                         case 3: {
                             System.out.println("New email:");
                             String newValue = scanner.nextLine();
-                            memberService.updateMemberInfo("email", newValue);
+                            memberService.updateMemberInfo("email", newValue, loggedInUser.getId());
                             break;
                         }
                         case 4: {
                             System.out.println("New password:");
                             String newValue = scanner.nextLine();
-                            memberService.updateMemberInfo("password", newValue);
+                            memberService.updateMemberInfo("password", newValue, loggedInUser.getId());
                             break;
                         }
                         case 0: {
@@ -105,13 +106,13 @@ public class MemberController {
             System.out.println("1. Change to premium");
             int choice = Integer.parseInt(scanner.nextLine());
             if (choice == 1) {
-                result = memberService.updateMemberInfo("membership_type", "premium");
+                result = memberService.updateMemberInfo("membership_type", "premium", loggedInUser.getId());
             }
         } else {
             System.out.println("1. Change to standard");
             int choice = Integer.parseInt(scanner.nextLine());
             if (choice == 1) {
-                result = memberService.updateMemberInfo("membership_type", "standard");
+                result = memberService.updateMemberInfo("membership_type", "standard", loggedInUser.getId());
             }
         }
         System.out.println(result);
@@ -156,7 +157,7 @@ public class MemberController {
 
     //case 1 admin
     public void showAllMembers() {
-        ArrayList<MemberInfoDTO> members = memberService.getAllMembers();
+        List<MemberInfoDTO> members = memberService.getAllMembers();
         for (MemberInfoDTO member : members) {
             System.out.println(member.toString());
         }
