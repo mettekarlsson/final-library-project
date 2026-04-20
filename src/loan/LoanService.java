@@ -5,6 +5,8 @@ import member.MemberRepository;
 
 import java.util.ArrayList;
 
+import static Main.MainController.loggedInUser;
+
 public class LoanService {
     LoanRepository loanRepository = new LoanRepository();
     LoanMapper loanMapper = new LoanMapper();
@@ -34,6 +36,22 @@ public class LoanService {
 
     public String addNewLoan(int bookId, int memberId) {
         return loanRepository.addNewLoan(bookId, memberId);
+    }
+
+    //leave review
+    public ArrayList<LoanInfoDTO> getReturnedLoans() {
+        ArrayList<Loan> loans = loanRepository.getAllLoansByMemberId(loggedInUser.getId());
+        ArrayList<Loan> returnedLoans = new ArrayList<>();
+        for (Loan l : loans) {
+            if (l.getReturnDate() != null) {
+                returnedLoans.add(l);
+            }
+        }
+        return loanMapper.mapToLoanInfoDTO(returnedLoans);
+    }
+
+    public String leaveReview(int bookId, int rating, String review) {
+        return loanRepository.leaveReview(bookId, rating, review);
     }
 
     public ArrayList<AdminLoanDTO> getAllCurrentLoans() {

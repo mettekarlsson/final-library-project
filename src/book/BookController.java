@@ -22,6 +22,7 @@ public class BookController {
             System.out.println("3. Show top ten most popular books");
             System.out.println("4. Search book");
             System.out.println("5. Filter books by category");
+            System.out.println("6. Leave a review");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 

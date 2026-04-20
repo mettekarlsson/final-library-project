@@ -6,6 +6,8 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static Main.MainController.loggedInUser;
+
 public class LoanRepository {
     private final String URL = "jdbc:mysql://localhost:3306/bibliotek";
     private final String USER = "root";
@@ -104,6 +106,26 @@ public class LoanRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public String leaveReview(int bookId, int rating, String comment) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement("""
+        INSERT INTO reviews (book_id, member_id, rating, comment, review_date)
+        VALUES (?, ?, ?, ?, CURDATE())
+""")) {
+            stmt.setInt(1, bookId);
+            stmt.setInt(2, loggedInUser.getId());
+            stmt.setInt(3, rating);
+            stmt.setString(4, comment);
+            stmt.executeUpdate();
+
+            return "You've left a review for book #" + bookId + ".";
+        } catch (SQLException e) {
+            System.out.println("SQL-FEL: " + e.getMessage());
+        }
+        return null;
+    }
+
 
     public ArrayList<Loan> getAllCurrentLoans() {
         ArrayList<Loan> loans = new ArrayList<>();

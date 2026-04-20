@@ -5,14 +5,16 @@ import java.time.LocalDate;
 public class LoanInfoDTO {
 
     private int id;
-    String bookTitle;
+    private int bookId;
+    private String bookTitle;
     private LocalDate loanDate;
     private LocalDate dueDate;
     private LocalDate returnDate;
 
-    public LoanInfoDTO(int id, String bookTitle, LocalDate loanDate, LocalDate dueDate,
+    public LoanInfoDTO(int id, int bookId, String bookTitle, LocalDate loanDate, LocalDate dueDate,
                        LocalDate returnDate) {
         this.id = id;
+        this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.loanDate = loanDate;
         this.dueDate = dueDate;
@@ -25,6 +27,14 @@ public class LoanInfoDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
     }
 
     public String getBookTitle() {
@@ -62,6 +72,7 @@ public class LoanInfoDTO {
     @Override
     public String toString() {
         return "Loan-ID: " + id +
+                ", Book-ID #" + bookId +
                 ", Book Title: '" + bookTitle + "'" +
                 ", Loan Date: " + loanDate +
                 ", Due Date: " + dueDate +

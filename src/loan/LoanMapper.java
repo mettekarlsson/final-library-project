@@ -17,7 +17,7 @@ public class LoanMapper {
         for (Loan l : loans) {
             Book book = bookRepository.findBookByLoanId(l.getId());
             Member member = memberRepository.findMemberByLoanId(l.getId());
-            LoanInfoDTO loanInfoDTO = new LoanInfoDTO(l.getId(), book.getTitle(), l.getLoanDate(), l.getDueDate(), l.getReturnDate());
+            LoanInfoDTO loanInfoDTO = new LoanInfoDTO(l.getId(), book.getId(), book.getTitle(), l.getLoanDate(), l.getDueDate(), l.getReturnDate());
             dtos.add(loanInfoDTO);
         }
         return dtos;

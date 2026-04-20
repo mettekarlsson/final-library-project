@@ -18,6 +18,7 @@ public class LoanController {
             System.out.println("2. Extend a loan");
             System.out.println("3. Return a book");
             System.out.println("4. Loan a book");
+            System.out.println("5. Leave a review");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -36,6 +37,10 @@ public class LoanController {
                 }
                 case 4: {
                     addNewLoan();
+                    break;
+                }
+                case 5: {
+                    leaveReview();
                     break;
                 }
                 case 0: {
@@ -88,12 +93,29 @@ public class LoanController {
         System.out.println(result);
     }
 
+    //case 5
+    public void leaveReview() {
+        ArrayList<LoanInfoDTO> loans = loanService.getReturnedLoans();
+        for (LoanInfoDTO l : loans) {
+            System.out.println(l);
+        }
+        System.out.println("Which book(id) would you like to review?");
+        int bookId = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter your rating (1-5):");
+        int rating = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter your review:");
+        String comment = scanner.nextLine();
+        String result = loanService.leaveReview(bookId, rating, comment);
+        System.out.println(result);
+    }
+
     public void adminLoanMenu(){
         boolean active = true;
         while (active) {
             System.out.println("---- Loan Menu ----");
             System.out.println("1. See all current loans");
             System.out.println("2. See all overdue loans");
+            System.out.println("3. Return loan");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -104,6 +126,10 @@ public class LoanController {
                 }
                 case 2: {
                     getAllLateLoans();
+                    break;
+                }
+                case 3: {
+                    adminReturnLoan();
                     break;
                 }
                 case 0: {
@@ -128,5 +154,17 @@ public class LoanController {
         for (AdminLoanDTO l : loans) {
             System.out.println(l.toString());
         }
+    }
+
+    //case 3 admin
+    public void adminReturnLoan() {
+        ArrayList<AdminLoanDTO> loans = loanService.getAllCurrentLoans();
+        for (AdminLoanDTO l : loans) {
+            System.out.println(l);
+        }
+        System.out.println("Which loan(id) would you like to return?:");
+        int loanId = Integer.parseInt(scanner.nextLine());
+        String result = loanService.returnLoan(loanId);
+        System.out.println(result);
     }
 }
