@@ -111,6 +111,18 @@ public class BookService {
         bookRepository.removeBookAuthors(bookId, authorId);
     }
 
+    public ArrayList<Category> getCategoriesByBookId(int bookId) {
+        return categoryRepository.findCategoriesByBookId(bookId);
+    }
+
+    public void addBookCategories(int bookId, int categoryId) {
+        bookRepository.addBookCategories(bookId, categoryId);
+    }
+
+    public void removeBookCategories(int bookId, int categoryId) {
+        bookRepository.removeBookCategories(bookId, categoryId);
+    }
+
     //bara ett mellansteg
     public void deleteBook(int bookId) {
         bookRepository.deleteBook(bookId);

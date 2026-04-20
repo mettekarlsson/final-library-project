@@ -246,12 +246,14 @@ public class BookController {
     //case 2 admin
     public void editBook() {
         ArrayList<Author> bookAuthors = new ArrayList<>();
+        ArrayList<Category> bookCategories = new ArrayList<>();
         System.out.println("Enter the book ID:");
         int bookId = Integer.parseInt(scanner.nextLine());
         ArrayList<BookInfoDTO> book = bookService.getBookById(bookId);
         for (BookInfoDTO b : book) {
             System.out.println(b);
             bookAuthors = b.getAuthors();
+            bookCategories = b.getCategories();
         }
 
         boolean active = true;
@@ -344,6 +346,33 @@ public class BookController {
                         System.out.println("Which author(id) would you like to remove?");
                         int authorId = Integer.parseInt(scanner.nextLine());
                         bookService.removeBookAuthors(bookId, authorId);
+                    } else {
+                        System.out.println("Invalid choice.");
+                    }
+                }
+                case 10: {
+                    for (Category c : bookCategories) {
+                        System.out.println(c);
+                    }
+                    System.out.println("1. Add category");
+                    System.out.println("2. Remove category");
+                    int categoryChoice = Integer.parseInt(scanner.nextLine());
+                    if (categoryChoice == 1) {
+                        ArrayList<Category> categories = bookService.getAllCategories();
+                        for (Category c : categories) {
+                            System.out.println(c);
+                        }
+                        System.out.println("Which category(id) would you like to add?");
+                        int categoryId = Integer.parseInt(scanner.nextLine());
+                        bookService.addBookCategories(bookId, categoryId);
+                    } else if (categoryChoice == 2) {
+                        ArrayList<Category> currentCategories = bookService.getCategoriesByBookId(bookId);
+                        for (Category c : currentCategories) {
+                            System.out.println(c);
+                        }
+                        System.out.println("Which category(id) would you like to remove?");
+                        int categoryId = Integer.parseInt(scanner.nextLine());
+                        bookService.removeBookCategories(bookId, categoryId);
                     } else {
                         System.out.println("Invalid choice.");
                     }
