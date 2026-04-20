@@ -1,5 +1,8 @@
 package author;
 
+import exceptions.DatabaseException;
+import exceptions.ValidationException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +40,8 @@ public class AuthorController {
 
     //case 1
     public void editAuthor() {
-        List<Author> authors = new ArrayList<>(authorService.getAllAuthors());
-        for(Author a : authors) {
+        List<AuthorInfoDTO> authors = new ArrayList<>(authorService.getAllAuthors());
+        for(AuthorInfoDTO a : authors) {
             System.out.println(a);
         }
         System.out.println("Enter the author ID:");
@@ -111,8 +114,16 @@ public class AuthorController {
     public void addAuthor() {
         System.out.println("Enter their first name:");
         String firstName = scanner.nextLine();
+        while (firstName.isBlank()) {
+            System.out.println("First name cannot be empty. Try again.");
+            firstName = scanner.nextLine();
+        }
         System.out.println("Enter their last name:");
         String lastName = scanner.nextLine();
+        while (lastName.isBlank()) {
+            System.out.println("Last name cannot be empty. Try again.");
+            lastName = scanner.nextLine();
+        }
         System.out.println("Enter their nationality:");
         String nationality = scanner.nextLine();
         System.out.println("Enter their birth date:");
@@ -123,7 +134,13 @@ public class AuthorController {
         String website = scanner.nextLine();
 
         NewAuthorDTO newAuthorDTO = new NewAuthorDTO(firstName, lastName, nationality, birthDate, biography, website);
-        String result = authorService.addAuthor(newAuthorDTO);
-        System.out.println(result);
+        try {
+            String result = authorService.addAuthor(newAuthorDTO);
+            System.out.println(result);
+        } catch (ValidationException e) {
+            System.out.println("Validation error: " + e.getMessage());
+        } catch (DatabaseException e) {
+            System.out.println("Something went wrong, please try again.");
+        }
     }
 }

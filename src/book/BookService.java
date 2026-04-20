@@ -14,7 +14,6 @@ public class BookService {
     BookRepository bookRepository = new BookRepository();
     AuthorRepository authorRepository = new AuthorRepository();
     CategoryRepository categoryRepository = new CategoryRepository();
-    AuthorMapper authorMapper = new AuthorMapper();
 
     //metod som lägger till author, category och gör om till dto
     public List<BookInfoDTO> mapToDTO(List<Book> books) {
@@ -59,7 +58,7 @@ public class BookService {
 
     //kallar på sökfunktionen i authorrepository genom mapperklassen - används i addbook
     public List<AuthorInfoDTO> searchAuthor(String search) {
-        return authorMapper.mapToDTO(authorRepository.searchAuthor(search));
+        return AuthorMapper.mapToDTO(authorRepository.searchAuthor(search));
     }
 
     public Author getAuthorById(int authorId) {
@@ -100,11 +99,11 @@ public class BookService {
 
     //för att bookcontroller inte ska behöva kalla på authorservice, denna o nästa
     public List<AuthorInfoDTO> getAllAuthors() {
-        return authorMapper.mapToDTO(authorRepository.getAllAuthors());
+        return AuthorMapper.mapToDTO(authorRepository.getAllAuthors());
     }
 
     public List<AuthorInfoDTO> getAuthorsByBookId(int bookId) {
-        return authorMapper.mapToDTO(authorRepository.findAuthorsByBookId(bookId));
+        return AuthorMapper.mapToDTO(authorRepository.findAuthorsByBookId(bookId));
     }
 
     public void removeBookAuthors(int bookId, int authorId){

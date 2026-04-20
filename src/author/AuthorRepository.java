@@ -1,5 +1,9 @@
 package author;
 
+import exceptions.AuthorNotFoundException;
+import exceptions.BookNotFoundException;
+import exceptions.DatabaseException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +14,6 @@ public class AuthorRepository {
     private final String PASS = "Apelsinkr0kant!";
 
     public Author findAuthorById(int authorId) {
-        Author author = null;
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
@@ -22,7 +25,7 @@ public class AuthorRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                author = new Author(
+                return new Author(
                         rs.getInt("id"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
@@ -31,12 +34,14 @@ public class AuthorRepository {
                         rs.getString("biography"),
                         rs.getString("website")
                 );
+            } else {
+                throw new AuthorNotFoundException(authorId);
             }
 
         } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return author;
+
     }
 
     public List<Author> findAuthorsByBookId(int bookId) {
@@ -45,9 +50,9 @@ public class AuthorRepository {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
             SELECT * FROM authors a
-                JOIN author_descriptions ad ON a.id=ad.author_id
-                JOIN book_authors ba ON ba.author_id=a.id
-                     WHERE ba.book_id = ?
+            JOIN author_descriptions ad ON a.id=ad.author_id
+            JOIN book_authors ba ON ba.author_id=a.id
+            WHERE ba.book_id = ?
             """)) {
             stmt.setInt(1, bookId);
             ResultSet rs = stmt.executeQuery();
@@ -63,11 +68,11 @@ public class AuthorRepository {
                         rs.getString("website")
                 ));
             }
+            return authors;
 
         } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return authors;
     }
 
     public List<Author> searchAuthor(String searchTerm) {
@@ -76,9 +81,10 @@ public class AuthorRepository {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
-            SELECT * FROM authors a JOIN author_descriptions ad ON ad.author_id=a.id WHERE first_name LIKE ? OR last_name LIKE ?
-
-""")){
+            SELECT * FROM authors a
+            JOIN author_descriptions ad ON ad.author_id=a.id
+            WHERE first_name LIKE ? OR last_name LIKE ?
+            """)){
             stmt.setString(1, search);
             stmt.setString(2, search);
             ResultSet rs = stmt.executeQuery();
@@ -93,10 +99,10 @@ public class AuthorRepository {
                         rs.getString("biography"),
                         rs.getString("website")
                 ));
-
+                return authors;
             }
         } catch (SQLException e){
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
         return authors;
     }
@@ -121,11 +127,11 @@ public class AuthorRepository {
                         rs.getString("website")
                 ));
             }
+            return authors;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
-        return authors;
     }
 
     public String editAuthor(int authorId, String column, String value) {
@@ -133,11 +139,15 @@ public class AuthorRepository {
         PreparedStatement stmt = conn.prepareStatement("UPDATE authors SET " + column + " = ? WHERE id = ?")) {
                 stmt.setString(1, value);
                 stmt.setInt(2, authorId);
-                stmt.executeUpdate();
 
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new AuthorNotFoundException(authorId);
+            }
+            return "Author # " + authorId + " has been edited.";
     } catch (SQLException e) {
-        System.out.println("SQL-FEL: " + e.getMessage());
-    } return "Author # " + authorId + " has been edited.";
+        throw new DatabaseException(e);
+    }
 }
 
     //edit author_descriptions
@@ -146,11 +156,16 @@ public class AuthorRepository {
          PreparedStatement stmt = conn.prepareStatement("UPDATE author_descriptions SET " + column + " = ? WHERE author_id = ?")) {
         stmt.setString(1, value);
         stmt.setInt(2, authorId);
-        stmt.executeUpdate();
 
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected == 0) {
+            throw new AuthorNotFoundException(authorId);
+        }
+
+        return "Author # " + authorId + " has been edited.";
     } catch (SQLException e) {
-        System.out.println("SQL-FEL: " + e.getMessage());
-    } return "Author # " + authorId + " has been edited.";
+        throw new DatabaseException(e);
+    }
 }
 
     public String addAuthor(NewAuthorDTO newAuthorDTO) {
@@ -182,7 +197,7 @@ public class AuthorRepository {
             return "Author with ID #" + authorId + " has been added.";
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 

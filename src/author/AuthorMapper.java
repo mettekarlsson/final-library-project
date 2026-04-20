@@ -1,18 +1,13 @@
 package author;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AuthorMapper {
 
     //metod som gör om authors till dtos
-    public List<AuthorInfoDTO> mapToDTO(List<Author> authors) {
-        return authors.stream()
-                .map(a -> new AuthorInfoDTO(
-                        a.getId(),
-                        a.getFirstName(),
-                        a.getLastName(),
-                        a.getNationality(),
-                        a.getBiography()))
-                .collect(Collectors.toList());
+    public static AuthorInfoDTO mapToDTO(Author author) {
+        return new AuthorInfoDTO(author.getId(),
+                author.getFirstName(),
+                author.getLastName(),
+                author.getNationality(),
+                author.getBiography());
     }
 }

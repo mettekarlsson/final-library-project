@@ -1,5 +1,7 @@
 package author;
 
+import exceptions.ValidationException;
+
 import java.time.LocalDate;
 
 public class Author {
@@ -21,6 +23,10 @@ public class Author {
         this.birthDate = birthDate;
         this.biography = biography;
         this.website = website;
+
+        if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
+            throw new ValidationException("Birth date cannot be in the future.");
+        }
     }
 
     public int getId() {
