@@ -1,5 +1,7 @@
 package loan;
 
+import exceptions.DatabaseException;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ public class LoanRepository {
     private final String USER = "root";
     private final String PASS = "Apelsinkr0kant!";
 
+    //get all (old and current) via member id
     public List<Loan> getAllLoansByMemberId(int memberId) {
         List<Loan> loans = new ArrayList<>();
 
@@ -39,13 +42,14 @@ public class LoanRepository {
                 returnDate));
 
             }
+            return loans;
 
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return loans;
     }
 
+    //extend loan i.e. update due date
     public String extendLoan(int loanId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
             PreparedStatement stmt = conn.prepareStatement("""
@@ -54,15 +58,46 @@ public class LoanRepository {
                    WHERE id=?
                    """)) {
             stmt.setInt(1, loanId);
-            stmt.executeUpdate();
-
-            return "Your loan #" + loanId + " has been extended.";
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Loan with ID #" + loanId + " has been extended.";
+            }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
+        return null;
     }
 
+    //för att kontrollera att lånet inte redan är returnerat när man ska lämna tillbaka det
+    public Loan getLoanById(int loanId) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement("""
+        SELECT * FROM loans
+        WHERE id=?
+        """)) {
+            stmt.setInt(1, loanId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Loan(
+                        rs.getInt("id"),
+                        rs.getInt("book_id"),
+                        rs.getInt("member_id"),
+                        null,
+                        null,
+                        rs.getDate("loan_date").toLocalDate(),
+                        rs.getDate("due_date").toLocalDate(),
+                        rs.getDate("return_date").toLocalDate()
+                );
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+        return null;
+    }
+
+    //return loan i.e. update return date
     public String returnLoan(int loanId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
@@ -71,14 +106,18 @@ public class LoanRepository {
             WHERE id=?
             """)) {
             stmt.setInt(1, loanId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Loan with ID #" + loanId + " has been returned.";
+            }
 
-            return "Your loan #" + loanId + " has been returned.";
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
+        return null;
     }
 
+    //add loan - insert i loans-tabellen, minska available copies - kolla felhantering här
     public String addNewLoan(int bookId, int memberId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         PreparedStatement stmt = conn.prepareStatement("""
@@ -100,10 +139,11 @@ public class LoanRepository {
             return "You've loaned book #" + bookId +".";
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 
+    //leave review - insert into review table
     public String leaveReview(int bookId, int memberId, int rating, String comment) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         PreparedStatement stmt = conn.prepareStatement("""
@@ -114,16 +154,18 @@ public class LoanRepository {
             stmt.setInt(2, memberId);
             stmt.setInt(3, rating);
             stmt.setString(4, comment);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "You've left a review for book #" + bookId + ".";
+            }
 
-            return "You've left a review for book #" + bookId + ".";
         } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
+            throw new DatabaseException(e);
         }
         return null;
     }
 
-
+    //get all loans that are not returned yet
     public List<Loan> getAllCurrentLoans() {
         List<Loan> loans = new ArrayList<>();
 
@@ -152,12 +194,14 @@ public class LoanRepository {
                         returnDate
                 ));
             }
+            return loans;
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
-        return loans;
     }
 
+    //get all loans that are overdue - due date has passed
     public List<Loan> getAllLateLoans() {
         List<Loan> loans = new ArrayList<>();
 
@@ -186,9 +230,10 @@ public class LoanRepository {
                     returnDate
             ));
         }
-        } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
-        }
         return loans;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
     }
 }

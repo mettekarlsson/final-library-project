@@ -104,6 +104,10 @@ public class LoanController {
         int bookId = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter your rating (1-5):");
         int rating = Integer.parseInt(scanner.nextLine());
+        while (rating > 5 || rating < 1) {
+            System.out.println("Invalid rating. Try again");
+            rating = Integer.parseInt(scanner.nextLine());
+        }
         System.out.println("Enter your review:");
         String comment = scanner.nextLine();
         String result = loanService.leaveReview(bookId, loggedInUser.getId(), rating, comment);

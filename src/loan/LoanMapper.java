@@ -35,15 +35,15 @@ public class LoanMapper {
                 loan.getReturnDate()
         );
     }
-
-    public List<AdminLoanDTO> mapToAdminLoanDTO(List<Loan> loans) {
-        List<AdminLoanDTO> dtos = new ArrayList<>();
-        for (Loan l : loans) {
-            Book book = bookRepository.findBookByLoanId(l.getId());
-            Member member = memberRepository.findMemberByLoanId(l.getId());
-            AdminLoanDTO activeLoanDTO = new AdminLoanDTO(l.getId(), book.getTitle(), member.getId(), (member.getFirstName() + " " + member.getLastName()), l.getLoanDate(), l.getDueDate(), l.getReturnDate());
-            dtos.add(activeLoanDTO);
-        }
-        return dtos;
-    }
+//
+//    public List<AdminLoanDTO> mapToAdminLoanDTO(List<Loan> loans) {
+//        List<AdminLoanDTO> dtos = new ArrayList<>();
+//        for (Loan l : loans) {
+//            Book book = bookRepository.findBookByLoanId(l.getId());
+//            Member member = memberRepository.findMemberByLoanId(l.getId());
+//            AdminLoanDTO activeLoanDTO = new AdminLoanDTO(l.getId(), book.getTitle(), member.getId(), (member.getFirstName() + " " + member.getLastName()), l.getLoanDate(), l.getDueDate(), l.getReturnDate());
+//            dtos.add(activeLoanDTO);
+//        }
+//        return dtos;
+//    }
 }

@@ -1,61 +1,119 @@
 package loan;
 
+import book.Book;
+import book.BookRepository;
+import exceptions.*;
+import member.Member;
+import member.MemberRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LoanService {
     LoanRepository loanRepository = new LoanRepository();
-    LoanMapper loanMapper = new LoanMapper();
+    BookRepository bookRepository = new BookRepository();
+    MemberRepository memberRepository = new MemberRepository();
 
     //case 1
     public List<LoanInfoDTO> getAllLoansByMemberId(int memberId) {
-        return loanMapper.mapToLoanInfoDTO(loanRepository.getAllLoansByMemberId(memberId));
+        List<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
+        List<LoanInfoDTO> dtos = new ArrayList<>();
+        for (Loan l : loans) {
+            dtos.add(LoanMapper.mapToLoanInfoDTO(l));
+        }
+        return dtos;
     }
 
+    //case 2 - filtrerar ut aktiva lån
     public List<LoanInfoDTO> getAllCurrentLoans(int memberId) {
         List<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
-        List<Loan> currentLoans = new ArrayList<>();
+        List<LoanInfoDTO> currentLoans = new ArrayList<>();
         for (Loan l : loans) {
             if (l.getReturnDate() == null) {
-                currentLoans.add(l);
+                currentLoans.add(LoanMapper.mapToLoanInfoDTO(l));
             }
         }
-        return loanMapper.mapToLoanInfoDTO(currentLoans);
+        return currentLoans;
     }
 
+    //case 2
     public String extendLoan(int loanId) {
-        return loanRepository.extendLoan(loanId);
+        String result =  loanRepository.extendLoan(loanId);
+        if (result == null) {
+            throw new LoanNotFoundException(loanId);
+        }
+        return result;
     }
 
+    //case 3 - check that loan isnt already returned
     public String returnLoan(int loanId) {
-        return loanRepository.returnLoan(loanId);
+        Loan loan = loanRepository.getLoanById(loanId);
+        if (loan.getReturnDate() != null) {
+            throw new LoanReturnedException(loanId);
+        }
+        String result = loanRepository.returnLoan(loanId);
+        if (result == null) {
+            throw new LoanNotFoundException(loanId);
+        }
+        return result;
     }
 
+    //case 4 - check that book exists and that availablecopies > 0,
+    //check that member exists and that status = active
     public String addNewLoan(int bookId, int memberId) {
+        Book book = bookRepository.getBookById(bookId);
+        if (book == null) {
+            throw new BookNotFoundException(bookId);
+        } else if (book.getAvailableCopies() == 0) {
+            throw new BookNotAvailableException(bookId);
+        }
+        Member member = memberRepository.getMemberById(memberId);
+        if (member == null) {
+            throw new MemberNotFoundException(memberId);
+        } else if (!member.getStatus().equals("active")) {
+            throw new InvalidMemberStatusException(memberId);
+        }
         return loanRepository.addNewLoan(bookId, memberId);
     }
 
-    //leave review
+    //case 5 - leave review
     public List<LoanInfoDTO> getReturnedLoans(int memberId) {
         List<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
-        List<Loan> returnedLoans = new ArrayList<>();
+        List<LoanInfoDTO> returnedLoans = new ArrayList<>();
         for (Loan l : loans) {
             if (l.getReturnDate() != null) {
-                returnedLoans.add(l);
+                returnedLoans.add(LoanMapper.mapToLoanInfoDTO(l));
             }
         }
-        return loanMapper.mapToLoanInfoDTO(returnedLoans);
+        return returnedLoans;
     }
 
+    //case 5 - vilket exception ska throwas här?
     public String leaveReview(int bookId, int memberId, int rating, String review) {
-        return loanRepository.leaveReview(bookId, memberId, rating, review);
+        String result = loanRepository.leaveReview(bookId, memberId, rating, review);
+        if (result == null) {
+            throw new BookNotFoundException(bookId);
+        }
+        return result;
     }
 
+    //admin case 1
     public List<AdminLoanDTO> getAllCurrentLoans() {
-        return loanMapper.mapToAdminLoanDTO(loanRepository.getAllCurrentLoans());
+        List<Loan> loans = loanRepository.getAllCurrentLoans();
+        List<AdminLoanDTO> dtos = new ArrayList<>();
+        for (Loan l : loans) {
+            dtos.add(LoanMapper.mapToAdminLoanDTO(l));
+        }
+        return dtos;
     }
 
+    //admin case 2
     public List<AdminLoanDTO> getAllLateLoans() {
-        return loanMapper.mapToAdminLoanDTO(loanRepository.getAllLateLoans());
+        List<Loan> loans = loanRepository.getAllLateLoans();
+        List<AdminLoanDTO> dtos = new ArrayList<>();
+        for (Loan l : loans) {
+            dtos.add(LoanMapper.mapToAdminLoanDTO(l));
+        }
+        return dtos;
     }
 }
