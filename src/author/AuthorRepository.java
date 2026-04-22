@@ -34,7 +34,7 @@ public class AuthorRepository {
                         rs.getString("website")
                 );
             } else {
-                throw new AuthorNotFoundException(authorId);
+                return null;
             }
 
         } catch (SQLException e) {
@@ -98,12 +98,13 @@ public class AuthorRepository {
                         rs.getString("biography"),
                         rs.getString("website")
                 ));
-                return authors;
+
             }
+            return authors;
+
         } catch (SQLException e){
             throw new DatabaseException(e);
         }
-        return authors;
     }
 
     public List<Author> getAllAuthors() {
@@ -199,5 +200,4 @@ public class AuthorRepository {
             throw new DatabaseException(e);
         }
     }
-
 }

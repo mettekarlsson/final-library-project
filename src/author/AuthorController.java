@@ -1,9 +1,5 @@
 package author;
-
-import exceptions.AuthorNotFoundException;
-import exceptions.DatabaseException;
 import exceptions.LibraryException;
-import exceptions.ValidationException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,7 +17,12 @@ public class AuthorController {
             System.out.println("1. Edit author");
             System.out.println("2. Add author");
             System.out.println("0. Return");
-            int choice = Integer.parseInt(scanner.nextLine());
+
+            int choice = -1;
+            try { choice = Integer.parseInt(scanner.nextLine()); }
+            catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+            }
 
             switch (choice) {
                 case 1: {
@@ -147,6 +148,7 @@ public class AuthorController {
         System.out.println("Enter their nationality:");
         String nationality = scanner.nextLine();
         System.out.println("Enter their birth date:");
+        //kan krasha om användaren skriver fel format. kan använda en try/catch här
         LocalDate birthDate = LocalDate.parse(scanner.nextLine());
         System.out.println("Enter their biography:");
         String biography = scanner.nextLine();

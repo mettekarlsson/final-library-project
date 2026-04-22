@@ -1,5 +1,7 @@
 package category;
 
+import exceptions.DatabaseException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +27,15 @@ public class CategoryRepository {
                 ));
             }
 
+            return categories;
+
         } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return categories;
     }
 
     public Category getCategoryById(int categoryId) {
-        Category category = null;
+        Category category;
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
@@ -49,12 +52,15 @@ public class CategoryRepository {
                         rs.getString("name"),
                         rs.getString("description")
                 );
+            } else {
+                return null;
             }
 
+            return category;
+
         } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return category;
     }
 
     public List<Category> findCategoriesByBookId(int bookId) {
@@ -77,13 +83,13 @@ public class CategoryRepository {
                 ));
             }
 
-        } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
-        }
-        return categories;
-    }
+            return categories;
 
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
     }
+}
 
 
 

@@ -1,5 +1,6 @@
 package author;
 
+import exceptions.AuthorNotFoundException;
 import exceptions.ValidationException;
 
 import java.util.List;
@@ -15,7 +16,11 @@ public class AuthorService {
     }
 
     public AuthorInfoDTO findAuthorById(int authorId) {
-        return AuthorMapper.mapToDTO(authorRepository.findAuthorById(authorId));
+        Author author = authorRepository.findAuthorById(authorId);
+        if (author == null) {
+            throw new AuthorNotFoundException(authorId);
+        }
+        return AuthorMapper.mapToDTO(author);
     }
 
     public String editAuthor(int authorId, String column, String value) {

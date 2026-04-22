@@ -3,7 +3,6 @@ import author.Author;
 import author.AuthorInfoDTO;
 import category.Category;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,17 +22,16 @@ public class BookController {
             System.out.println("3. Show top ten most popular books");
             System.out.println("4. Search book");
             System.out.println("5. Filter books by category");
-            System.out.println("6. Leave a review");
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
                 case 1: {
-                    showAllBooks();
+                    getAllBooks();
                     break;
                 }
                 case 2: {
-                    showAllAvailableBooks();
+                    getAllAvailableBooks();
                     break;
                 }
 
@@ -61,7 +59,7 @@ public class BookController {
     }
 
     //case 1
-    public void showAllBooks() {
+    public void getAllBooks() {
     List<BookInfoDTO> books = new ArrayList<>(bookService.getAllBooks());
     for(BookInfoDTO b :books) {
         System.out.println(b);
@@ -69,7 +67,7 @@ public class BookController {
 }
 
     //case 2
-    public void showAllAvailableBooks() {
+    public void getAllAvailableBooks() {
         List<BookInfoDTO> books = new ArrayList<>(bookService.getAllAvailableBooks());
         for (BookInfoDTO b : books) {
             System.out.println(b);
@@ -151,8 +149,16 @@ public class BookController {
 
         System.out.println("Enter the book-title:");
         String title = scanner.nextLine();
+        while (title.isBlank()) {
+            System.out.println("Title cannot be empty. Try again.");
+            title = scanner.nextLine();
+        }
         System.out.println("Enter the ISBN:");
         String isbn = scanner.nextLine();
+        while (isbn.isBlank()) {
+            System.out.println("ISBN cannot be empty. Try again.");
+            isbn = scanner.nextLine();
+        }
         System.out.println("Enter the publishing year:");
         int yearPublished = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter the total number of copies:");
@@ -175,12 +181,6 @@ public class BookController {
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
                 case 1: {
-                    System.out.println("Search for an author:");
-                    String authorSearch = scanner.nextLine();
-                    List<AuthorInfoDTO> authors = bookService.searchAuthor(authorSearch);
-                    for (AuthorInfoDTO a : authors) {
-                        System.out.println(a);
-                    }
                     System.out.println("Enter the author-id:");
                     int authorId = Integer.parseInt(scanner.nextLine());
 
@@ -250,12 +250,10 @@ public class BookController {
         List<Category> bookCategories = new ArrayList<>();
         System.out.println("Enter the book ID:");
         int bookId = Integer.parseInt(scanner.nextLine());
-        List<BookInfoDTO> book = bookService.getBookById(bookId);
-        for (BookInfoDTO b : book) {
-            System.out.println(b);
-            bookAuthors = b.getAuthors();
-            bookCategories = b.getCategories();
-        }
+        BookInfoDTO bookInfoDTO = bookService.getBookById(bookId);
+            System.out.println(bookInfoDTO.toString());
+            bookAuthors = bookInfoDTO.getAuthors();
+            bookCategories = bookInfoDTO.getCategories();
 
         boolean active = true;
 
@@ -388,23 +386,21 @@ public class BookController {
         }
     }
 
-            //case 3 admin
-        public void deleteBook() {
+    //case 3 admin
+    public void deleteBook() {
         System.out.println("Enter the book ID:");
         int bookId = Integer.parseInt(scanner.nextLine());
-        bookService.deleteBook(bookId);
-
-        System.out.println("Book #" + bookId + " has been deleted.");
+        String result = bookService.deleteBook(bookId);
+        System.out.println(result);
     }
 
     //case 4 admin
     public void addCategoryToBook() {
         System.out.println("Enter the book-id:");
         int bookId = Integer.parseInt(scanner.nextLine());
-        List<BookInfoDTO> books = bookService.getBookById(bookId);
-        for (BookInfoDTO b : books) {
-            System.out.println(b);
-        }
+        BookInfoDTO bookInfoDTO = bookService.getBookById(bookId);
+        System.out.println(bookInfoDTO.toString());
+        //denna metoden finns i bookservice oavsett, för att en låntagare ska kunna filtrera efter kategorier
         List<Category> categories = bookService.getAllCategories();
         for (Category c : categories) {
             System.out.println(c);

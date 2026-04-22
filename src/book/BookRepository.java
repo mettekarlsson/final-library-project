@@ -2,6 +2,7 @@ package book;
 
 import author.Author;
 import category.Category;
+import exceptions.DatabaseException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,12 +40,14 @@ public class BookRepository {
                 ));
 
             }
+            return books;
+
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return books;
     }
 
+    //hämta de 10 mest lånade böckerna
     public List<Book> getPopularBooks() {
         List<Book> books = new ArrayList<>();
 
@@ -74,11 +77,10 @@ public class BookRepository {
                         new ArrayList<>()
                 ));
                 }
-
+                return books;
             } catch (SQLException e) {
-            System.out.println("SQL-fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return books;
     }
 
     //sök efter en bok via boktitel/beskrivning
@@ -111,13 +113,13 @@ public class BookRepository {
                 ));
 
             }
+            return books;
             } catch (SQLException e){
-                throw new RuntimeException(e);
-            }
-        return books;
+                throw new DatabaseException(e);
         }
+    }
 
-        //filtrera böcker via kategori
+    //filtrera böcker via kategori
     public List<Book> filterBooksByCategory(int categoryId) {
         List<Book> booksByCategory = new ArrayList<>();
 
@@ -151,8 +153,10 @@ public class BookRepository {
         } return booksByCategory;
     }
 
-    public List<Book> getBookById(int bookId) {
-        List<Book> book = new ArrayList<>();
+
+    //hämta en bok genom dess id
+    public Book getBookById(int bookId) {
+        Book book = null;
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
             PreparedStatement stmt = conn.prepareStatement("""
@@ -163,7 +167,7 @@ public class BookRepository {
             stmt.setInt(1, bookId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                book.add(new Book(
+                book = new Book(
                         rs.getInt("id"),
                         rs.getString("title"),
                         rs.getString("isbn"),
@@ -175,16 +179,17 @@ public class BookRepository {
                         rs.getInt("page_count"),
                         new ArrayList<>(),
                         new ArrayList<>()
-                ));
+                );
             }
+            return book;
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
-        return book;
     }
 
 
-
+    //lägg till en ny bok
     public String addBook(NewBookDTO newBookDTO) {
 
         //insert books-info, få tillbaka nya book-id
@@ -268,12 +273,11 @@ public class BookRepository {
             return "Bok med id #" + bookId + " har lagts till";
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-
+            throw new DatabaseException(e);
         }
     }
 
-        //redigera en bok där kolumnen du redigerar är ett string värde
+    //redigera en bok där kolumnen du redigerar är ett string värde
     public void editBook(int bookId, String column, String value) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -359,7 +363,7 @@ public class BookRepository {
         }
     }
 
-    //remove from book_authors
+    //remove from book_categories
     public void removeBookCategories(int bookId, int categoryId){
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
@@ -373,16 +377,21 @@ public class BookRepository {
         }
     }
 
-        //ta bort en bok
-    public void deleteBook(int bookId) {
+    //ta bort en bok
+    public String deleteBook(int bookId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("DELETE FROM books WHERE id = ?")) {
             stmt.setInt(1, bookId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Book with ID # " + bookId + " has been deleted.";
+            } else {
+                return null;
+            }
 
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
     }
 
@@ -395,10 +404,16 @@ public class BookRepository {
                      """)) {
             stmt.setInt(1, bookId);
             stmt.setInt(2, categoryId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Category with id # " + categoryId + " has been added to Book with id #" + bookId;
+            } else {
+                return null;
+            }
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }  return "Category with id # " + categoryId + " has been added to Book with id #" + bookId;
+            throw new DatabaseException(e);
+        }
     }
 
     //for loanservice, to add book-info into loan-object
