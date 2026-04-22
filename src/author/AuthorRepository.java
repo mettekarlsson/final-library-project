@@ -1,7 +1,6 @@
 package author;
 
 import exceptions.AuthorNotFoundException;
-import exceptions.BookNotFoundException;
 import exceptions.DatabaseException;
 
 import java.sql.*;

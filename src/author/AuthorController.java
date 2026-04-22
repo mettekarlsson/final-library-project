@@ -1,6 +1,8 @@
 package author;
 
+import exceptions.AuthorNotFoundException;
 import exceptions.DatabaseException;
+import exceptions.LibraryException;
 import exceptions.ValidationException;
 
 import java.time.LocalDate;
@@ -45,7 +47,13 @@ public class AuthorController {
             System.out.println(a);
         }
         System.out.println("Enter the author ID:");
-        int authorId = Integer.parseInt(scanner.nextLine());
+        int authorId;
+        try {
+            authorId = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter a valid number.");
+            return;
+        }
         boolean active = true;
 
         while (active) {
@@ -60,10 +68,15 @@ public class AuthorController {
 
             int choice = Integer.parseInt(scanner.nextLine());
 
+            try {
             switch (choice) {
                 case 1: {
                     System.out.println("Enter the new first name:");
                     String firstName = scanner.nextLine();
+                    while (firstName.isBlank()) {
+                        System.out.println("First name cannot be empty. Try again.");
+                        firstName = scanner.nextLine();
+                    }
                     String result = authorService.editAuthor(authorId, "first_name", firstName);
                     System.out.println(result);
                     break;
@@ -71,6 +84,10 @@ public class AuthorController {
                 case 2: {
                     System.out.println("Enter the new last name:");
                     String lastName = scanner.nextLine();
+                    while (lastName.isBlank()) {
+                        System.out.println("Last name cannot be empty. Try again.");
+                        lastName = scanner.nextLine();
+                    }
                     String result = authorService.editAuthor(authorId, "last_name", lastName);
                     System.out.println(result);
                     break;
@@ -108,6 +125,9 @@ public class AuthorController {
                     break;
                 }
             }
+            } catch (LibraryException e) {
+                handleException(e);
+            }
         }
     }
 
@@ -137,10 +157,12 @@ public class AuthorController {
         try {
             String result = authorService.addAuthor(newAuthorDTO);
             System.out.println(result);
-        } catch (ValidationException e) {
-            System.out.println("Validation error: " + e.getMessage());
-        } catch (DatabaseException e) {
-            System.out.println("Something went wrong, please try again.");
+        } catch (LibraryException e) {
+            handleException(e);
         }
+    }
+
+    private void handleException(Exception e) {
+        System.out.println(e.getMessage());
     }
 }
