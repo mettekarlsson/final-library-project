@@ -246,8 +246,8 @@ public class BookController {
 
     //case 2 admin
     public void editBook() {
-        List<Author> bookAuthors = new ArrayList<>();
-        List<Category> bookCategories = new ArrayList<>();
+        List<Author> bookAuthors;
+        List<Category> bookCategories;
         System.out.println("Enter the book ID:");
         int bookId = Integer.parseInt(scanner.nextLine());
         BookInfoDTO bookInfoDTO = bookService.getBookById(bookId);

@@ -7,6 +7,7 @@ public class LoanService {
     LoanRepository loanRepository = new LoanRepository();
     LoanMapper loanMapper = new LoanMapper();
 
+    //case 1
     public List<LoanInfoDTO> getAllLoansByMemberId(int memberId) {
         return loanMapper.mapToLoanInfoDTO(loanRepository.getAllLoansByMemberId(memberId));
     }

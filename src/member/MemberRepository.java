@@ -1,5 +1,7 @@
 package member;
 
+import exceptions.DatabaseException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +11,12 @@ public class MemberRepository {
     private final String USER = "root";
     private final String PASS = "Apelsinkr0kant!";
 
-    public Member getMemberById(int id) {
+    //find member by their id
+    public Member getMemberById(int memberId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM members WHERE id = ?")) {
-            stmt.setInt(1, id);
+            stmt.setInt(1, memberId);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -28,12 +31,12 @@ public class MemberRepository {
             }
         }
         catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
         return null;
     }
 
-
+    //find member by their email - for login
     public Member getMemberByEmail(String email) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -53,25 +56,30 @@ public class MemberRepository {
             }
 
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
         return null;
     }
 
+    //update member info
     public String updateMemberInfo(String column, String newValue, int memberId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("UPDATE members SET " + column + " = ? WHERE id = ?")) {
             stmt.setString(1, newValue);
             stmt.setInt(2, memberId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Your profile has been updated.";
+            }
+            return null;
 
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return "Your profile has been updated.";
     }
 
+    //get all members
     public List<Member> getAllMembers() {
         List<Member> members = new ArrayList<>();
 
@@ -93,11 +101,11 @@ public class MemberRepository {
             return members;
 
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return members;
     }
 
+    //add member
     public String addNewMember(NewMemberDTO member) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("INSERT INTO members (first_name, last_name, email, membership_date, membership_type, status, password)  VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
@@ -120,38 +128,41 @@ public class MemberRepository {
             return "Member with ID #" + memberId + " has been added.";
 
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return null;
     }
 
+    //suspend member
     public String suspendMember(int memberId){
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("UPDATE members SET status = ? WHERE id = ?")) {
             stmt.setString(1, "suspended");
             stmt.setInt(2, memberId);
-
-            stmt.executeUpdate();
-            return "Member with ID #" + memberId + " has been suspended.";
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0 ) {
+                return "Member with ID #" + memberId + " has been suspended.";
+            }
+            return null;
 
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return null;
     }
 
+    //remove member
     public String removeMember(int memberId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("DELETE FROM members WHERE id = ?")) {
             stmt.setInt(1, memberId);
-
-            stmt.executeUpdate();
-            return "Member with ID #" + memberId + " has been removed.";
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Member with ID #" + memberId + " has been removed.";
+            }
+            return null;
 
         } catch (SQLException e) {
-            System.out.println("Fel: " + e.getMessage());
+            throw new DatabaseException(e);
         }
-        return null;
     }
 
     //for loanservice, to add member-info into loan-object

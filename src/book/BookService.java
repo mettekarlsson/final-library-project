@@ -147,9 +147,8 @@ public class BookService {
         String result = bookRepository.deleteBook(bookId);
         if (result == null) {
             throw new BookNotFoundException(bookId);
-        } else {
-            return result;
         }
+        return result;
     }
 
     //admin case 4 - kontrollerar om det lyckades...? vilket exception ska egentligen skickas med här?
@@ -157,9 +156,8 @@ public class BookService {
         String result = bookRepository.addCategoryToBook(bookId, categoryId);
         if (result == null) {
             throw new BookNotFoundException(bookId);
-        } else {
-            return result;
         }
+        return result;
     }
 
     public BookInfoDTO getBookById(int bookId) {

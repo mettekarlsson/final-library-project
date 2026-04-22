@@ -95,7 +95,7 @@ public class MemberController {
             }
     }
 
-
+    //case 3
     public void updateMembershipType() {
         String result = null;
         System.out.println("Current status:");

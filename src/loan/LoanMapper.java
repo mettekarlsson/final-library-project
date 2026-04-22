@@ -13,15 +13,27 @@ public class LoanMapper {
     BookRepository bookRepository = new BookRepository();
     MemberRepository memberRepository = new MemberRepository();
 
-    public List<LoanInfoDTO> mapToLoanInfoDTO(List<Loan> loans) {
-        List<LoanInfoDTO> dtos = new ArrayList<>();
-        for (Loan l : loans) {
-            Book book = bookRepository.findBookByLoanId(l.getId());
-            //Member member = memberRepository.findMemberByLoanId(l.getId());
-            LoanInfoDTO loanInfoDTO = new LoanInfoDTO(l.getId(), book.getId(), book.getTitle(), l.getLoanDate(), l.getDueDate(), l.getReturnDate());
-            dtos.add(loanInfoDTO);
-        }
-        return dtos;
+    public static LoanInfoDTO mapToLoanInfoDTO(Loan loan) {
+        return new LoanInfoDTO(
+                loan.getId(),
+                loan.getBookId(),
+                loan.getBook().getTitle(),
+                loan.getLoanDate(),
+                loan.getDueDate(),
+                loan.getReturnDate()
+        );
+    }
+
+    public static AdminLoanDTO mapToAdminLoanDTO(Loan loan) {
+        return new AdminLoanDTO(
+                loan.getId(),
+                loan.getBook().getTitle(),
+                loan.getMemberId(),
+                (loan.getMember().getFirstName() + " " + loan.getMember().getLastName()),
+                loan.getLoanDate(),
+                loan.getDueDate(),
+                loan.getReturnDate()
+        );
     }
 
     public List<AdminLoanDTO> mapToAdminLoanDTO(List<Loan> loans) {
