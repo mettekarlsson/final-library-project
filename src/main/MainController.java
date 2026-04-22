@@ -35,7 +35,7 @@ public class MainController {
             loggedInUser = member;
             memberMainMenu();
         } else {
-            System.out.println("Wrong password");
+            System.out.println("Wrong password.");
         }
     }
 
@@ -47,7 +47,6 @@ public class MainController {
             System.out.println("1. Books");
             System.out.println("2. Loans");
             System.out.println("3. My profile");
-            System.out.println("4. Authors? ");
             System.out.println("0. Log out");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -62,10 +61,6 @@ public class MainController {
                 }
                 case 3: {
                     memberController.memberProfileMenu();
-                    break;
-                }
-                case 4: {
-                    // memberAuthorMenu();
                     break;
                 }
                 case 0: {

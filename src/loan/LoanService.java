@@ -19,7 +19,8 @@ public class LoanService {
         List<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
         List<LoanInfoDTO> dtos = new ArrayList<>();
         for (Loan l : loans) {
-            dtos.add(LoanMapper.mapToLoanInfoDTO(l));
+            Book book = bookRepository.findBookByLoanId(l.getId());
+            dtos.add(LoanMapper.mapToLoanInfoDTO(l, book));
         }
         return dtos;
     }
@@ -30,7 +31,8 @@ public class LoanService {
         List<LoanInfoDTO> currentLoans = new ArrayList<>();
         for (Loan l : loans) {
             if (l.getReturnDate() == null) {
-                currentLoans.add(LoanMapper.mapToLoanInfoDTO(l));
+                Book book = bookRepository.findBookByLoanId(l.getId());
+                currentLoans.add(LoanMapper.mapToLoanInfoDTO(l, book));
             }
         }
         return currentLoans;
@@ -82,7 +84,8 @@ public class LoanService {
         List<LoanInfoDTO> returnedLoans = new ArrayList<>();
         for (Loan l : loans) {
             if (l.getReturnDate() != null) {
-                returnedLoans.add(LoanMapper.mapToLoanInfoDTO(l));
+                Book book = bookRepository.findBookByLoanId(l.getId());
+                returnedLoans.add(LoanMapper.mapToLoanInfoDTO(l, book));
             }
         }
         return returnedLoans;
@@ -102,7 +105,9 @@ public class LoanService {
         List<Loan> loans = loanRepository.getAllCurrentLoans();
         List<AdminLoanDTO> dtos = new ArrayList<>();
         for (Loan l : loans) {
-            dtos.add(LoanMapper.mapToAdminLoanDTO(l));
+            Member member = memberRepository.findMemberByLoanId(l.getId());
+            Book book = bookRepository.findBookByLoanId(l.getId());
+            dtos.add(LoanMapper.mapToAdminLoanDTO(l, member, book));
         }
         return dtos;
     }
@@ -112,7 +117,9 @@ public class LoanService {
         List<Loan> loans = loanRepository.getAllLateLoans();
         List<AdminLoanDTO> dtos = new ArrayList<>();
         for (Loan l : loans) {
-            dtos.add(LoanMapper.mapToAdminLoanDTO(l));
+            Member member = memberRepository.findMemberByLoanId(l.getId());
+            Book book = bookRepository.findBookByLoanId(l.getId());
+            dtos.add(LoanMapper.mapToAdminLoanDTO(l, member, book));
         }
         return dtos;
     }

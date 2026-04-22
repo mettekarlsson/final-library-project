@@ -406,7 +406,7 @@ public class BookRepository {
             stmt.setInt(2, categoryId);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
-                return "Category with id # " + categoryId + " has been added to Book with id #" + bookId;
+                return "Category with id #" + categoryId + " has been added to Book with id #" + bookId;
             } else {
                 return null;
             }
@@ -430,7 +430,7 @@ public class BookRepository {
             stmt.setInt(1, loanId);
             ResultSet rs = stmt.executeQuery();
 
-            while (rs.next()) {
+            if (rs.next()) {
                 book = new Book(
                         rs.getInt("id"),
                         rs.getString("title"),

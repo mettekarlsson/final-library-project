@@ -54,7 +54,7 @@ public class LoanRepository {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
             PreparedStatement stmt = conn.prepareStatement("""
                    UPDATE loans
-                   SET due_date = DATE_ADD(due_date, INTERVAL 14 DAY) 
+                   SET due_date = DATE_ADD(due_date, INTERVAL 14 DAY)
                    WHERE id=?
                    """)) {
             stmt.setInt(1, loanId);
@@ -78,7 +78,15 @@ public class LoanRepository {
         """)) {
             stmt.setInt(1, loanId);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
+                //för att undvika nullpointreexception på return date
+                Date returnDateSql = rs.getDate("return_date");
+                LocalDate returnDate = null;
+
+                if (returnDateSql != null) {
+                    returnDate = returnDateSql.toLocalDate();
+                }
                 return new Loan(
                         rs.getInt("id"),
                         rs.getInt("book_id"),
@@ -87,7 +95,7 @@ public class LoanRepository {
                         null,
                         rs.getDate("loan_date").toLocalDate(),
                         rs.getDate("due_date").toLocalDate(),
-                        rs.getDate("return_date").toLocalDate()
+                        returnDate
                 );
             }
 
