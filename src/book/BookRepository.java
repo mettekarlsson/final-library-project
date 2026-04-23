@@ -406,11 +406,7 @@ public class BookRepository {
             stmt.setInt(1, bookId);
             stmt.setInt(2, authorId);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return true;
-            }
-
-            return false;
+            return rs.next();
 
         } catch (SQLException e) {
             throw new DatabaseException(e);
