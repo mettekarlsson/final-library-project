@@ -147,10 +147,10 @@ public class BookRepository {
                             new ArrayList<>(),
                             new ArrayList<>()
                     ));
-                }
-            } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        } return booksByCategory;
+                } return booksByCategory;
+            } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
     }
 
 
@@ -193,12 +193,12 @@ public class BookRepository {
     public String addBook(NewBookDTO newBookDTO) {
 
         //insert books-info, få tillbaka nya book-id
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
 
 
             PreparedStatement stmt = conn.prepareStatement("""
         INSERT INTO books (title, isbn, year_published, total_copies, available_copies) VALUES (?, ?, ?, ?, ?)
-        """, Statement.RETURN_GENERATED_KEYS);
+        """, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, newBookDTO.getTitle());
             stmt.setString(2, newBookDTO.getIsbn());
             stmt.setInt(3, newBookDTO.getYearPublished());

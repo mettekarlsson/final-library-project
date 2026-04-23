@@ -71,7 +71,7 @@ public class MainController {
         }
     }
 
-    public void adminMainMenu() throws SQLException {
+    public void adminMainMenu() {
         boolean active = true;
         while (active) {
             System.out.println("---- Welcome admin ----");

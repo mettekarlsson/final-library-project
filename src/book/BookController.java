@@ -1,16 +1,17 @@
 package book;
 import author.Author;
 import author.AuthorInfoDTO;
+import base.BaseController;
 import category.Category;
+import exceptions.AuthorNotFoundException;
+import exceptions.LibraryException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class BookController {
+public class BookController extends BaseController {
     BookService bookService = new BookService();
-    Scanner scanner = new Scanner(System.in);
 
     public void memberBookMenu() {
         boolean active = true;
@@ -25,34 +26,38 @@ public class BookController {
             System.out.println("0. Return");
             int choice = Integer.parseInt(scanner.nextLine());
 
-            switch (choice) {
-                case 1: {
-                    getAllBooks();
-                    break;
-                }
-                case 2: {
-                    getAllAvailableBooks();
-                    break;
-                }
+            try {
+                switch (choice) {
+                    case 1: {
+                        getAllBooks();
+                        break;
+                    }
+                    case 2: {
+                        getAllAvailableBooks();
+                        break;
+                    }
 
-                case 3: {
-                    showPopularBooks();
-                    break;
-                }
+                    case 3: {
+                        showPopularBooks();
+                        break;
+                    }
 
-                case 4: {
-                    searchBook();
-                    break;
-                }
+                    case 4: {
+                        searchBook();
+                        break;
+                    }
 
-                case 5: {
-                    filterBooksByCategory();
-                    break;
+                    case 5: {
+                        filterBooksByCategory();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
                 }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            } catch (LibraryException e) {
+                handleException(e);
             }
 
         }
@@ -69,9 +74,9 @@ public class BookController {
     //case 2
     public void getAllAvailableBooks() {
         List<BookInfoDTO> books = new ArrayList<>(bookService.getAllAvailableBooks());
-        for (BookInfoDTO b : books) {
-            System.out.println(b);
-        }
+            for (BookInfoDTO b : books) {
+                System.out.println(b);
+            }
     }
 
     //case 3
@@ -86,8 +91,12 @@ public class BookController {
     public void searchBook() {
         System.out.println("Search for a book:");
         List<BookInfoDTO> books = bookService.searchBook(scanner.nextLine());
-        for (BookInfoDTO b : books) {
-            System.out.println(b);
+        if(books.isEmpty()) {
+            System.out.println("No matching books.");
+        } else {
+            for (BookInfoDTO b : books) {
+                System.out.println(b);
+            }
         }
     }
 
@@ -115,29 +124,33 @@ public class BookController {
             System.out.println("3. Delete book");
             System.out.println("4. Add category to book");
             System.out.println("0. Return");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
-            switch (choice) {
-                case 1: {
-                    addBook();
-                    break;
+            try {
+                switch (choice) {
+                    case 1: {
+                        addBook();
+                        break;
+                    }
+                    case 2: {
+                        editBook();
+                        break;
+                    }
+                    case 3: {
+                        deleteBook();
+                        break;
+                    }
+                    case 4: {
+                        addCategoryToBook();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
                 }
-                case 2: {
-                    editBook();
-                    break;
-                }
-                case 3: {
-                    deleteBook();
-                    break;
-                }
-                case 4: {
-                    addCategoryToBook();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            } catch (LibraryException e) {
+                handleException(e);
             }
         }
     }
@@ -160,17 +173,17 @@ public class BookController {
             isbn = scanner.nextLine();
         }
         System.out.println("Enter the publishing year:");
-        int yearPublished = Integer.parseInt(scanner.nextLine());
+        int yearPublished = readInt();
         System.out.println("Enter the total number of copies:");
-        int totalCopies = Integer.parseInt(scanner.nextLine());
+        int totalCopies = readInt();
         System.out.println("Enter the available number of copies:");
-        int availableCopies = Integer.parseInt(scanner.nextLine());
+        int availableCopies = readInt();
         System.out.println("Enter the summary:");
         String summary = scanner.nextLine();
         System.out.println("Enter the language:");
         String language = scanner.nextLine();
         System.out.println("Enter the page count:");
-        int pageCount = Integer.parseInt(scanner.nextLine());
+        int pageCount = readInt();
 
 
         boolean addAuthor = true;
@@ -178,12 +191,11 @@ public class BookController {
             System.out.println("1. Choose existing author");
             System.out.println("2. Add new author");
 
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
             switch (choice) {
                 case 1: {
                     System.out.println("Enter the author-id:");
-                    int authorId = Integer.parseInt(scanner.nextLine());
-
+                    int authorId = readInt();
                     Author author = bookService.getAuthorById(authorId);
                     bookAuthors.add(author);
                     break;
@@ -221,7 +233,7 @@ public class BookController {
         boolean addCategory = true;
         while (addCategory) {
             System.out.println("Enter the category-id:");
-            int categoryId = Integer.parseInt(scanner.nextLine());
+            int categoryId = readInt();
 
             Category category = bookService.getCategoryById(categoryId);
             if (category != null) {
@@ -397,7 +409,7 @@ public class BookController {
     //case 4 admin
     public void addCategoryToBook() {
         System.out.println("Enter the book-id:");
-        int bookId = Integer.parseInt(scanner.nextLine());
+        int bookId = readInt();
         BookInfoDTO bookInfoDTO = bookService.getBookById(bookId);
         System.out.println(bookInfoDTO.toString());
         //denna metoden finns i bookservice oavsett, för att en låntagare ska kunna filtrera efter kategorier
@@ -406,7 +418,7 @@ public class BookController {
             System.out.println(c);
         }
         System.out.println("Enter the category-id:");
-        int categoryId = Integer.parseInt(scanner.nextLine());
+        int categoryId = readInt();
         String result = bookService.addCategoryToBook(bookId, categoryId);
         System.out.println(result);
     }

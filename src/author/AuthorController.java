@@ -1,13 +1,12 @@
 package author;
+import base.BaseController;
 import exceptions.LibraryException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class AuthorController {
-        Scanner scanner = new Scanner(System.in);
+public class AuthorController extends BaseController {
         AuthorService authorService = new AuthorService();
 
     public void adminAuthorMenu() {
@@ -48,13 +47,8 @@ public class AuthorController {
             System.out.println(a);
         }
         System.out.println("Enter the author ID:");
-        int authorId;
-        try {
-            authorId = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Please enter a valid number.");
-            return;
-        }
+        int authorId = readInt();
+
         boolean active = true;
 
         while (active) {
@@ -67,7 +61,7 @@ public class AuthorController {
             System.out.println("6. Website");
             System.out.println("0. Return");
 
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
             try {
             switch (choice) {
@@ -164,7 +158,4 @@ public class AuthorController {
         }
     }
 
-    private void handleException(Exception e) {
-        System.out.println(e.getMessage());
-    }
 }

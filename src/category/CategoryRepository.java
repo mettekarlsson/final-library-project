@@ -47,16 +47,13 @@ public class CategoryRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                category = new Category(
+                return new Category(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("description")
                 );
-            } else {
-                return null;
             }
-
-            return category;
+            return null;
 
         } catch (SQLException e) {
             throw new DatabaseException(e);

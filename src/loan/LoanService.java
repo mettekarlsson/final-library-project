@@ -47,15 +47,16 @@ public class LoanService {
         return result;
     }
 
-    //case 3 - check that loan isnt already returned
+    //case 3 and admin case 3 - check that loan isnt already returned
     public String returnLoan(int loanId) {
         Loan loan = loanRepository.getLoanById(loanId);
+        if (loan == null) { throw new LoanNotFoundException(loanId); }
         if (loan.getReturnDate() != null) {
             throw new LoanReturnedException(loanId);
         }
         String result = loanRepository.returnLoan(loanId);
         if (result == null) {
-            throw new LoanNotFoundException(loanId);
+            throw new OperationFailedException("Failed to return loan.");
         }
         return result;
     }
@@ -64,17 +65,12 @@ public class LoanService {
     //check that member exists and that status = active
     public String addNewLoan(int bookId, int memberId) {
         Book book = bookRepository.getBookById(bookId);
-        if (book == null) {
-            throw new BookNotFoundException(bookId);
-        } else if (book.getAvailableCopies() == 0) {
-            throw new BookNotAvailableException(bookId);
-        }
+        if (book == null) throw new BookNotFoundException(bookId);
+        if (book.getAvailableCopies() == 0) throw new BookNotAvailableException(bookId);
         Member member = memberRepository.getMemberById(memberId);
-        if (member == null) {
-            throw new MemberNotFoundException(memberId);
-        } else if (!member.getStatus().equals("active")) {
-            throw new InvalidMemberStatusException(memberId);
-        }
+        if (member == null) throw new MemberNotFoundException(memberId);
+        if (!member.getStatus().equals("active")) throw new InvalidMemberStatusException(memberId);
+
         return loanRepository.addNewLoan(bookId, memberId);
     }
 
@@ -91,11 +87,14 @@ public class LoanService {
         return returnedLoans;
     }
 
-    //case 5 - vilket exception ska throwas här?
+    //case 5
     public String leaveReview(int bookId, int memberId, int rating, String review) {
+        if (rating < 1 || rating > 5) {
+            throw new ValidationException("Rating must be between 1 and 5.");
+        }
         String result = loanRepository.leaveReview(bookId, memberId, rating, review);
         if (result == null) {
-            throw new BookNotFoundException(bookId);
+            throw new OperationFailedException("Failed to leave review.");
         }
         return result;
     }

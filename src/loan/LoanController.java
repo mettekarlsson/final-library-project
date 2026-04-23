@@ -1,13 +1,15 @@
 package loan;
 
+import base.BaseController;
+import exceptions.LibraryException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import static main.MainController.loggedInUser;
 
-public class LoanController {
-    Scanner scanner = new Scanner(System.in);
+public class LoanController extends BaseController {
     LoanService loanService = new LoanService();
 
     public void memberLoanMenu() {
@@ -21,35 +23,38 @@ public class LoanController {
             System.out.println("4. Loan a book");
             System.out.println("5. Leave a review");
             System.out.println("0. Return");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
-            switch (choice) {
-                case 1: {
-                    getAllLoansByMemberId();
-                    break;
+            try {
+                switch (choice) {
+                    case 1: {
+                        getAllLoansByMemberId();
+                        break;
+                    }
+                    case 2: {
+                        extendLoan();
+                        break;
+                    }
+                    case 3: {
+                        returnLoan();
+                        break;
+                    }
+                    case 4: {
+                        addNewLoan();
+                        break;
+                    }
+                    case 5: {
+                        leaveReview();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
                 }
-                case 2: {
-                    extendLoan();
-                    break;
-                }
-                case 3: {
-                    returnLoan();
-                    break;
-                }
-                case 4: {
-                    addNewLoan();
-                    break;
-                }
-                case 5: {
-                    leaveReview();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            } catch (LibraryException e) {
+                handleException(e);
             }
-
         }
     }
 
@@ -68,7 +73,7 @@ public class LoanController {
             System.out.println(l.toString());
         }
         System.out.println("Which loan(id) would you like to extend?");
-        int loanId = Integer.parseInt(scanner.nextLine());
+        int loanId = readInt();
         String result = loanService.extendLoan(loanId);
         System.out.println(result);
     }
@@ -80,7 +85,7 @@ public class LoanController {
             System.out.println(l.toString());
         }
         System.out.println("Which loan(id) would you like to return?");
-        int loanId = Integer.parseInt(scanner.nextLine());
+        int loanId = readInt();
         String result = loanService.returnLoan(loanId);
         System.out.println(result);
     }
@@ -88,7 +93,7 @@ public class LoanController {
     //case 4
     public void addNewLoan() {
         System.out.println("Which book(id) would you like to loan?");
-        int bookId = Integer.parseInt(scanner.nextLine());
+        int bookId = readInt();
         int memberId = loggedInUser.getId();
         String result = loanService.addNewLoan(bookId, memberId);
         System.out.println(result);
@@ -101,12 +106,12 @@ public class LoanController {
             System.out.println(l);
         }
         System.out.println("Which book(id) would you like to review?");
-        int bookId = Integer.parseInt(scanner.nextLine());
+        int bookId = readInt();
         System.out.println("Enter your rating (1-5):");
-        int rating = Integer.parseInt(scanner.nextLine());
+        int rating = readInt();
         while (rating > 5 || rating < 1) {
             System.out.println("Invalid rating. Try again");
-            rating = Integer.parseInt(scanner.nextLine());
+            rating = readInt();
         }
         System.out.println("Enter your review:");
         String comment = scanner.nextLine();
@@ -122,25 +127,29 @@ public class LoanController {
             System.out.println("2. See all overdue loans");
             System.out.println("3. Return loan");
             System.out.println("0. Return");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
-            switch (choice) {
-                case 1: {
-                    getAllCurrentLoans();
-                    break;
+            try {
+                switch (choice) {
+                    case 1: {
+                        getAllCurrentLoans();
+                        break;
+                    }
+                    case 2: {
+                        getAllLateLoans();
+                        break;
+                    }
+                    case 3: {
+                        adminReturnLoan();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
                 }
-                case 2: {
-                    getAllLateLoans();
-                    break;
-                }
-                case 3: {
-                    adminReturnLoan();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            } catch (LibraryException e) {
+                handleException(e);
             }
         }
     }
@@ -168,7 +177,7 @@ public class LoanController {
             System.out.println(l);
         }
         System.out.println("Which loan(id) would you like to return?:");
-        int loanId = Integer.parseInt(scanner.nextLine());
+        int loanId = readInt();
         String result = loanService.returnLoan(loanId);
         System.out.println(result);
     }

@@ -8,7 +8,7 @@ public class LoanMapper {
     public static LoanInfoDTO mapToLoanInfoDTO(Loan loan, Book book) {
         return new LoanInfoDTO(
                 loan.getId(),
-                loan.getBookId(),
+                book.getId(),
                 book.getTitle(),
                 loan.getLoanDate(),
                 loan.getDueDate(),
@@ -20,7 +20,7 @@ public class LoanMapper {
         return new AdminLoanDTO(
                 loan.getId(),
                 book.getTitle(),
-                loan.getMemberId(),
+                member.getId(),
                 (member.getFirstName() + " " + member.getLastName()),
                 loan.getLoanDate(),
                 loan.getDueDate(),

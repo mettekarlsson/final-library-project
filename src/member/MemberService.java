@@ -1,6 +1,7 @@
 package member;
 
 import exceptions.MemberNotFoundException;
+import exceptions.OperationFailedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,11 @@ public class MemberService {
         return MemberMapper.mapToDTO(member);
     }
 
-    //case (2 och) 3 - är det rätt exception som throws här?
+    //case (2 och) 3
     public String updateMemberInfo(String column, String newValue, int memberId) {
         String result = memberRepository.updateMemberInfo(column, newValue, memberId);
         if (result == null) {
-            throw new MemberNotFoundException(memberId);
+            throw new OperationFailedException("Failed to update member-info.");
         }
         return result;
     }

@@ -1,14 +1,14 @@
 package member;
 
+import base.BaseController;
+import exceptions.LibraryException;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Scanner;
 import static main.MainController.loggedInUser;
 
 
-public class MemberController {
-
-    Scanner scanner = new Scanner(System.in);
+public class MemberController extends BaseController {
     MemberService memberService = new MemberService();
 
     public void memberProfileMenu() {
@@ -20,25 +20,29 @@ public class MemberController {
             System.out.println("2. Update my profile info");
             System.out.println("3. Change my membership-type");
             System.out.println("0. Return");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
-            switch (choice) {
-                case 1: {
-                    showProfileInfo();
-                    break;
-                }
-                case 2: {
-                    updateProfileInfo();
-                    break;
-                }
-                case 3: {
-                    updateMembershipType();
-                    break;
-                }
-                case 0: {
+            try {
+                switch (choice) {
+                    case 1: {
+                        showProfileInfo();
+                        break;
+                    }
+                    case 2: {
+                        updateProfileInfo();
+                        break;
+                    }
+                    case 3: {
+                        updateMembershipType();
+                        break;
+                    }
+                    case 0: {
                         active = false;
                         break;
+                    }
                 }
+            } catch (LibraryException e) {
+                handleException(e);
             }
         }
     }
@@ -60,30 +64,46 @@ public class MemberController {
                 System.out.println("3. Update email");
                 System.out.println("4. Update password");
                 System.out.println("0. Return");
-                int option = Integer.parseInt(scanner.nextLine().trim());
+                int option = readInt();
 
                     switch (option) {
                         case 1: {
                             System.out.println("New first name:");
                             String newValue = scanner.nextLine();
+                            while (newValue.isBlank()) {
+                                System.out.println("First name cannot be empty. Try again.");
+                                newValue = scanner.nextLine();
+                            }
                             memberService.updateMemberInfo("first_name", newValue, loggedInUser.getId());
                             break;
                         }
                         case 2: {
                             System.out.println("New last name:");
                             String newValue = scanner.nextLine();
+                            while (newValue.isBlank()) {
+                                System.out.println("Last name cannot be empty. Try again.");
+                                newValue = scanner.nextLine();
+                            }
                             memberService.updateMemberInfo("last_name", newValue, loggedInUser.getId());
                             break;
                         }
                         case 3: {
                             System.out.println("New email:");
                             String newValue = scanner.nextLine();
+                            while (newValue.isBlank()) {
+                                System.out.println("Email cannot be empty. Try again.");
+                                newValue = scanner.nextLine();
+                            }
                             memberService.updateMemberInfo("email", newValue, loggedInUser.getId());
                             break;
                         }
                         case 4: {
                             System.out.println("New password:");
                             String newValue = scanner.nextLine();
+                            while (newValue.isBlank()) {
+                                System.out.println("Password cannot be empty. Try again.");
+                                newValue = scanner.nextLine();
+                            }
                             memberService.updateMemberInfo("password", newValue, loggedInUser.getId());
                             break;
                         }
@@ -103,18 +123,22 @@ public class MemberController {
         System.out.println(member.getMembershipType());
         if (member.getMembershipType().equals("standard")) {
             System.out.println("1. Change to premium");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
             if (choice == 1) {
                 result = memberService.updateMemberInfo("membership_type", "premium", loggedInUser.getId());
             }
         } else {
             System.out.println("1. Change to standard");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
             if (choice == 1) {
                 result = memberService.updateMemberInfo("membership_type", "standard", loggedInUser.getId());
             }
         }
-        System.out.println(result);
+        if (result != null) {
+            System.out.println(result);
+        } else {
+            System.out.println("No changes were made.");
+        }
     }
 
     public void adminMemberMenu() {
@@ -127,29 +151,33 @@ public class MemberController {
             System.out.println("3. Suspend member");
             System.out.println("4. Remove member");
             System.out.println("0. Return");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
-            switch (choice) {
-                case 1: {
-                    showAllMembers();
-                    break;
+            try {
+                switch (choice) {
+                    case 1: {
+                        showAllMembers();
+                        break;
+                    }
+                    case 2: {
+                        addNewMember();
+                        break;
+                    }
+                    case 3: {
+                        suspendMember();
+                        break;
+                    }
+                    case 4: {
+                        removeMember();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
                 }
-                case 2: {
-                    addNewMember();
-                    break;
-                }
-                case 3: {
-                    suspendMember();
-                    break;
-                }
-                case 4: {
-                    removeMember();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            } catch (LibraryException e) {
+                handleException(e);
             }
         }
     }
@@ -186,7 +214,7 @@ public class MemberController {
     //case 3 admin
     public void suspendMember() {
         System.out.println("Enter the ID of the member you want to suspend:");
-        int memberId = Integer.parseInt(scanner.nextLine());
+        int memberId = readInt();
         String result = memberService.suspendMember(memberId);
         System.out.println(result);
     }
@@ -194,7 +222,7 @@ public class MemberController {
     //case 4 admin
     public void removeMember() {
         System.out.println("Enter the ID of the member you want to remove:");
-        int memberId = Integer.parseInt(scanner.nextLine());
+        int memberId = readInt();
         String result = memberService.removeMember(memberId);
         System.out.println(result);
     }

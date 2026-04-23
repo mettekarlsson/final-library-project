@@ -185,12 +185,6 @@ public class LoanRepository {
             """);
 
             while (rs.next()) {
-                Date returnDateSql = rs.getDate("return_date");
-                LocalDate returnDate = null;
-
-                if (returnDateSql != null) {
-                    returnDate = returnDateSql.toLocalDate();
-                }
                 loans.add(new Loan(
                         rs.getInt("id"),
                         rs.getInt("book_id"),
@@ -199,7 +193,7 @@ public class LoanRepository {
                         null,
                         rs.getDate("loan_date").toLocalDate(),
                         rs.getDate("due_date").toLocalDate(),
-                        returnDate
+                        null
                 ));
             }
             return loans;
@@ -221,12 +215,6 @@ public class LoanRepository {
         """);
 
         while (rs.next()) {
-            Date returnDateSql = rs.getDate("return_date");
-            LocalDate returnDate = null;
-
-            if (returnDateSql != null) {
-                returnDate = returnDateSql.toLocalDate();
-            }
             loans.add(new Loan(
                     rs.getInt("id"),
                     rs.getInt("book_id"),
@@ -235,7 +223,7 @@ public class LoanRepository {
                     null,
                     rs.getDate("loan_date").toLocalDate(),
                     rs.getDate("due_date").toLocalDate(),
-                    returnDate
+                    null
             ));
         }
         return loans;
