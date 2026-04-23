@@ -18,8 +18,8 @@ public class AuthorRepository {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
             SELECT * FROM authors a
-                JOIN author_descriptions ad ON a.id=ad.author_id
-                WHERE a.id = ?
+            JOIN author_descriptions ad ON a.id=ad.author_id
+            WHERE a.id = ?
             """)) {
             stmt.setInt(1, authorId);
             ResultSet rs = stmt.executeQuery();
@@ -43,7 +43,7 @@ public class AuthorRepository {
         }
     }
 
-    //get authors related to a book
+    //get authors linked to a book
     public List<Author> findAuthorsByBookId(int bookId) {
         List<Author> authors = new ArrayList<>();
 
