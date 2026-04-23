@@ -1,8 +1,6 @@
 package book;
 
 import author.Author;
-import author.AuthorInfoDTO;
-import author.AuthorMapper;
 import author.AuthorRepository;
 import category.Category;
 import category.CategoryRepository;
@@ -56,7 +54,7 @@ public class BookService {
                 .toList();
     }
 
-    //case 5 - för att visa alla kategorier, och admin case 1 och admin case 4
+    //case 5 - för att visa alla kategorier, och admin case 1, 4
     public List<Category> getAllCategories() {
         return categoryRepository.getAllCategories();
     }
@@ -86,63 +84,65 @@ public class BookService {
         return category;
     }
 
-    //admin case 1 - obs gör kontroller
+    //admin case 1
     public String addBook(NewBookDTO newBookDTO) {
+        if (newBookDTO.getTotalCopies() < 1) {
+            throw new ValidationException("Total copies cannot be less than 1.");
+        }
         if (newBookDTO.getAvailableCopies() > newBookDTO.getTotalCopies()) {
             throw new ValidationException("Available copies cannot be more than total copies.");
+        }
+        if (newBookDTO.getAuthors().isEmpty()) {
+            throw new ValidationException("Author list cannot be empty.");
         }
         return bookRepository.addBook(newBookDTO);
     }
 
+    //admin case 2
+    public BookInfoDTO getBookById(int bookId) {
+        Book book = bookRepository.getBookById(bookId);
+        if (book == null) {
+            throw new BookNotFoundException(bookId);
+        }
+        return addInfoAndMap(book);
+    }
+
+    //admin case 2
     public void editBook(int bookId, String column, String value) {
         bookRepository.editBook(bookId, column, value);
     }
 
+    //admin case 2
     public void editBook(int bookId, String column, int value) {
         bookRepository.editBook(bookId, column, value);
     }
 
+    //admin case 2
     public void editBookDesc(int bookId, String column, String value) {
         bookRepository.editBookDesc(bookId, column, value);
     }
 
+    //admin case 2
     public void editBookDesc(int bookId, String column, int value) {
         bookRepository.editBookDesc(bookId, column, value);
     }
 
-    public void addBookAuthors(int bookId, int authorId) {
-        bookRepository.addBookAuthors(bookId, authorId);
-    }
-
-    //för att bookcontroller inte ska behöva kalla på authorservice, denna o nästa
-    public List<AuthorInfoDTO> getAllAuthors() {
-        List<Author> authors = authorRepository.getAllAuthors();
-        List<AuthorInfoDTO> dtos = new ArrayList<>();
-        for(Author a : authors) {
-            dtos.add(AuthorMapper.mapToDTO(a));
+    //admin case 2
+    public String addBookAuthors(int bookId, int authorId) {
+        if (bookRepository.existsBookAuthors(bookId, authorId)) {
+            throw new OperationFailedException("Author is already linked to this book.");
         }
-        return dtos;
+        return bookRepository.addBookAuthors(bookId, authorId);
     }
 
-    public List<AuthorInfoDTO> getAuthorsByBookId(int bookId) {
-        List<Author> authors = authorRepository.findAuthorsByBookId(bookId);
-        List<AuthorInfoDTO> dtos = new ArrayList<>();
-        for (Author a : authors) {
-            dtos.add(AuthorMapper.mapToDTO(a));
-        }
-        return dtos;
+    //admin case 2
+    public String removeBookAuthors(int bookId, int authorId){
+        return bookRepository.removeBookAuthors(bookId, authorId);
     }
 
-    public void removeBookAuthors(int bookId, int authorId){
-        bookRepository.removeBookAuthors(bookId, authorId);
-    }
-
-    public List<Category> getCategoriesByBookId(int bookId) {
-        return categoryRepository.findCategoriesByBookId(bookId);
-    }
-
-    public void removeBookCategories(int bookId, int categoryId) {
-        bookRepository.removeBookCategories(bookId, categoryId);
+    //admin case 2
+    public String removeBookCategories(int bookId, int categoryId) {
+        return bookRepository.removeBookCategories(bookId, categoryId);
     }
 
     //admin case 3 - kontrollerar om boken fanns
@@ -154,21 +154,16 @@ public class BookService {
         return result;
     }
 
-    //admin case 4 - kontrollerar om det lyckades...? vilket exception ska egentligen skickas med här?
+    //admin case 2, 4
     public String addCategoryToBook(int bookId, int categoryId) {
+        if (bookRepository.existsBookCategories(bookId, categoryId)) {
+            throw new OperationFailedException("Category is already linked to this book.");
+        }
         String result = bookRepository.addCategoryToBook(bookId, categoryId);
         if (result == null) {
             throw new OperationFailedException("Failed to add category to book.");
         }
         return result;
-    }
-
-    public BookInfoDTO getBookById(int bookId) {
-        Book book = bookRepository.getBookById(bookId);
-        if (book == null) {
-            throw new BookNotFoundException(bookId);
-        }
-        return addInfoAndMap(book);
     }
 
 }

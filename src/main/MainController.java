@@ -7,7 +7,6 @@ import member.Member;
 import member.MemberController;
 import member.MemberService;
 
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MainController {

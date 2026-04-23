@@ -35,7 +35,6 @@ public class CategoryRepository {
     }
 
     public Category getCategoryById(int categoryId) {
-        Category category;
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""

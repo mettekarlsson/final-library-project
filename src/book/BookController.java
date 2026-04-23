@@ -3,7 +3,6 @@ import author.Author;
 import author.AuthorInfoDTO;
 import base.BaseController;
 import category.Category;
-import exceptions.AuthorNotFoundException;
 import exceptions.LibraryException;
 
 import java.time.LocalDate;
@@ -236,11 +235,8 @@ public class BookController extends BaseController {
             int categoryId = readInt();
 
             Category category = bookService.getCategoryById(categoryId);
-            if (category != null) {
-                bookCategories.add(category);
-            } else {
-                System.out.println("Category not found: " + categoryId);
-            }
+            bookCategories.add(category);
+
 
             System.out.println("Add another category? (Y/N)");
             String again = scanner.nextLine();
@@ -258,14 +254,10 @@ public class BookController extends BaseController {
 
     //case 2 admin
     public void editBook() {
-        List<Author> bookAuthors;
-        List<Category> bookCategories;
         System.out.println("Enter the book ID:");
-        int bookId = Integer.parseInt(scanner.nextLine());
+        int bookId = readInt();
         BookInfoDTO bookInfoDTO = bookService.getBookById(bookId);
             System.out.println(bookInfoDTO.toString());
-            bookAuthors = bookInfoDTO.getAuthors();
-            bookCategories = bookInfoDTO.getCategories();
 
         boolean active = true;
 
@@ -283,36 +275,44 @@ public class BookController extends BaseController {
             System.out.println("10. Categories");
             System.out.println("0. Return");
 
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
             switch (choice) {
                 case 1: {
                     System.out.println("Enter the new title:");
                     String bookTitle = scanner.nextLine();
+                    while (bookTitle.isBlank()) {
+                        System.out.println("Title cannot be empty. Try again.");
+                        bookTitle = scanner.nextLine();
+                    }
                     bookService.editBook(bookId, "title", bookTitle);
                     break;
                 }
                 case 2: {
                     System.out.println("Enter the new ISBN:");
                     String isbn = scanner.nextLine();
+                    while (isbn.isBlank()) {
+                        System.out.println("ISBN cannot be empty. Try again.");
+                        isbn = scanner.nextLine();
+                    }
                     bookService.editBook(bookId, "isbn", isbn);
                     break;
                 }
                 case 3: {
                     System.out.println("Enter the new publishing year:");
-                    int yearPublished = Integer.parseInt(scanner.nextLine());
+                    int yearPublished = readInt();
                     bookService.editBook(bookId, "year_published", yearPublished);
                     break;
                 }
                 case 4: {
                     System.out.println("Enter the new number of total copies:");
-                    int totalCopies = Integer.parseInt(scanner.nextLine());
+                    int totalCopies = readInt();
                     bookService.editBook(bookId, "total_copies", totalCopies);
                     break;
                 }
                 case 5: {
                     System.out.println("Enter the new number of available copies:");
-                    int availableCopies = Integer.parseInt(scanner.nextLine());
+                    int availableCopies = readInt();
                     bookService.editBook(bookId, "available_copies", availableCopies);
                     break;
                 }
@@ -330,61 +330,39 @@ public class BookController extends BaseController {
                 }
                 case 8: {
                     System.out.println("Enter the new page count:");
-                    int pageCount = Integer.parseInt(scanner.nextLine());
+                    int pageCount = readInt();
                     bookService.editBookDesc(bookId, "page_count", pageCount);
                     break;
                 }
                 case 9: {
-                    for (Author a : bookAuthors) {
-                        System.out.println(a);
-                    }
                     System.out.println("1. Add author");
                     System.out.println("2. Remove author");
-                    int authorChoice = Integer.parseInt(scanner.nextLine());
+                    int authorChoice = readInt();
                     if (authorChoice == 1) {
-                        List<AuthorInfoDTO> authors = bookService.getAllAuthors();
-                        for (AuthorInfoDTO a : authors) {
-                            System.out.println(a);
-                        }
                         System.out.println("Which author(id) would you like to add?");
-                        int authorId = Integer.parseInt(scanner.nextLine());
-                        bookService.addBookAuthors(bookId, authorId);
+                        int authorId = readInt();
+                        System.out.println(bookService.addBookAuthors(bookId, authorId));
                     } else if (authorChoice == 2) {
-                        List<AuthorInfoDTO> currentAuthors = bookService.getAuthorsByBookId(bookId);
-                        for (AuthorInfoDTO a : currentAuthors) {
-                            System.out.println(a);
-                        }
                         System.out.println("Which author(id) would you like to remove?");
-                        int authorId = Integer.parseInt(scanner.nextLine());
-                        bookService.removeBookAuthors(bookId, authorId);
+                        int authorId = readInt();
+                        System.out.println(bookService.removeBookAuthors(bookId, authorId));
                     } else {
                         System.out.println("Invalid choice.");
                     }
                     break;
                 }
                 case 10: {
-                    for (Category c : bookCategories) {
-                        System.out.println(c);
-                    }
                     System.out.println("1. Add category");
                     System.out.println("2. Remove category");
-                    int categoryChoice = Integer.parseInt(scanner.nextLine());
+                    int categoryChoice = readInt();
                     if (categoryChoice == 1) {
-                        List<Category> categories = bookService.getAllCategories();
-                        for (Category c : categories) {
-                            System.out.println(c);
-                        }
                         System.out.println("Which category(id) would you like to add?");
-                        int categoryId = Integer.parseInt(scanner.nextLine());
-                        bookService.addCategoryToBook(bookId, categoryId);
+                        int categoryId = readInt();
+                        System.out.println(bookService.addCategoryToBook(bookId, categoryId));
                     } else if (categoryChoice == 2) {
-                        List<Category> currentCategories = bookService.getCategoriesByBookId(bookId);
-                        for (Category c : currentCategories) {
-                            System.out.println(c);
-                        }
                         System.out.println("Which category(id) would you like to remove?");
-                        int categoryId = Integer.parseInt(scanner.nextLine());
-                        bookService.removeBookCategories(bookId, categoryId);
+                        int categoryId = readInt();
+                        System.out.println(bookService.removeBookCategories(bookId, categoryId));
                     } else {
                         System.out.println("Invalid choice.");
                     }

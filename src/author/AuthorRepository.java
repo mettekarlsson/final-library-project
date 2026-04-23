@@ -40,7 +40,6 @@ public class AuthorRepository {
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-
     }
 
     public List<Author> findAuthorsByBookId(int bookId) {

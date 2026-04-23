@@ -3,6 +3,7 @@ package book;
 import author.Author;
 import category.Category;
 import exceptions.DatabaseException;
+import exceptions.OperationFailedException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -224,6 +225,8 @@ public class BookRepository {
             bdStmt.executeUpdate();
 
             //insert book_authors info, eventuellt authors - isåfall ta emot nya id:et och lägger sen till
+            //lite orent att author-insert finns i bookrepo, men ser det som en transaktion,
+            //om något misslyckas så blir det ingen inconsistency
             for (Author a : newBookDTO.getAuthors()) {
                 int authorId = a.getId();
 
@@ -288,7 +291,7 @@ public class BookRepository {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
 
     }
@@ -304,7 +307,7 @@ public class BookRepository {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 
@@ -317,7 +320,7 @@ public class BookRepository {
             stmt.setInt(2, bookId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
+            throw new DatabaseException(e);
         }
     }
 
@@ -330,12 +333,12 @@ public class BookRepository {
             stmt.setInt(2, bookId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("SQL-FEL: " + e.getMessage());
+            throw new DatabaseException(e);
         }
     }
 
     //add to book_authors
-    public void addBookAuthors(int bookId, int authorId) {
+    public String addBookAuthors(int bookId, int authorId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         PreparedStatement stmt = conn.prepareStatement("""
         INSERT INTO book_authors (book_id, author_id)
@@ -343,37 +346,96 @@ public class BookRepository {
 """)) {
             stmt.setInt(1, bookId);
             stmt.setInt(2, authorId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new OperationFailedException("Failed to add author to book.");
+            }
+            return "Author has been added to book.";
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 
     //remove from book_authors
-    public void removeBookAuthors(int bookId, int authorId){
+    public String removeBookAuthors(int bookId, int authorId){
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
         DELETE FROM book_authors WHERE book_id = ? AND author_id = ?
 """)) {
             stmt.setInt(1, bookId);
             stmt.setInt(2, authorId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new OperationFailedException("Author is not linked to this book.");
+            }
+            return "Author removed from book.";
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
         }
     }
 
     //remove from book_categories
-    public void removeBookCategories(int bookId, int categoryId){
+    public String removeBookCategories(int bookId, int categoryId){
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
         DELETE FROM book_categories WHERE book_id = ? AND category_id = ?
 """)) {
             stmt.setInt(1, bookId);
             stmt.setInt(2, categoryId);
-            stmt.executeUpdate();
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new OperationFailedException("Category is not linked to this book.");
+            }
+            return "Category removed from book.";
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException(e);
+        }
+    }
+
+    //check if author and book belong together
+    public boolean existsBookAuthors(int bookId, int authorId) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+        PreparedStatement stmt = conn.prepareStatement("""
+        SELECT * FROM book_authors
+        WHERE book_id=?
+        AND author_id=?
+        """)) {
+            stmt.setInt(1, bookId);
+            stmt.setInt(2, authorId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+
+            return false;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
+    //checks if book and category belong together
+    public boolean existsBookCategories(int bookId, int categoryId) {
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement("""
+        SELECT * FROM book_categories
+        WHERE book_id=?
+        AND category_id=?
+        """)) {
+            stmt.setInt(1, bookId);
+            stmt.setInt(2, categoryId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+
+            return false;
+
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
         }
     }
 
@@ -395,7 +457,7 @@ public class BookRepository {
         }
     }
 
-    //add a category to a book
+    //add a category to a book (insert book_categories)
     public String addCategoryToBook(int bookId, int categoryId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
