@@ -17,25 +17,25 @@ public class AuthorController extends BaseController {
             System.out.println("2. Add author");
             System.out.println("0. Return");
 
-            int choice = -1;
-            try { choice = Integer.parseInt(scanner.nextLine()); }
-            catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-            }
+            int choice = readInt();
 
-            switch (choice) {
-                case 1: {
-                    editAuthor();
-                    break;
+            try {
+                switch (choice) {
+                    case 1: {
+                        editAuthor();
+                        break;
+                    }
+                    case 2: {
+                        addAuthor();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
                 }
-                case 2: {
-                    addAuthor();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            } catch (LibraryException e) {
+                handleException(e);
             }
         }
     }
@@ -63,7 +63,6 @@ public class AuthorController extends BaseController {
 
             int choice = readInt();
 
-            try {
             switch (choice) {
                 case 1: {
                     System.out.println("Enter the new first name:");
@@ -120,9 +119,6 @@ public class AuthorController extends BaseController {
                     break;
                 }
             }
-            } catch (LibraryException e) {
-                handleException(e);
-            }
         }
     }
 
@@ -150,12 +146,7 @@ public class AuthorController extends BaseController {
         String website = scanner.nextLine();
 
         NewAuthorDTO newAuthorDTO = new NewAuthorDTO(firstName, lastName, nationality, birthDate, biography, website);
-        try {
             String result = authorService.addAuthor(newAuthorDTO);
             System.out.println(result);
-        } catch (LibraryException e) {
-            handleException(e);
-        }
     }
-
 }

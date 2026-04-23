@@ -1,6 +1,5 @@
 package book;
 import author.Author;
-import author.AuthorInfoDTO;
 import base.BaseController;
 import category.Category;
 import exceptions.LibraryException;

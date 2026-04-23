@@ -2,6 +2,7 @@ package member;
 
 import exceptions.MemberNotFoundException;
 import exceptions.OperationFailedException;
+import exceptions.ValidationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class MemberService {
         return MemberMapper.mapToDTO(member);
     }
 
-    //case (2 och) 3
+    //case 2 och 3
     public String updateMemberInfo(String column, String newValue, int memberId) {
         String result = memberRepository.updateMemberInfo(column, newValue, memberId);
         if (result == null) {
@@ -41,11 +42,18 @@ public class MemberService {
         return dtos;
     }
 
+    //admin case 2
     public String addNewMember(NewMemberDTO member) {
+        if (!member.getMembershipType().equals("standard") && !member.getMembershipType().equals("premium")) {
+            throw new ValidationException("Membership type must be 'standard' or 'premium'.");
+        }
+        if (!member.getStatus().equals("active") && !member.getStatus().equals("expired") && !member.getStatus().equals("suspended")) {
+            throw new ValidationException("Status must be 'active', 'expired' or 'suspended'.");
+        }
         return memberRepository.addNewMember(member);
     }
 
-    //admin case 3 - throwas rätt exception här?
+    //admin case 3
     public String suspendMember(int memberId) {
         String result = memberRepository.suspendMember(memberId);
         if (result == null) {
@@ -54,7 +62,7 @@ public class MemberService {
         return result;
     }
 
-    //admin case 4 - throwas rätt exception här?
+    //admin case 4
     public String removeMember(int memberId) {
         String result = memberRepository.removeMember(memberId);
         if (result == null) {

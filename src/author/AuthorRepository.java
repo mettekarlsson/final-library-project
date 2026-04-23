@@ -73,6 +73,7 @@ public class AuthorRepository {
         }
     }
 
+    //kan jag ta bort denna månne
     public List<Author> searchAuthor(String searchTerm) {
         List<Author> authors = new ArrayList<>();
         String search = "%" + searchTerm + "%";

@@ -194,18 +194,42 @@ public class MemberController extends BaseController {
     public void addNewMember() {
         System.out.println("The new member's first name:");
         String firstName = scanner.nextLine();
+        while (firstName.isBlank()) {
+            System.out.println("First name cannot be empty. Try again.");
+            firstName = scanner.nextLine();
+        }
         System.out.println("The new member's last name:");
         String lastName = scanner.nextLine();
+        while (lastName.isBlank()) {
+            System.out.println("Last name cannot be empty. Try again.");
+            lastName = scanner.nextLine();
+        }
         System.out.println("The new member's email:");
         String email = scanner.nextLine();
+        while (email.isBlank()) {
+            System.out.println("Email cannot be empty. Try again.");
+            email = scanner.nextLine();
+        }
         System.out.println("The new member's joining date:");
         LocalDate membershipDate = LocalDate.parse(scanner.nextLine());
         System.out.println("The new member's membership-type:");
         String membershipType = scanner.nextLine();
+        while (membershipType.isBlank()) {
+            System.out.println("Membership type cannot be empty. Try again.");
+            membershipType = scanner.nextLine();
+        }
         System.out.println("The new member's status:");
         String status = scanner.nextLine();
+        while (status.isBlank()) {
+            System.out.println("Status cannot be empty. Try again.");
+            status = scanner.nextLine();
+        }
         System.out.println("The new member's password:");
         String password = scanner.nextLine();
+        while (password.isBlank()) {
+            System.out.println("Password cannot be empty. Try again.");
+            password = scanner.nextLine();
+        }
         NewMemberDTO member = new NewMemberDTO(firstName, lastName, email, membershipDate, membershipType, status, password);
         String result = memberService.addNewMember(member);
         System.out.println(result);
