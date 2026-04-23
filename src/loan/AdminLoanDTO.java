@@ -6,7 +6,7 @@ public class AdminLoanDTO {
 
     private int id;
     private String bookTitle;
-    int memberId;
+    private int memberId;
     private String memberName;
     private LocalDate loanDate;
     private LocalDate dueDate;

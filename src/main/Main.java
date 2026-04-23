@@ -16,20 +16,24 @@ public class Main {
             System.out.println("0. Exit");
             int choice = Integer.parseInt(scanner.nextLine());
 
-            switch (choice) {
-                case 1: {
-                    mainController.memberLogIn();
-                    break;
-                }
-                case 2: {
-                    mainController.adminMainMenu();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            try {
+                switch (choice) {
+                    case 1: {
+                        mainController.memberLogIn();
+                        break;
+                    }
+                    case 2: {
+                        mainController.adminMainMenu();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
 
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
             }
         }
     }

@@ -48,7 +48,7 @@ public class AuthorController extends BaseController {
         }
         System.out.println("Enter the author ID:");
         int authorId = readInt();
-        authorService.findAuthorById(authorId);
+        System.out.println(authorService.findAuthorById(authorId).toString());
 
         boolean active = true;
 

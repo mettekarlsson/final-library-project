@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BookService {
+public class BookService implements BookServiceInterface {
     BookRepository bookRepository = new BookRepository();
     AuthorRepository authorRepository = new AuthorRepository();
     CategoryRepository categoryRepository = new CategoryRepository();
@@ -136,7 +136,7 @@ public class BookService {
     }
 
     //admin case 2
-    public String removeBookAuthors(int bookId, int authorId){
+    public String removeBookAuthors(int bookId, int authorId) {
         return bookRepository.removeBookAuthors(bookId, authorId);
     }
 
