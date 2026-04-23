@@ -19,7 +19,7 @@ public class LoanController extends BaseController {
             System.out.println("1. See all my loans");
             System.out.println("2. Extend a loan");
             System.out.println("3. Return a book");
-            System.out.println("4. Loan a book");
+            System.out.println("4. Borrow a book");
             System.out.println("5. Leave a review");
             System.out.println("0. Return");
             int choice = readInt();
@@ -73,8 +73,8 @@ public class LoanController extends BaseController {
         }
         System.out.println("Which loan(id) would you like to extend?");
         int loanId = readInt();
-        String result = loanService.extendLoan(loanId);
-        System.out.println(result);
+        loanService.extendLoan(loanId, loggedInUser.getId());
+        System.out.println("Loan with ID #" + loanId + " has been extended.");
     }
 
     //case 3
@@ -85,8 +85,8 @@ public class LoanController extends BaseController {
         }
         System.out.println("Which loan(id) would you like to return?");
         int loanId = readInt();
-        String result = loanService.returnLoan(loanId);
-        System.out.println(result);
+        loanService.returnLoan(loanId, loggedInUser.getId());
+        System.out.println("Loan with ID # " + loanId + " has been returned.");
     }
 
     //case 4
@@ -177,7 +177,9 @@ public class LoanController extends BaseController {
         }
         System.out.println("Which loan(id) would you like to return?:");
         int loanId = readInt();
-        String result = loanService.returnLoan(loanId);
-        System.out.println(result);
+        System.out.println("What user does it belong to?:");
+        int memberId = readInt();
+        loanService.returnLoan(loanId, memberId);
+        System.out.println("Loan with ID # " + loanId + " has been returned.");
     }
 }

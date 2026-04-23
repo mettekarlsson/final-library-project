@@ -22,7 +22,7 @@ public class BookController extends BaseController {
             System.out.println("4. Search book");
             System.out.println("5. Filter books by category");
             System.out.println("0. Return");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
             try {
                 switch (choice) {
@@ -106,7 +106,7 @@ public class BookController extends BaseController {
             System.out.println(c);
         }
         System.out.println("Choose which category(id) to look at:");
-        int categoryId = Integer.parseInt(scanner.nextLine());
+        int categoryId = readInt();
         List<BookInfoDTO> books = bookService.filterBooksByCategory(categoryId);
         for (BookInfoDTO b : books) {
             System.out.println(b);
@@ -201,8 +201,16 @@ public class BookController extends BaseController {
                 case 2: {
                     System.out.println("Enter their first name:");
                     String firstName = scanner.nextLine();
+                    while (firstName.isBlank()) {
+                        System.out.println("First name cannot be empty. Try again.");
+                        firstName = scanner.nextLine();
+                    }
                     System.out.println("Enter their last name:");
                     String lastName = scanner.nextLine();
+                    while (lastName.isBlank()) {
+                        System.out.println("Last name cannot be empty. Try again.");
+                        lastName = scanner.nextLine();
+                    }
                     System.out.println("Enter their nationality:");
                     String nationality = scanner.nextLine();
                     System.out.println("Enter their birth date:");
@@ -378,7 +386,7 @@ public class BookController extends BaseController {
     //case 3 admin
     public void deleteBook() {
         System.out.println("Enter the book ID:");
-        int bookId = Integer.parseInt(scanner.nextLine());
+        int bookId = readInt();
         String result = bookService.deleteBook(bookId);
         System.out.println(result);
     }

@@ -73,40 +73,6 @@ public class AuthorRepository {
         }
     }
 
-    //kan jag ta bort denna månne
-    public List<Author> searchAuthor(String searchTerm) {
-        List<Author> authors = new ArrayList<>();
-        String search = "%" + searchTerm + "%";
-
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
-             PreparedStatement stmt = conn.prepareStatement("""
-            SELECT * FROM authors a
-            JOIN author_descriptions ad ON ad.author_id=a.id
-            WHERE first_name LIKE ? OR last_name LIKE ?
-            """)){
-            stmt.setString(1, search);
-            stmt.setString(2, search);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                authors.add(new Author(
-                        rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("nationality"),
-                        rs.getDate("birth_date").toLocalDate(),
-                        rs.getString("biography"),
-                        rs.getString("website")
-                ));
-
-            }
-            return authors;
-
-        } catch (SQLException e){
-            throw new DatabaseException(e);
-        }
-    }
-
     public List<Author> getAllAuthors() {
         List<Author> authors = new ArrayList<>();
 

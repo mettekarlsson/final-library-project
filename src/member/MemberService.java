@@ -55,6 +55,13 @@ public class MemberService {
 
     //admin case 3
     public String suspendMember(int memberId) {
+        Member member = memberRepository.getMemberById(memberId);
+        if (member == null) {
+            throw new MemberNotFoundException(memberId);
+        }
+        if (member.getStatus().equals("suspended")) {
+            throw new ValidationException("Member # " + memberId + " is already suspended.");
+        }
         String result = memberRepository.suspendMember(memberId);
         if (result == null) {
             throw new MemberNotFoundException(memberId);

@@ -1,7 +1,9 @@
 package main;
 
 import author.AuthorController;
+import base.BaseController;
 import book.BookController;
+import exceptions.LibraryException;
 import loan.LoanController;
 import member.Member;
 import member.MemberController;
@@ -9,10 +11,9 @@ import member.MemberService;
 
 import java.util.Scanner;
 
-public class MainController {
+public class MainController extends BaseController {
 
     public static Member loggedInUser = null;
-    Scanner scanner = new Scanner(System.in);
     BookController bookController = new BookController();
     MemberController memberController = new MemberController();
     MemberService memberService = new MemberService();
@@ -47,25 +48,29 @@ public class MainController {
             System.out.println("2. Loans");
             System.out.println("3. My profile");
             System.out.println("0. Log out");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
-            switch (choice) {
-                case 1: {
-                    bookController.memberBookMenu();
-                    break;
+            try {
+                switch (choice) {
+                    case 1: {
+                        bookController.memberBookMenu();
+                        break;
+                    }
+                    case 2: {
+                        loanController.memberLoanMenu();
+                        break;
+                    }
+                    case 3: {
+                        memberController.memberProfileMenu();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
                 }
-                case 2: {
-                    loanController.memberLoanMenu();
-                    break;
-                }
-                case 3: {
-                    memberController.memberProfileMenu();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            } catch (LibraryException e) {
+                handleException(e);
             }
         }
     }
@@ -79,29 +84,33 @@ public class MainController {
             System.out.println("3. Members");
             System.out.println("4. Authors");
             System.out.println("0. Log out");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt();
 
-            switch (choice) {
-                case 1: {
-                    bookController.adminBookMenu();
-                    break;
+            try {
+                switch (choice) {
+                    case 1: {
+                        bookController.adminBookMenu();
+                        break;
+                    }
+                    case 2: {
+                        loanController.adminLoanMenu();
+                        break;
+                    }
+                    case 3: {
+                        memberController.adminMemberMenu();
+                        break;
+                    }
+                    case 4: {
+                        authorController.adminAuthorMenu();
+                        break;
+                    }
+                    case 0: {
+                        active = false;
+                        break;
+                    }
                 }
-                case 2: {
-                    loanController.adminLoanMenu();
-                    break;
-                }
-                case 3: {
-                    memberController.adminMemberMenu();
-                    break;
-                }
-                case 4: {
-                    authorController.adminAuthorMenu();
-                    break;
-                }
-                case 0: {
-                    active = false;
-                    break;
-                }
+            } catch (LibraryException e) {
+                handleException(e);
             }
         }
     }

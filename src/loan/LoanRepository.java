@@ -1,6 +1,8 @@
 package loan;
 
 import exceptions.DatabaseException;
+import exceptions.LoanNotFoundException;
+import exceptions.OperationFailedException;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -50,7 +52,7 @@ public class LoanRepository {
     }
 
     //extend loan i.e. update due date
-    public String extendLoan(int loanId) {
+    public void extendLoan(int loanId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
             PreparedStatement stmt = conn.prepareStatement("""
                    UPDATE loans
@@ -59,14 +61,13 @@ public class LoanRepository {
                    """)) {
             stmt.setInt(1, loanId);
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return "Loan with ID #" + loanId + " has been extended.";
+            if (rowsAffected == 0) {
+                throw new LoanNotFoundException(loanId);
             }
 
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-        return null;
     }
 
     //för att kontrollera att lånet inte redan är returnerat när man ska lämna tillbaka det
@@ -106,7 +107,7 @@ public class LoanRepository {
     }
 
     //return loan i.e. update return date
-    public String returnLoan(int loanId) {
+    public void returnLoan(int loanId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement("""
             UPDATE loans
@@ -115,14 +116,12 @@ public class LoanRepository {
             """)) {
             stmt.setInt(1, loanId);
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return "Loan with ID #" + loanId + " has been returned.";
+            if (rowsAffected == 0) {
+                throw new OperationFailedException("Could not return loan.");
             }
-
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-        return null;
     }
 
     //add loan - insert i loans-tabellen, minska available copies - kolla felhantering här

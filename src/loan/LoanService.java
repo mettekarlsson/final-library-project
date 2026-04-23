@@ -8,6 +8,7 @@ import member.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LoanService {
     LoanRepository loanRepository = new LoanRepository();
@@ -38,27 +39,32 @@ public class LoanService {
         return currentLoans;
     }
 
-    //case 2
-    public String extendLoan(int loanId) {
-        String result =  loanRepository.extendLoan(loanId);
-        if (result == null) {
+    //case 2 - check that it belongs to the user, and is not returned
+    public void extendLoan(int loanId, int memberId) {
+        Loan loan = loanRepository.getLoanById(loanId);
+        if (loan == null) {
             throw new LoanNotFoundException(loanId);
         }
-        return result;
-    }
-
-    //case 3 and admin case 3 - check that loan isnt already returned
-    public String returnLoan(int loanId) {
-        Loan loan = loanRepository.getLoanById(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+        if (loan.getMemberId() != memberId) {
+            throw new ValidationException("This loan does not belong to you.");
+        }
         if (loan.getReturnDate() != null) {
             throw new LoanReturnedException(loanId);
         }
-        String result = loanRepository.returnLoan(loanId);
-        if (result == null) {
-            throw new OperationFailedException("Failed to return loan.");
+        loanRepository.extendLoan(loanId);
+    }
+
+    //case 3 and admin case 3 - check that loan isnt already returned, and that it belongs to the user
+    public void returnLoan(int loanId, int memberId) {
+        Loan loan = loanRepository.getLoanById(loanId);
+        if (loan == null) { throw new LoanNotFoundException(loanId); }
+        if (loan.getMemberId() != memberId) {
+            throw new ValidationException("The loan and the member doesn't match.");
         }
-        return result;
+        if (loan.getReturnDate() != null) {
+            throw new LoanReturnedException(loanId);
+        }
+        loanRepository.returnLoan(loanId);
     }
 
     //case 4 - check that book exists and that availablecopies > 0,
@@ -89,6 +95,19 @@ public class LoanService {
 
     //case 5
     public String leaveReview(int bookId, int memberId, int rating, String review) {
+       List<Loan> loans = loanRepository.getAllLoansByMemberId(memberId);
+       boolean foundLoanForBook = false;
+       for (Loan l : loans) {
+            if (l.getBookId() == bookId) {
+                foundLoanForBook = true;
+                if (l.getReturnDate() == null) {
+                    throw new ValidationException("You must return the book before you can leave a review.");
+                }
+            }
+       }
+        if (!foundLoanForBook) {
+            throw new ValidationException("You have not borrowed this book.");
+        }
         if (rating < 1 || rating > 5) {
             throw new ValidationException("Rating must be between 1 and 5.");
         }
