@@ -12,6 +12,7 @@ public class AuthorRepository {
     private final String USER = "root";
     private final String PASS = "Apelsinkr0kant!";
 
+    //get author by id
     public Author findAuthorById(int authorId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -42,6 +43,7 @@ public class AuthorRepository {
         }
     }
 
+    //get authors related to a book
     public List<Author> findAuthorsByBookId(int bookId) {
         List<Author> authors = new ArrayList<>();
 
@@ -73,6 +75,7 @@ public class AuthorRepository {
         }
     }
 
+    //get all authors
     public List<Author> getAllAuthors() {
         List<Author> authors = new ArrayList<>();
 
@@ -100,6 +103,7 @@ public class AuthorRepository {
         }
     }
 
+    //edit authors-table
     public String editAuthor(int authorId, String column, String value) {
         try (Connection conn = DriverManager.getConnection(URL,USER,PASS);
         PreparedStatement stmt = conn.prepareStatement("UPDATE authors SET " + column + " = ? WHERE id = ?")) {
@@ -134,6 +138,7 @@ public class AuthorRepository {
     }
 }
 
+//insert into authors
     public String addAuthor(NewAuthorDTO newAuthorDTO) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         PreparedStatement stmt = conn.prepareStatement("""

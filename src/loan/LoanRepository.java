@@ -70,7 +70,7 @@ public class LoanRepository {
         }
     }
 
-    //för att kontrollera att lånet inte redan är returnerat när man ska lämna tillbaka det
+    //used to check that a loan isn't already returned
     public Loan getLoanById(int loanId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         PreparedStatement stmt = conn.prepareStatement("""
@@ -81,7 +81,7 @@ public class LoanRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                //för att undvika nullpointreexception på return date
+                //to avoid nullpointerexception on return date
                 Date returnDateSql = rs.getDate("return_date");
                 LocalDate returnDate = null;
 
@@ -124,7 +124,7 @@ public class LoanRepository {
         }
     }
 
-    //add loan - insert i loans-tabellen, minska available copies - kolla felhantering här
+    //add loan - insert i loans-table, available copies -1
     public String addNewLoan(int bookId, int memberId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         PreparedStatement stmt = conn.prepareStatement("""

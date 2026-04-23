@@ -14,7 +14,7 @@ public class BookRepository {
     private final String USER = "root";
     private final String PASS = "Apelsinkr0kant!";
 
-    //hämta alla böcker från biblioteket
+    //get all books
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class BookRepository {
         }
     }
 
-    //hämta de 10 mest lånade böckerna
+    //get 10 most borrowed books
     public List<Book> getPopularBooks() {
         List<Book> books = new ArrayList<>();
 
@@ -84,7 +84,7 @@ public class BookRepository {
         }
     }
 
-    //sök efter en bok via boktitel/beskrivning
+    //search for book via title/summary
     public List<Book> searchBooks(String searchTerm) {
         List<Book> books = new ArrayList<>();
         String search = "%" + searchTerm + "%";
@@ -120,7 +120,7 @@ public class BookRepository {
         }
     }
 
-    //filtrera böcker via kategori
+    //filter books by category
     public List<Book> filterBooksByCategory(int categoryId) {
         List<Book> booksByCategory = new ArrayList<>();
 
@@ -155,7 +155,7 @@ public class BookRepository {
     }
 
 
-    //hämta en bok genom dess id
+    //get book by id
     public Book getBookById(int bookId) {
         Book book = null;
 
@@ -190,10 +190,10 @@ public class BookRepository {
     }
 
 
-    //lägg till en ny bok
+    //add new book
     public String addBook(NewBookDTO newBookDTO) {
 
-        //insert books-info, få tillbaka nya book-id
+        //insert into books, get the new book-id
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
 
 
@@ -213,7 +213,7 @@ public class BookRepository {
                 bookId = generatedBookKey.getInt(1);
             }
 
-            //insert book_descriptions info
+            //insert into book_descriptions
             PreparedStatement bdStmt = conn.prepareStatement("""
                 INSERT INTO book_descriptions (book_id, summary, language, page_count) VALUES (?, ?, ?, ?)
             """);
@@ -224,7 +224,7 @@ public class BookRepository {
 
             bdStmt.executeUpdate();
 
-            //insert book_authors info, eventuellt authors - isåfall ta emot nya id:et och lägger sen till
+            //insert into book_authors info, possibly authors - in that case get the new id and add it
             //lite orent att author-insert finns i bookrepo, men ser det som en transaktion,
             //om något misslyckas så blir det ingen inconsistency
             for (Author a : newBookDTO.getAuthors()) {
@@ -251,7 +251,7 @@ public class BookRepository {
                         adStmt.setString(3, a.getWebsite());
                         adStmt.executeUpdate();
                 }
-                //insert i book-categories
+                //insert into book-categories
                 PreparedStatement baStmt = conn.prepareStatement("""
                    INSERT INTO book_authors (book_id, author_id) VALUES (?, ?)
                    """);
@@ -280,7 +280,7 @@ public class BookRepository {
         }
     }
 
-    //redigera en bok där kolumnen du redigerar är ett string värde
+    //edit a book where the column has a string value
     public void editBook(int bookId, String column, String value) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -296,7 +296,7 @@ public class BookRepository {
 
     }
 
-    //redigera en bok där kolumnen du redigerar är ett int värde
+    //edit a book where the column has an int value
     public void editBook(int bookId, String column, int value) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -311,7 +311,7 @@ public class BookRepository {
         }
     }
 
-    //redigera en kolumn i bookdescriptions med stringvärde
+    //edit a column in book-descriptions where the column has a string value
     public void editBookDesc(int bookId, String column, String value) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -324,7 +324,7 @@ public class BookRepository {
         }
     }
 
-    //redigera en kolumn i bookdescriptions med intvärde
+    //edit a column in book-descriptions where the column has an int value
     public void editBookDesc(int bookId, String column, int value) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -337,7 +337,7 @@ public class BookRepository {
         }
     }
 
-    //add to book_authors
+    //insert into book_authors
     public String addBookAuthors(int bookId, int authorId) {
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
         PreparedStatement stmt = conn.prepareStatement("""
@@ -435,7 +435,7 @@ public class BookRepository {
         }
     }
 
-    //ta bort en bok
+    //delete book
     public String deleteBook(int bookId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);

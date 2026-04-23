@@ -11,6 +11,7 @@ public class CategoryRepository {
     private final String USER = "root";
     private final String PASS = "Apelsinkr0kant!";
 
+    //get all categories
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
 
@@ -34,6 +35,7 @@ public class CategoryRepository {
         }
     }
 
+    //get category by id
     public Category getCategoryById(int categoryId) {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASS);
@@ -59,6 +61,7 @@ public class CategoryRepository {
         }
     }
 
+    //get categories linked to a book
     public List<Category> findCategoriesByBookId(int bookId) {
         List<Category> categories = new ArrayList<>();
 
