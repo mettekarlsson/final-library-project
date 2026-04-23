@@ -70,10 +70,10 @@ public class LoanService {
     //check that member exists and that status = active
     public String addNewLoan(int bookId, int memberId) {
         Book book = bookRepository.getBookById(bookId);
-        if (book == null) throw new BookNotFoundException(bookId);
-        if (book.getAvailableCopies() == 0) throw new BookNotAvailableException(bookId);
         Member member = memberRepository.getMemberById(memberId);
+        if (book == null) throw new BookNotFoundException(bookId);
         if (member == null) throw new MemberNotFoundException(memberId);
+        if (book.getAvailableCopies() == 0) throw new BookNotAvailableException(bookId);
         if (!member.getStatus().equals("active")) throw new InvalidMemberStatusException(memberId);
 
         return loanRepository.addNewLoan(bookId, memberId);
