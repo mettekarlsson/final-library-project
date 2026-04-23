@@ -9,8 +9,6 @@ import member.Member;
 import member.MemberController;
 import member.MemberService;
 
-import java.util.Scanner;
-
 public class MainController extends BaseController {
 
     public static Member loggedInUser = null;
