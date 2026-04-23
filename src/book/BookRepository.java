@@ -85,7 +85,7 @@ public class BookRepository {
     }
 
     //sök efter en bok via boktitel/beskrivning
-    public List<Book> searchBook(String searchTerm) {
+    public List<Book> searchBooks(String searchTerm) {
         List<Book> books = new ArrayList<>();
         String search = "%" + searchTerm + "%";
 

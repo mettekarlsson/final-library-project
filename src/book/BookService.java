@@ -48,8 +48,8 @@ public class BookService {
     }
 
     //case 4
-    public List<BookInfoDTO> searchBook(String search) {
-        return bookRepository.searchBook(search).stream()
+    public List<BookInfoDTO> searchBooks(String search) {
+        return bookRepository.searchBooks(search).stream()
                 .map(b -> addInfoAndMap(b))
                 .toList();
     }

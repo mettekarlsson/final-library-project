@@ -20,13 +20,13 @@ public class MainController extends BaseController {
 
 
     public void memberLogIn() {
-        System.out.println("Enter your email");
+        System.out.println("Enter your email:");
         Member member = memberService.getMemberByEmail(scanner.nextLine());
         if (member == null) {
-            System.out.println("Email not found");
+            System.out.println("Email not found.");
             return;
         }
-        System.out.println("Enter your password");
+        System.out.println("Enter your password:");
         String password = scanner.nextLine();
 
         if(password.equals(member.getPassword())) {

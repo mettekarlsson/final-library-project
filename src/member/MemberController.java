@@ -16,7 +16,7 @@ public class MemberController extends BaseController {
 
         while (active) {
             System.out.println("---- Your profile ----");
-            System.out.println("1. Show my profile info");
+            System.out.println("1. View my profile info");
             System.out.println("2. Update my profile info");
             System.out.println("3. Change my membership-type");
             System.out.println("0. Return");
@@ -146,7 +146,7 @@ public class MemberController extends BaseController {
 
         while (active) {
             System.out.println("---- Member Menu ----");
-            System.out.println("1. See all members");
+            System.out.println("1. View all members");
             System.out.println("2. Add new member");
             System.out.println("3. Suspend member");
             System.out.println("4. Remove member");
@@ -192,39 +192,39 @@ public class MemberController extends BaseController {
 
     //case 2 admin
     public void addNewMember() {
-        System.out.println("The new member's first name:");
+        System.out.println("First name:");
         String firstName = scanner.nextLine();
         while (firstName.isBlank()) {
             System.out.println("First name cannot be empty. Try again.");
             firstName = scanner.nextLine();
         }
-        System.out.println("The new member's last name:");
+        System.out.println("Last name:");
         String lastName = scanner.nextLine();
         while (lastName.isBlank()) {
             System.out.println("Last name cannot be empty. Try again.");
             lastName = scanner.nextLine();
         }
-        System.out.println("The new member's email:");
+        System.out.println("Email:");
         String email = scanner.nextLine();
         while (email.isBlank()) {
             System.out.println("Email cannot be empty. Try again.");
             email = scanner.nextLine();
         }
-        System.out.println("The new member's joining date:");
+        System.out.println("Joining date:");
         LocalDate membershipDate = LocalDate.parse(scanner.nextLine());
-        System.out.println("The new member's membership-type:");
+        System.out.println("Membership-type:");
         String membershipType = scanner.nextLine();
         while (membershipType.isBlank()) {
             System.out.println("Membership type cannot be empty. Try again.");
             membershipType = scanner.nextLine();
         }
-        System.out.println("The new member's status:");
+        System.out.println("Status:");
         String status = scanner.nextLine();
         while (status.isBlank()) {
             System.out.println("Status cannot be empty. Try again.");
             status = scanner.nextLine();
         }
-        System.out.println("The new member's password:");
+        System.out.println("Password:");
         String password = scanner.nextLine();
         while (password.isBlank()) {
             System.out.println("Password cannot be empty. Try again.");

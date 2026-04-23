@@ -16,10 +16,10 @@ public class BookController extends BaseController {
 
         while (active) {
             System.out.println("---- Book Menu ----");
-            System.out.println("1. Show all books");
-            System.out.println("2. Show all available books");
-            System.out.println("3. Show top ten most popular books");
-            System.out.println("4. Search book");
+            System.out.println("1. View all books");
+            System.out.println("2. View all available books");
+            System.out.println("3. View top ten most popular books");
+            System.out.println("4. Search books");
             System.out.println("5. Filter books by category");
             System.out.println("0. Return");
             int choice = readInt();
@@ -41,7 +41,7 @@ public class BookController extends BaseController {
                     }
 
                     case 4: {
-                        searchBook();
+                        searchBooks();
                         break;
                     }
 
@@ -86,9 +86,9 @@ public class BookController extends BaseController {
     }
 
     //case 4
-    public void searchBook() {
-        System.out.println("Search for a book:");
-        List<BookInfoDTO> books = bookService.searchBook(scanner.nextLine());
+    public void searchBooks() {
+        System.out.println("Search books:");
+        List<BookInfoDTO> books = bookService.searchBooks(scanner.nextLine());
         if(books.isEmpty()) {
             System.out.println("No matching books.");
         } else {
@@ -158,29 +158,29 @@ public class BookController extends BaseController {
         List<Author> bookAuthors = new ArrayList<>();
         List<Category> bookCategories = new ArrayList<>();
 
-        System.out.println("Enter the book-title:");
+        System.out.println("Title:");
         String title = scanner.nextLine();
         while (title.isBlank()) {
             System.out.println("Title cannot be empty. Try again.");
             title = scanner.nextLine();
         }
-        System.out.println("Enter the ISBN:");
+        System.out.println("ISBN:");
         String isbn = scanner.nextLine();
         while (isbn.isBlank()) {
             System.out.println("ISBN cannot be empty. Try again.");
             isbn = scanner.nextLine();
         }
-        System.out.println("Enter the publishing year:");
+        System.out.println("Publishing year:");
         int yearPublished = readInt();
-        System.out.println("Enter the total number of copies:");
+        System.out.println("Total number of copies:");
         int totalCopies = readInt();
-        System.out.println("Enter the available number of copies:");
+        System.out.println("Available number of copies:");
         int availableCopies = readInt();
-        System.out.println("Enter the summary:");
+        System.out.println("Summary:");
         String summary = scanner.nextLine();
-        System.out.println("Enter the language:");
+        System.out.println("Language:");
         String language = scanner.nextLine();
-        System.out.println("Enter the page count:");
+        System.out.println("Page count:");
         int pageCount = readInt();
 
 
@@ -199,25 +199,25 @@ public class BookController extends BaseController {
                     break;
                 }
                 case 2: {
-                    System.out.println("Enter their first name:");
+                    System.out.println("First name:");
                     String firstName = scanner.nextLine();
                     while (firstName.isBlank()) {
                         System.out.println("First name cannot be empty. Try again.");
                         firstName = scanner.nextLine();
                     }
-                    System.out.println("Enter their last name:");
+                    System.out.println("Last name:");
                     String lastName = scanner.nextLine();
                     while (lastName.isBlank()) {
                         System.out.println("Last name cannot be empty. Try again.");
                         lastName = scanner.nextLine();
                     }
-                    System.out.println("Enter their nationality:");
+                    System.out.println("Nationality:");
                     String nationality = scanner.nextLine();
-                    System.out.println("Enter their birth date:");
+                    System.out.println("Birth date:");
                     LocalDate birthDate = LocalDate.parse(scanner.nextLine());
-                    System.out.println("Enter their biography:");
+                    System.out.println("Biography:");
                     String biography = scanner.nextLine();
-                    System.out.println("Enter their website:");
+                    System.out.println("Website:");
                     String website = scanner.nextLine();
                     Author author = new Author(0, firstName, lastName, nationality, birthDate, biography, website);
                     bookAuthors.add(author);
@@ -231,7 +231,7 @@ public class BookController extends BaseController {
             }
 
         }
-        System.out.println("See all categories:");
+        System.out.println("--- All categories ---");
         List<Category> categories = bookService.getAllCategories();
         for (Category c : categories) {
             System.out.println(c);
@@ -286,7 +286,7 @@ public class BookController extends BaseController {
 
             switch (choice) {
                 case 1: {
-                    System.out.println("Enter the new title:");
+                    System.out.println("New title:");
                     String bookTitle = scanner.nextLine();
                     while (bookTitle.isBlank()) {
                         System.out.println("Title cannot be empty. Try again.");
@@ -296,7 +296,7 @@ public class BookController extends BaseController {
                     break;
                 }
                 case 2: {
-                    System.out.println("Enter the new ISBN:");
+                    System.out.println("New ISBN:");
                     String isbn = scanner.nextLine();
                     while (isbn.isBlank()) {
                         System.out.println("ISBN cannot be empty. Try again.");
@@ -306,37 +306,37 @@ public class BookController extends BaseController {
                     break;
                 }
                 case 3: {
-                    System.out.println("Enter the new publishing year:");
+                    System.out.println("New publishing year:");
                     int yearPublished = readInt();
                     bookService.editBook(bookId, "year_published", yearPublished);
                     break;
                 }
                 case 4: {
-                    System.out.println("Enter the new number of total copies:");
+                    System.out.println("New number of total copies:");
                     int totalCopies = readInt();
                     bookService.editBook(bookId, "total_copies", totalCopies);
                     break;
                 }
                 case 5: {
-                    System.out.println("Enter the new number of available copies:");
+                    System.out.println("New number of available copies:");
                     int availableCopies = readInt();
                     bookService.editBook(bookId, "available_copies", availableCopies);
                     break;
                 }
                 case 6: {
-                    System.out.println("Enter the new summary:");
+                    System.out.println("New summary:");
                     String summary = scanner.nextLine();
                     bookService.editBookDesc(bookId, "summary", summary);
                     break;
                 }
                 case 7: {
-                    System.out.println("Enter the new language:");
+                    System.out.println("New language:");
                     String language = scanner.nextLine();
                     bookService.editBookDesc(bookId, "language", language);
                     break;
                 }
                 case 8: {
-                    System.out.println("Enter the new page count:");
+                    System.out.println("New page count:");
                     int pageCount = readInt();
                     bookService.editBookDesc(bookId, "page_count", pageCount);
                     break;

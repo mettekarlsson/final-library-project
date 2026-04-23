@@ -16,10 +16,10 @@ public class LoanController extends BaseController {
 
         while (active) {
             System.out.println("---- Loan Menu ----");
-            System.out.println("1. See all my loans");
-            System.out.println("2. Extend a loan");
-            System.out.println("3. Return a book");
-            System.out.println("4. Borrow a book");
+            System.out.println("1. View all my loans");
+            System.out.println("2. Extend loan");
+            System.out.println("3. Return book");
+            System.out.println("4. Borrow book");
             System.out.println("5. Leave a review");
             System.out.println("0. Return");
             int choice = readInt();
@@ -106,13 +106,13 @@ public class LoanController extends BaseController {
         }
         System.out.println("Which book(id) would you like to review?");
         int bookId = readInt();
-        System.out.println("Enter your rating (1-5):");
+        System.out.println("Your rating (1-5):");
         int rating = readInt();
         while (rating > 5 || rating < 1) {
             System.out.println("Invalid rating. Try again");
             rating = readInt();
         }
-        System.out.println("Enter your review:");
+        System.out.println("Your review:");
         String comment = scanner.nextLine();
         String result = loanService.leaveReview(bookId, loggedInUser.getId(), rating, comment);
         System.out.println(result);
@@ -122,9 +122,9 @@ public class LoanController extends BaseController {
         boolean active = true;
         while (active) {
             System.out.println("---- Loan Menu ----");
-            System.out.println("1. See all current loans");
-            System.out.println("2. See all overdue loans");
-            System.out.println("3. Return loan");
+            System.out.println("1. View all current loans");
+            System.out.println("2. View all overdue loans");
+            System.out.println("3. Return book");
             System.out.println("0. Return");
             int choice = readInt();
 
@@ -177,7 +177,7 @@ public class LoanController extends BaseController {
         }
         System.out.println("Which loan(id) would you like to return?:");
         int loanId = readInt();
-        System.out.println("What user does it belong to?:");
+        System.out.println("What user(id) does it belong to?:");
         int memberId = readInt();
         loanService.returnLoan(loanId, memberId);
         System.out.println("Loan with ID # " + loanId + " has been returned.");

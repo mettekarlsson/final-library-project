@@ -66,7 +66,7 @@ public class AuthorController extends BaseController {
 
             switch (choice) {
                 case 1: {
-                    System.out.println("Enter the new first name:");
+                    System.out.println("New first name:");
                     String firstName = scanner.nextLine();
                     while (firstName.isBlank()) {
                         System.out.println("First name cannot be empty. Try again.");
@@ -77,7 +77,7 @@ public class AuthorController extends BaseController {
                     break;
                 }
                 case 2: {
-                    System.out.println("Enter the new last name:");
+                    System.out.println("New last name:");
                     String lastName = scanner.nextLine();
                     while (lastName.isBlank()) {
                         System.out.println("Last name cannot be empty. Try again.");
@@ -88,28 +88,28 @@ public class AuthorController extends BaseController {
                     break;
                 }
                 case 3: {
-                    System.out.println("Enter the new nationality:");
+                    System.out.println("New nationality:");
                     String nationality = scanner.nextLine();
                     String result = authorService.editAuthor(authorId, "nationality", nationality);
                     System.out.println(result);
                     break;
                 }
                 case 4: {
-                    System.out.println("Enter the new birth date:");
+                    System.out.println("New birth date:");
                     String birthDate = scanner.nextLine();
                     String result = authorService.editAuthor(authorId, "birth_date", birthDate);
                     System.out.println(result);
                     break;
                 }
                 case 5: {
-                    System.out.println("Enter the new biography:");
+                    System.out.println("New biography:");
                     String biography = scanner.nextLine();
                     String result = authorService.editAuthorDesc(authorId, "biography", biography);
                     System.out.println(result);
                     break;
                 }
                 case 6: {
-                    System.out.println("Enter the new website:");
+                    System.out.println("New website:");
                     String website = scanner.nextLine();
                     String result = authorService.editAuthorDesc(authorId, "website", website);
                     System.out.println(result);
@@ -124,26 +124,26 @@ public class AuthorController extends BaseController {
     }
 
     public void addAuthor() {
-        System.out.println("Enter their first name:");
+        System.out.println("First name:");
         String firstName = scanner.nextLine();
         while (firstName.isBlank()) {
             System.out.println("First name cannot be empty. Try again.");
             firstName = scanner.nextLine();
         }
-        System.out.println("Enter their last name:");
+        System.out.println("Last name:");
         String lastName = scanner.nextLine();
         while (lastName.isBlank()) {
             System.out.println("Last name cannot be empty. Try again.");
             lastName = scanner.nextLine();
         }
-        System.out.println("Enter their nationality:");
+        System.out.println("Nationality:");
         String nationality = scanner.nextLine();
-        System.out.println("Enter their birth date:");
+        System.out.println("Birth date:");
         //kan krasha om användaren skriver fel format. kan använda en try/catch här
         LocalDate birthDate = LocalDate.parse(scanner.nextLine());
-        System.out.println("Enter their biography:");
+        System.out.println("Biography:");
         String biography = scanner.nextLine();
-        System.out.println("Enter their website:");
+        System.out.println("Website:");
         String website = scanner.nextLine();
 
         NewAuthorDTO newAuthorDTO = new NewAuthorDTO(firstName, lastName, nationality, birthDate, biography, website);
