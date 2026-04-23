@@ -2,7 +2,7 @@ package base;
 
 import java.util.Scanner;
 
-public class BaseController {
+public abstract class BaseController {
 
     protected Scanner scanner = new Scanner(System.in);
 

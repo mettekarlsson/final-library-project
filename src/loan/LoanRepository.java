@@ -162,14 +162,14 @@ public class LoanRepository {
             stmt.setInt(3, rating);
             stmt.setString(4, comment);
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return "You've left a review for book #" + bookId + ".";
+            if (rowsAffected == 0) {
+                throw new OperationFailedException("Failed to leave review.");
             }
+            return "You've left a review for book #" + bookId + ".";
 
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-        return null;
     }
 
     //get all loans that are not returned yet
